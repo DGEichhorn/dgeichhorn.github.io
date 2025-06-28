@@ -1,5 +1,10 @@
 ---
-title: "dgeichhorn.github.io"
+title: "J. T. Smith"
+image: inputs/mypic.png
+about:
+  template: jolla
+  image-shape: round
+  image-width: 15em
 ---
 
 This is a Quarto website.
