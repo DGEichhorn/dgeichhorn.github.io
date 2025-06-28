@@ -1,12 +1,5 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "dgeichhorn.github.io",
-    "section": "",
-    "text": "To learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
-  },
-  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
@@ -14,10 +7,17 @@
     "text": "1 + 1\n\n[1] 2"
   },
   {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "dgeichhorn.github.io",
+    "section": "",
+    "text": "To learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+  },
+  {
     "objectID": "projects.html",
     "href": "projects.html",
     "title": "Projects",
     "section": "",
-    "text": "blubblub"
+    "text": "blabla\nblubblub"
   }
 ]
