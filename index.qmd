@@ -1,10 +1,22 @@
 ---
 title: "J. T. Smith"
-image: inputs/mypic.png
+image: inputs/dawgs.png
 about:
   template: jolla
   image-shape: round
   image-width: 15em
+  links: 
+    - text: Email
+      icon: envelope
+      href: mailto:dominik.g.eichhorn@gmail.com
+    - text: GitHub
+      icon: github
+      #href: 
+    - text: LinkedIn
+      icon: linkedin
+      #href: 
+    - text: CV
+      href: inputs/resume.pdf
 ---
 
 This is a Quarto website.
