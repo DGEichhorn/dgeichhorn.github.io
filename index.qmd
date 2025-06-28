@@ -1,6 +1,7 @@
 ---
 title: "J. T. Smith"
 image: inputs/dawgs.png
+resources: inputs/resume.pdf
 about:
   template: jolla
   image-shape: round
