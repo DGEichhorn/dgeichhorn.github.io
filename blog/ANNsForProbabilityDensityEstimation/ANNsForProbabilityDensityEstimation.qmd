@@ -61,6 +61,7 @@ class Network(nn.Module):
     
   def forward(self, x):
     return self.net(x)
+
 ```
 
 # Define Custom Loss Function
@@ -79,6 +80,7 @@ class LossPDE(nn.Module):
     loss_total = loss_prediction + lambda_mon*loss_monotonicity
     
     return loss_total
+
 ```
 
 # Construct model, loss and optimizer
@@ -121,7 +123,7 @@ for epoch in range(num_epochs):
     mon_u = model(mon_points + delta)
     
     loss = criterion(preds, u, lambda_mon, mon_l, mon_u)
-
+    
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
