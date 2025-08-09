@@ -11,11 +11,11 @@ To Dos:
 
 ```{python}
 import numpy as np
-from scipy import stats           # sampling
+from scipy import stats           # for sampling
 
-import matplotlib.pyplot as plt   # visualization
+import matplotlib.pyplot as plt   # for visualization
 
-import torch                      # constructing, learning, using NNs
+import torch                      # for constructing, learning, using NNs
 import torch.nn as nn
 import torch.optim as optim
 ```
@@ -66,18 +66,9 @@ class Network(nn.Module):
 # Define Custom Loss Function
 
 ```{python}
-class Loss(nn.Module):
+class LossPDE(nn.Module):
   def __init__(self):
-    super(Loss, self).__init__()
-  
-  def forward(self, y_pred, y_true):
-    return torch.mean((y_pred - y_true)**2)
-```
-
-```{python}
-class CustomLoss(nn.Module):
-  def __init__(self):
-    super(CustomLoss, self).__init__()
+    super(LossPDE, self).__init__()
   
   def forward(self, y_pred, y_true, lambda_mon, mon_l, mon_u):
     loss_prediction = torch.mean((y_pred - y_true)**2)
@@ -94,7 +85,7 @@ class CustomLoss(nn.Module):
 
 ```{python}
 model = Network(input_size=1, hidden_size=10, output_size=1)
-criterion = CustomLoss()
+criterion = LossPDE()
 optimizer = optim.Adam(model.parameters(), lr=1e-3)
 ```
 
