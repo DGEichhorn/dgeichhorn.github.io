@@ -1,4 +1,5 @@
 To Dos:
+1. seed setzen für sampling UND neural network training
 2. Plots:
   - visualization of histogram
   - vergleich cdfs
