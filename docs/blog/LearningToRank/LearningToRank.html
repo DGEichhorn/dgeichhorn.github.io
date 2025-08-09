@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Alicia">
+<meta name="dcterms.date" content="2021-05-22">
+<meta name="description" content="In this post, I implement from scratch two different approaches for learning a ranking from data on the results of pairwise comparisons.">
+
+<title>Dominik Eichhorn - Learning to Rank</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Dominik Eichhorn</span>
+  </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">Home</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">About</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html">Projects</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html">Blog</a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Learning to Rank</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Science</div>
+    <div class="quarto-category">Technology</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    In this post, I implement from scratch two different approaches for learning a ranking from data on the results of pairwise comparisons.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Alicia </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 22, 2021</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<p>So this is really my first Blog Post. I am trying to implement various ranking approaches.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BradleyTerry2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(citations)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>team.names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"FCN"</span>, <span class="st">"VfB"</span>, <span class="st">"BVB"</span>, <span class="st">"HSV"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">0</span>),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="dv">4</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    team.names,  <span class="co"># Row names</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    team.names   <span class="co"># Column names</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># number of teams</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">dim</span>(W)[<span class="dv">1</span>]</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>theta.old <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, p)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>theta.new <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) {</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    theta.new[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>(W[i,])<span class="sc">/</span>(<span class="fu">sum</span>((W[i,] <span class="sc">+</span> W[,i])<span class="sc">/</span>(theta.old[i]<span class="sc">+</span>theta.old)))</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># divide by geomtric mean</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  theta.new <span class="ot">&lt;-</span> theta.new<span class="sc">/</span><span class="fu">prod</span>(theta.new)<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span>p)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  theta.old <span class="ot">&lt;-</span> theta.new</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co"># wahrsch dass FCN gegen VfB gewinnt: </span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="fl">1.042565</span><span class="sc">/</span>(<span class="fl">1.042565</span><span class="sc">+</span> <span class="fl">0.795519</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.567202</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>b<span class="ot">&lt;-</span><span class="fu">countsToBinomial</span>(W)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>citation_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="dv">714</span>, <span class="dv">730</span>, <span class="dv">498</span>, <span class="dv">221</span>,    <span class="co"># Biometrika</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">33</span>, <span class="dv">425</span>, <span class="dv">68</span>, <span class="dv">17</span>,       <span class="co"># Comm Statist</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="dv">320</span>, <span class="dv">813</span>, <span class="dv">1072</span>, <span class="dv">142</span>,   <span class="co"># JASA</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="dv">284</span>, <span class="dv">276</span>, <span class="dv">325</span>, <span class="dv">188</span>),   <span class="co"># JRSS-B</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="dv">4</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign row and column names</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(citation_matrix) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Biometrika"</span>, <span class="st">"Comm Statist"</span>, <span class="st">"JASA"</span>, <span class="st">"JRSS-B"</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(citation_matrix) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Biometrika"</span>, <span class="st">"Comm Statist"</span>, <span class="st">"JASA"</span>, <span class="st">"JRSS-B"</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>citations.sf <span class="ot">&lt;-</span> <span class="fu">countsToBinomial</span>(citations)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>a<span class="ot">&lt;-</span><span class="fu">countsToBinomial</span>(citation_matrix)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>citations.sf <span class="ot">&lt;-</span> <span class="fu">countsToBinomial</span>(W)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(citations.sf)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"journal1"</span>, <span class="st">"journal2"</span>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="do">## Fit the "standard" Bradley-Terry model</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>citeModel <span class="ot">&lt;-</span> <span class="fu">BTm</span>(<span class="fu">cbind</span>(win1, win2), journal1, journal2, <span class="at">data =</span> citations.sf)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="fu">BTabilities</span>(citeModel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       ability     s.e.
+FCN 0.00000000 0.000000
+VfB 0.05301869 1.484210
+BVB 0.95329538 1.450889
+HSV 3.00933786 1.436988</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Converting my values into BTm ability values</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(theta.old<span class="sc">/</span>theta.old[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.00000000 0.05301869 0.95329538 3.00933787</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Converting BTm values to my values</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>BTabilities <span class="ot">&lt;-</span> <span class="fu">BTabilities</span>(citeModel)[,<span class="dv">1</span>]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(BTabilities)<span class="sc">*</span>theta.old[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      FCN       VfB       BVB       HSV 
+0.3664427 0.3863953 0.9506421 7.4292498 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fl">0.85</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span>p, p)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># W_ij: number of times team j lost against team i</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>W</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    FCN VfB BVB HSV
+FCN   0   1   0   0
+VfB   0   0   1   0
+BVB   1   0   0   1
+HSV   5   4   4   0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># c_j: number of times team j lost (=colSums of W)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">colSums</span>(W)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>d)<span class="sc">*</span><span class="fu">rep</span>(<span class="dv">1</span>,p) <span class="sc">%*%</span> <span class="fu">t</span>(<span class="fu">rep</span>(<span class="dv">1</span>,p))<span class="sc">/</span>p <span class="sc">+</span> d<span class="sc">*</span>W<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span>c) </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(r)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> A<span class="sc">%*%</span>r</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.25 0.25 0.25 0.25
+         [,1]
+FCN 0.0800000
+VfB 0.0800000
+BVB 0.2854167
+HSV 0.5545833
+          [,1]
+FCN 0.05110000
+VfB 0.08602083
+BVB 0.52022917
+HSV 0.34265000
+          [,1]
+FCN 0.05212354
+VfB 0.12593896
+BVB 0.33599167
+HSV 0.48594583
+          [,1]
+FCN 0.05890962
+VfB 0.09461858
+BVB 0.45793813
+HSV 0.38853367
+          [,1]
+FCN 0.05358516
+VfB 0.11534948
+BVB 0.37609915
+HSV 0.45496621
+          [,1]
+FCN 0.05710941
+VfB 0.10143685
+BVB 0.43181251
+HSV 0.40964122
+          [,1]
+FCN 0.05474427
+VfB 0.11090813
+BVB 0.39378554
+HSV 0.44056207
+          [,1]
+FCN 0.05635438
+VfB 0.10444354
+BVB 0.41973320
+HSV 0.41946888
+         [,1]
+FCN 0.0552554
+VfB 0.1088546
+BVB 0.4020321
+HSV 0.4338579
+          [,1]
+FCN 0.05600529
+VfB 0.10584545
+BVB 0.41410704
+HSV 0.42404222
+          [,1]
+FCN 0.05549373
+VfB 0.10789820
+BVB 0.40586997
+HSV 0.43073811
+          [,1]
+FCN 0.05584269
+VfB 0.10649789
+BVB 0.41148900
+HSV 0.42617041
+          [,1]
+FCN 0.05560464
+VfB 0.10745313
+BVB 0.40765590
+HSV 0.42928633
+          [,1]
+FCN 0.05576703
+VfB 0.10680150
+BVB 0.41027071
+HSV 0.42716076
+          [,1]
+FCN 0.05565626
+VfB 0.10724602
+BVB 0.40848698
+HSV 0.42861075
+          [,1]
+FCN 0.05573182
+VfB 0.10694279
+BVB 0.40970377
+HSV 0.42762162
+          [,1]
+FCN 0.05568027
+VfB 0.10714964
+BVB 0.40887372
+HSV 0.42829637
+          [,1]
+FCN 0.05571544
+VfB 0.10700853
+BVB 0.40943995
+HSV 0.42783608
+          [,1]
+FCN 0.05569145
+VfB 0.10710479
+BVB 0.40905369
+HSV 0.42815007
+          [,1]
+FCN 0.05570781
+VfB 0.10703913
+BVB 0.40931718
+HSV 0.42793588
+          [,1]
+FCN 0.05569665
+VfB 0.10708392
+BVB 0.40913743
+HSV 0.42808199
+          [,1]
+FCN 0.05570427
+VfB 0.10705336
+BVB 0.40926005
+HSV 0.42798232
+          [,1]
+FCN 0.05569907
+VfB 0.10707421
+BVB 0.40917641
+HSV 0.42805031
+          [,1]
+FCN 0.05570262
+VfB 0.10705999
+BVB 0.40923347
+HSV 0.42800393
+         [,1]
+FCN 0.0557002
+VfB 0.1070697
+BVB 0.4091945
+HSV 0.4280356
+          [,1]
+FCN 0.05570185
+VfB 0.10706307
+BVB 0.40922110
+HSV 0.42801398
+          [,1]
+FCN 0.05570072
+VfB 0.10706759
+BVB 0.40920298
+HSV 0.42802871
+          [,1]
+FCN 0.05570149
+VfB 0.10706451
+BVB 0.40921534
+HSV 0.42801866
+          [,1]
+FCN 0.05570097
+VfB 0.10706661
+BVB 0.40920691
+HSV 0.42802552
+          [,1]
+FCN 0.05570132
+VfB 0.10706517
+BVB 0.40921266
+HSV 0.42802084
+          [,1]
+FCN 0.05570108
+VfB 0.10706615
+BVB 0.40920874
+HSV 0.42802403
+          [,1]
+FCN 0.05570125
+VfB 0.10706549
+BVB 0.40921141
+HSV 0.42802186
+          [,1]
+FCN 0.05570113
+VfB 0.10706594
+BVB 0.40920959
+HSV 0.42802334
+          [,1]
+FCN 0.05570121
+VfB 0.10706563
+BVB 0.40921083
+HSV 0.42802233
+          [,1]
+FCN 0.05570116
+VfB 0.10706584
+BVB 0.40920998
+HSV 0.42802302
+          [,1]
+FCN 0.05570119
+VfB 0.10706570
+BVB 0.40921056
+HSV 0.42802255
+          [,1]
+FCN 0.05570117
+VfB 0.10706580
+BVB 0.40921017
+HSV 0.42802287
+          [,1]
+FCN 0.05570119
+VfB 0.10706573
+BVB 0.40921044
+HSV 0.42802265
+          [,1]
+FCN 0.05570117
+VfB 0.10706577
+BVB 0.40921025
+HSV 0.42802280
+          [,1]
+FCN 0.05570118
+VfB 0.10706574
+BVB 0.40921038
+HSV 0.42802270
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921029
+HSV 0.42802277
+          [,1]
+FCN 0.05570118
+VfB 0.10706575
+BVB 0.40921035
+HSV 0.42802272
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921031
+HSV 0.42802275
+          [,1]
+FCN 0.05570118
+VfB 0.10706575
+BVB 0.40921034
+HSV 0.42802273
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921032
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706575
+BVB 0.40921033
+HSV 0.42802273
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921032
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274
+          [,1]
+FCN 0.05570118
+VfB 0.10706576
+BVB 0.40921033
+HSV 0.42802274</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Paket 'igraph' wurde unter R Version 4.2.3 erstellt</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attache Paket: 'igraph'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Die folgenden Objekte sind maskiert von 'package:stats':
+
+    decompose, spectrum</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Das folgende Objekt ist maskiert 'package:base':
+
+    union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>graphObj <span class="ot">&lt;-</span> <span class="fu">graph_from_adjacency_matrix</span>(<span class="fu">t</span>(W), <span class="at">weighted =</span> <span class="cn">TRUE</span>, <span class="at">mode =</span> <span class="st">"directed"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>(prVec <span class="ot">&lt;-</span> <span class="fu">page_rank</span>(graphObj)<span class="sc">$</span>vector)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       FCN        VfB        BVB        HSV 
+0.05570118 0.10706576 0.40921033 0.42802274 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># loss matrix: L_ij is number of times team i lost against team j</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#L &lt;- t(W)</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># normalize cols to make it a column stochastic matrix</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co">#A &lt;- sweep(L, 2, colSums(L), FUN = "/")</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#for (i in 1:100) {</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co">#    r &lt;- d * (A %*% r) + (1 - d) * 1/p</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co">#    #if (sum(abs(r_new - r)) &lt; tol) {</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co">#    #  break</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co">#    #}</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co">#    #r &lt;- r_new</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">#    print(r)</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co">#  }</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># link wo man daten als csv bekommt: https://www.hockey-reference.com/leagues/NHL_2025_games.html#games</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Paket 'rvest' wurde unter R Version 4.2.3 erstellt</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Paket 'dplyr' wurde unter R Version 4.2.3 erstellt</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attache Paket: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Die folgenden Objekte sind maskiert von 'package:igraph':
+
+    as_data_frame, groups, union</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Die folgenden Objekte sind maskiert von 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Die folgenden Objekte sind maskiert von 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># URL of the schedule page</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://www.hockey-reference.com/leagues/NHL_2025_games.html"</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the webpage</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>page <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the Regular Season Schedule table (it has id="games")</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>schedule <span class="ot">&lt;-</span> page <span class="sc">%&gt;%</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_node</span>(<span class="st">"table#games"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_table</span>(<span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">fill =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up data as needed</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="co">#schedule_clean &lt;- schedule %&gt;%</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="co">#  # Convert Date column to Date type</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="co">#  mutate(Date = as.Date(Date)) %&gt;%</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="co">#  # Clean Time (e.g. add timezone if needed), convert numeric columns</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="co">#  mutate(</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a><span class="co">#    Visitor = Visitor,</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="co">#    Home = Home,</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="co">#    `Visitor G` = as.integer(`Visitor G`),</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a><span class="co">#    `Home G` = as.integer(`Home G`),</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a><span class="co">#    Att. = as.integer(gsub(",", "", Att.)),</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a><span class="co">#    Time = Time</span></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a><span class="co">#  )</span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a><span class="co"># View the result</span></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a><span class="co">#str(schedule_clean)</span></span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a><span class="co">#head(schedule_clean)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
