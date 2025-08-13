@@ -57,38 +57,6 @@ class LossODE(nn.Module):
 
 ```
 
-CHATGPT SOLUTION
-```{python}
-# class LossODE(nn.Module):
-#     def __init__(self):
-#         super(LossODE, self).__init__()
-#     
-#     def forward(self, model, x):
-#         x = x.clone().detach().requires_grad_(True)
-#         y = model(x)
-#         
-#         dy_dx = torch.autograd.grad(
-#             outputs=y,
-#             inputs=x,
-#             grad_outputs=torch.ones_like(y),
-#             create_graph=True
-#         )[0]
-#         
-#         d2y_dx2 = torch.autograd.grad(
-#             outputs=dy_dx,
-#             inputs=x,
-#             grad_outputs=torch.ones_like(dy_dx),
-#             create_graph=True
-#         )[0]
-#         
-#         loss_DE = torch.mean((d2y_dx2 + dy_dx + 4*y)**2)
-#         loss_initial = (y[0] - 0.5)**2 + (dy_dx[0] - 2)**2
-#         return loss_DE + loss_initial
-
-```
-
-
-
 # Construct model, loss and optimizer
 
 ```{python}
