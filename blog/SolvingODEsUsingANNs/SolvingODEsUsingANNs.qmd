@@ -33,12 +33,13 @@ class LossODE(nn.Module):
     super(LossODE, self).__init__()
   
   def forward(self, model, x):
-    x = x.clone().detach().requires_grad(True)
+    x = x.clone().detach().requires_grad_(True)
     y = model(x)
     
     dy_dx = torch.autograd.grad(
-      outputs=y.sum(),
+      outputs=y,
       inputs=x,
+      grad_outputs=torch.ones_like(y),
       create_graph=True
       )[0]
     
@@ -58,31 +59,31 @@ class LossODE(nn.Module):
 
 CHATGPT SOLUTION
 ```{python}
-class LossODE(nn.Module):
-    def __init__(self):
-        super(LossODE, self).__init__()
-    
-    def forward(self, model, x):
-        x = x.clone().detach().requires_grad_(True)
-        y = model(x)
-        
-        dy_dx = torch.autograd.grad(
-            outputs=y,
-            inputs=x,
-            grad_outputs=torch.ones_like(y),
-            create_graph=True
-        )[0]
-        
-        d2y_dx2 = torch.autograd.grad(
-            outputs=dy_dx,
-            inputs=x,
-            grad_outputs=torch.ones_like(dy_dx),
-            create_graph=True
-        )[0]
-        
-        loss_DE = torch.mean((d2y_dx2 + dy_dx + 4*y)**2)
-        loss_initial = (y[0] - 0.5)**2 + (dy_dx[0] - 2)**2
-        return loss_DE + loss_initial
+# class LossODE(nn.Module):
+#     def __init__(self):
+#         super(LossODE, self).__init__()
+#     
+#     def forward(self, model, x):
+#         x = x.clone().detach().requires_grad_(True)
+#         y = model(x)
+#         
+#         dy_dx = torch.autograd.grad(
+#             outputs=y,
+#             inputs=x,
+#             grad_outputs=torch.ones_like(y),
+#             create_graph=True
+#         )[0]
+#         
+#         d2y_dx2 = torch.autograd.grad(
+#             outputs=dy_dx,
+#             inputs=x,
+#             grad_outputs=torch.ones_like(dy_dx),
+#             create_graph=True
+#         )[0]
+#         
+#         loss_DE = torch.mean((d2y_dx2 + dy_dx + 4*y)**2)
+#         loss_initial = (y[0] - 0.5)**2 + (dy_dx[0] - 2)**2
+#         return loss_DE + loss_initial
 
 ```
 
@@ -105,7 +106,7 @@ x = torch.linspace(0, 5, 100)[:, None]
 # Training
 
 ```{python}
-num_epochs = 100
+num_epochs = 50
 steps_per_epoch = 1000
 
 for epoch in range(num_epochs):
@@ -119,20 +120,18 @@ for epoch in range(num_epochs):
   print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
 
 ```
-# VISUALIZE SOLUTION:
-ÜBERARBEITEN SELBER SCHREIBEN UND SAUBER MACHEN
-```{python}
-import matplotlib.pyplot as plt
+# VISUALIZE SOLUTION
 
-xx = torch.linspace(0, 15, 100)[:, None]
+```{python}
+x = torch.linspace(0, 15, 100)[:, None]
 with torch.no_grad():
-    yy = model(xx)
+  y = model(x)
 
 plt.figure(figsize=(10, 6))
-plt.plot(xx, yy, label="Predicted")
-plt.plot(xx, torch.exp(-0.5*xx)*(0.5*torch.cos(xx*(15)**0.5/2)+3*((15)**0.5/10)*torch.sin(xx*(15)**0.5/2)), '--', label="Exact")
-plt.xlabel('x')
-plt.ylabel('y')
+plt.plot(x, y, label="Predicted")
+plt.plot(x, torch.exp(-0.5*x)*(0.5*torch.cos(x*(15)**0.5/2)+3*((15)**0.5/10)*torch.sin(x*(15)**0.5/2)), '--', label="Analytical")
+plt.xlabel("x")
+plt.ylabel("y")
 plt.legend()
 plt.grid()
 plt.show()
@@ -342,76 +341,4 @@ plt.ylabel('y')
 plt.legend()
 plt.grid()
 plt.show()
-```
-
-```{python}
-# import torch
-# import torch.nn as nn
-# import matplotlib.pyplot as plt
-# 
-# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-# 
-# # Define neural network
-# class Network(nn.Module):
-#   def __init__(self):
-#     super().__init__()
-#     self.hidden_layer = nn.Linear(1, 10)
-#     self.output_layer = nn.Linear(10, 1)
-# 
-#   def forward(self, x):
-#     x = torch.sigmoid(self.hidden_layer(x))
-#     return self.output_layer(x)
-# 
-# # Initialize network
-# N = Network().to(device)
-# 
-# # Trial solution: y_trial(x) = 1 + x * 0 + x^2 * N(x)
-# # (satisfies y(0)=1, y'(0)=0)
-# def y_trial(x):
-#   x = x.clone().detach().requires_grad_(True).to(device)
-#   net_out = N(x)
-#   return 1 + x**2 * net_out
-# 
-# # Loss function for y''(x) - y(x) = 0
-# def loss_fn(x):
-#   x = x.clone().detach().requires_grad_(True).to(device)
-#   y = y_trial(x)
-# 
-#   dy_dx = torch.autograd.grad(y, x, grad_outputs=torch.ones_like(y), create_graph=True)[0]
-#   d2y_dx2 = torch.autograd.grad(dy_dx, x, grad_outputs=torch.ones_like(dy_dx), create_graph=True)[0]
-# 
-#   residual = d2y_dx2 - y
-#   return torch.mean(residual**2)
-# 
-# # Training setup
-# x = torch.linspace(0, 1, 100).view(-1, 1).to(device)
-# optimizer = torch.optim.LBFGS(N.parameters())
-# 
-# def closure():
-#   optimizer.zero_grad()
-#   loss = loss_fn(x)
-#   loss.backward()
-#   return loss
-# 
-# # Train
-# epochs = 10
-# for epoch in range(epochs):
-#   optimizer.step(closure)
-#   print(f"Epoch {epoch}, Loss: {loss_fn(x).item()}")
-# 
-# # Evaluate and plot
-# with torch.no_grad():
-#   xx = torch.linspace(0, 1, 100).view(-1, 1).to(device)
-#   yy = y_trial(xx)
-# 
-# plt.figure(figsize=(10, 6))
-# plt.plot(xx.cpu(), yy.cpu(), label="Predicted")
-# plt.plot(xx.cpu(), torch.cosh(xx.cpu()), '--', label="Exact (cosh)")
-# plt.xlabel("x")
-# plt.ylabel("y")
-# plt.title("Second-Order ODE: $y'' = y$, $y(0)=1$, $y'(0)=0$")
-# plt.legend()
-# plt.grid(True)
-# plt.show()
-
 ```
