@@ -158,290 +158,554 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#to-dos" id="toc-to-dos" class="nav-link active" data-scroll-target="#to-dos">To Dos:</a></li>
+  <li><a href="#load-packages" id="toc-load-packages" class="nav-link" data-scroll-target="#load-packages">Load Packages</a></li>
+  <li><a href="#define-neural-network" id="toc-define-neural-network" class="nav-link" data-scroll-target="#define-neural-network">Define Neural Network</a></li>
+  <li><a href="#first-ode" id="toc-first-ode" class="nav-link" data-scroll-target="#first-ode">First ODE</a>
+  <ul class="collapse">
+  <li><a href="#define-custom-loss-function" id="toc-define-custom-loss-function" class="nav-link" data-scroll-target="#define-custom-loss-function">Define Custom Loss Function</a></li>
+  <li><a href="#construct-model-loss-and-optimizer" id="toc-construct-model-loss-and-optimizer" class="nav-link" data-scroll-target="#construct-model-loss-and-optimizer">Construct model, loss and optimizer</a></li>
+  <li><a href="#set-x-values" id="toc-set-x-values" class="nav-link" data-scroll-target="#set-x-values">Set x-values</a></li>
+  <li><a href="#training" id="toc-training" class="nav-link" data-scroll-target="#training">Training</a></li>
+  <li><a href="#visualize-learned-and-analytical-solution" id="toc-visualize-learned-and-analytical-solution" class="nav-link" data-scroll-target="#visualize-learned-and-analytical-solution">Visualize learned and analytical solution</a></li>
+  </ul></li>
+  <li><a href="#second-ode" id="toc-second-ode" class="nav-link" data-scroll-target="#second-ode">Second ODE</a>
+  <ul class="collapse">
+  <li><a href="#define-custom-loss-function-1" id="toc-define-custom-loss-function-1" class="nav-link" data-scroll-target="#define-custom-loss-function-1">Define Custom Loss Function</a></li>
+  </ul></li>
+  <li><a href="#construct-model-loss-and-optimizer-1" id="toc-construct-model-loss-and-optimizer-1" class="nav-link" data-scroll-target="#construct-model-loss-and-optimizer-1">Construct model, loss and optimizer</a></li>
+  <li><a href="#set-x-values-1" id="toc-set-x-values-1" class="nav-link" data-scroll-target="#set-x-values-1">Set x-values</a></li>
+  <li><a href="#training-1" id="toc-training-1" class="nav-link" data-scroll-target="#training-1">Training</a></li>
+  <li><a href="#visualize-learned-and-analytical-solution-1" id="toc-visualize-learned-and-analytical-solution-1" class="nav-link" data-scroll-target="#visualize-learned-and-analytical-solution-1">Visualize learned and analytical solution</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Back up ODE: torch.mean( (dy_dx - (x+y)/x)<strong>2 ) + (y[0] + 0.1)</strong>2</h1>
+</div>
 
 
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="to-dos" class="level1">
+<h1>To Dos:</h1>
+<ul>
+<li>nach zweiter LossODE: HIDE code show plots
+<ul>
+<li>construct model, criterion and loss</li>
+<li>training</li>
+<li>visualization with analyticaly solution</li>
+</ul></li>
+</ul>
+</section>
+<section id="load-packages" class="level1">
+<h1>Load Packages</h1>
 <div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch                        <span class="co"># for constructing, learning, using NNs</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.optim <span class="im">as</span> optim</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> torch.device(<span class="st">"cuda:0"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Network(nn.Module):</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.hidden_layer <span class="op">=</span> nn.Linear(<span class="dv">1</span>, <span class="dv">10</span>)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.output_layer <span class="op">=</span> nn.Linear(<span class="dv">10</span>, <span class="dv">1</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    layer_out <span class="op">=</span> torch.sigmoid(<span class="va">self</span>.hidden_layer(x))</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    output <span class="op">=</span> <span class="va">self</span>.output_layer(layer_out)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> output</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> Network()</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> N.to(device)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(x):</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.exp(x)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> loss(x):</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    x.requires_grad <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> N(x)</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    dy_dx <span class="op">=</span> torch.autograd.grad(y.<span class="bu">sum</span>(), x, create_graph<span class="op">=</span><span class="va">True</span>)[<span class="dv">0</span>]</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.mean( (dy_dx <span class="op">-</span> (x<span class="op">+</span>y)<span class="op">/</span>x)<span class="op">**</span><span class="dv">2</span> ) <span class="op">+</span> (y[<span class="dv">0</span>] <span class="op">+</span> <span class="fl">0.1</span>)<span class="op">**</span><span class="dv">2</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.LBFGS(N.parameters())</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> closure():</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    l <span class="op">=</span> loss(x)</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    l.backward()</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> l</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>epochs <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    optimizer.step(closure)</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> torch.linspace(<span class="fl">0.1</span>, <span class="dv">2</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    yy <span class="op">=</span> N(xx)</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>plt.plot(xx, yy, label<span class="op">=</span><span class="st">"Predicted"</span>)</span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>plt.plot(xx, xx<span class="op">*</span>torch.log(xx) <span class="op">+</span> <span class="fl">0.1</span><span class="op">*</span>xx, <span class="st">'--'</span>, label<span class="op">=</span><span class="st">"Exact"</span>)</span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'x'</span>)</span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'y'</span>)</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="SolvingODEsUsingANNs_files/figure-html/cell-2-output-1.png" width="823" height="503"></p>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt     <span class="co"># for visualization</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+</section>
+<section id="define-neural-network" class="level1">
+<h1>Define Neural Network</h1>
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> torch.device(<span class="st">"cuda:0"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Network(nn.Module):</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.hidden_layer <span class="op">=</span> nn.Linear(<span class="dv">1</span>, <span class="dv">10</span>)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.output_layer <span class="op">=</span> nn.Linear(<span class="dv">10</span>, <span class="dv">1</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    layer_out <span class="op">=</span> torch.sigmoid(<span class="va">self</span>.hidden_layer(x))</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    output <span class="op">=</span> <span class="va">self</span>.output_layer(layer_out)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> output</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> Network()</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> N.to(device)</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(x):</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.exp(x)</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> loss(x):</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    x.requires_grad <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> N(x)</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    dy_dx <span class="op">=</span> torch.autograd.grad(y.<span class="bu">sum</span>(), x, create_graph<span class="op">=</span><span class="va">True</span>)[<span class="dv">0</span>]</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    d2y_dx2 <span class="op">=</span> torch.autograd.grad(dy_dx, x,</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>                                  grad_outputs<span class="op">=</span>torch.ones_like(dy_dx),</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>                                  create_graph<span class="op">=</span><span class="va">True</span>)[<span class="dv">0</span>]</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">#return torch.mean( (d2y_dx2 + 2*dy_dx +4*y)**2 ) + (y[0, 0] - 1)**2 + (dy_dx[0, 0] - 3)**2</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.mean( (d2y_dx2 <span class="op">+</span> <span class="dv">1</span><span class="op">*</span>dy_dx <span class="op">+</span><span class="dv">4</span><span class="op">*</span>y)<span class="op">**</span><span class="dv">2</span> ) <span class="op">+</span> (y[<span class="dv">0</span>] <span class="op">-</span> <span class="fl">0.5</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (dy_dx[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.LBFGS(N.parameters())</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> closure():</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    l <span class="op">=</span> loss(x)</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    l.backward()</span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> l</span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>epochs <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    optimizer.step(closure)</span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">15</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    yy <span class="op">=</span> N(xx)</span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>plt.plot(xx, yy, label<span class="op">=</span><span class="st">"Predicted"</span>)</span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>plt.plot(xx, torch.exp(<span class="op">-</span><span class="fl">0.5</span><span class="op">*</span>xx)<span class="op">*</span>(<span class="fl">0.5</span><span class="op">*</span>torch.cos(xx<span class="op">*</span>(<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">2</span>)<span class="op">+</span><span class="dv">3</span><span class="op">*</span>((<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">10</span>)<span class="op">*</span>torch.sin(xx<span class="op">*</span>(<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">2</span>)), <span class="st">'--'</span>, label<span class="op">=</span><span class="st">"Exact"</span>)</span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'x'</span>)</span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'y'</span>)</span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="SolvingODEsUsingANNs_files/figure-html/cell-3-output-1.png" width="823" height="503"></p>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Network(nn.Module):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_size, hidden_size, output_size):</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(Network, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.net <span class="op">=</span> nn.Sequential(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      nn.Linear(input_size, hidden_size),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      nn.Sigmoid(),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>      nn.Linear(hidden_size, output_size)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">self</span>.net(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+</section>
+<section id="first-ode" class="level1">
+<h1>First ODE</h1>
+<section id="define-custom-loss-function" class="level2">
+<h2 class="anchored" data-anchor-id="define-custom-loss-function">Define Custom Loss Function</h2>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> torch.device(<span class="st">"cuda:0"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Network(nn.Module):</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.hidden_layer <span class="op">=</span> nn.Linear(<span class="dv">1</span>, <span class="dv">10</span>)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.output_layer <span class="op">=</span> nn.Linear(<span class="dv">10</span>, <span class="dv">1</span>)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    layer_out <span class="op">=</span> torch.sigmoid(<span class="va">self</span>.hidden_layer(x))</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    output <span class="op">=</span> <span class="va">self</span>.output_layer(layer_out)</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> output</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> Network()</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> N.to(device)</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(x):</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.exp(x)</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> loss(x):</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    x.requires_grad <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> N(x)</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    dy_dx <span class="op">=</span> torch.autograd.grad(y.<span class="bu">sum</span>(), x, create_graph<span class="op">=</span><span class="va">True</span>)[<span class="dv">0</span>]</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.mean( (dy_dx <span class="op">-</span> f(x))<span class="op">**</span><span class="dv">2</span> ) <span class="op">+</span> (y[<span class="dv">0</span>, <span class="dv">0</span>] <span class="op">-</span> <span class="fl">1.</span>)<span class="op">**</span><span class="dv">2</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.LBFGS(N.parameters())</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> closure():</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    l <span class="op">=</span> loss(x)</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    l.backward()</span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> l</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>epochs <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    optimizer.step(closure)</span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    yy <span class="op">=</span> N(xx)</span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>plt.plot(xx, yy, label<span class="op">=</span><span class="st">"Predicted"</span>)</span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>plt.plot(xx, torch.exp(xx), <span class="st">'--'</span>, label<span class="op">=</span><span class="st">"Exact"</span>)</span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'x'</span>)</span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'y'</span>)</span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="SolvingODEsUsingANNs_files/figure-html/cell-4-output-1.png" width="821" height="503"></p>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LossODE(nn.Module):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(LossODE, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> forward(<span class="va">self</span>, model, x):</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x.clone().detach().requires_grad_(<span class="va">True</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> model(x)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    dy_dx <span class="op">=</span> torch.autograd.grad(</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      outputs<span class="op">=</span>y,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      inputs<span class="op">=</span>x,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      grad_outputs<span class="op">=</span>torch.ones_like(y),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      create_graph<span class="op">=</span><span class="va">True</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      )[<span class="dv">0</span>]</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    d2y_dx2 <span class="op">=</span> torch.autograd.grad(</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      outputs<span class="op">=</span>dy_dx,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      inputs<span class="op">=</span>x,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>      grad_outputs<span class="op">=</span>torch.ones_like(dy_dx),</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>      create_graph<span class="op">=</span><span class="va">True</span>)[<span class="dv">0</span>]</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    loss_DE <span class="op">=</span> torch.mean((d2y_dx2 <span class="op">+</span> <span class="dv">1</span><span class="op">*</span>dy_dx <span class="op">+</span> <span class="dv">4</span><span class="op">*</span>y)<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    loss_initial <span class="op">=</span> (y[<span class="dv">0</span>] <span class="op">-</span> <span class="fl">0.5</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (dy_dx[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    loss_total <span class="op">=</span> loss_DE <span class="op">+</span> loss_initial</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss_total</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+</section>
+<section id="construct-model-loss-and-optimizer" class="level2">
+<h2 class="anchored" data-anchor-id="construct-model-loss-and-optimizer">Construct model, loss and optimizer</h2>
 <div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import torch</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># import torch.nn as nn</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># import matplotlib.pyplot as plt</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># # Define neural network</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># class Network(nn.Module):</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   def __init__(self):</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     super().__init__()</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#     self.hidden_layer = nn.Linear(1, 10)</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     self.output_layer = nn.Linear(10, 1)</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#   def forward(self, x):</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     x = torch.sigmoid(self.hidden_layer(x))</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     return self.output_layer(x)</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># # Initialize network</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># N = Network().to(device)</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># # Trial solution: y_trial(x) = 1 + x * 0 + x^2 * N(x)</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co"># # (satisfies y(0)=1, y'(0)=0)</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co"># def y_trial(x):</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#   x = x.clone().detach().requires_grad_(True).to(device)</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#   net_out = N(x)</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#   return 1 + x**2 * net_out</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co"># # Loss function for y''(x) - y(x) = 0</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co"># def loss_fn(x):</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#   x = x.clone().detach().requires_grad_(True).to(device)</span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">#   y = y_trial(x)</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co">#   dy_dx = torch.autograd.grad(y, x, grad_outputs=torch.ones_like(y), create_graph=True)[0]</span></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co">#   d2y_dx2 = torch.autograd.grad(dy_dx, x, grad_outputs=torch.ones_like(dy_dx), create_graph=True)[0]</span></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co">#   residual = d2y_dx2 - y</span></span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co">#   return torch.mean(residual**2)</span></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="co"># # Training setup</span></span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="co"># x = torch.linspace(0, 1, 100).view(-1, 1).to(device)</span></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="co"># optimizer = torch.optim.LBFGS(N.parameters())</span></span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="co"># def closure():</span></span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="co">#   optimizer.zero_grad()</span></span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="co">#   loss = loss_fn(x)</span></span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="co">#   loss.backward()</span></span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="co">#   return loss</span></span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="co"># # Train</span></span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="co"># epochs = 10</span></span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="co"># for epoch in range(epochs):</span></span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="co">#   optimizer.step(closure)</span></span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="co">#   print(f"Epoch {epoch}, Loss: {loss_fn(x).item()}")</span></span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="co"># # Evaluate and plot</span></span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="co"># with torch.no_grad():</span></span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="co">#   xx = torch.linspace(0, 1, 100).view(-1, 1).to(device)</span></span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="co">#   yy = y_trial(xx)</span></span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.figure(figsize=(10, 6))</span></span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.plot(xx.cpu(), yy.cpu(), label="Predicted")</span></span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.plot(xx.cpu(), torch.cosh(xx.cpu()), '--', label="Exact (cosh)")</span></span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.xlabel("x")</span></span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.ylabel("y")</span></span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.title("Second-Order ODE: $y'' = y$, $y(0)=1$, $y'(0)=0$")</span></span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.legend()</span></span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.grid(True)</span></span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.show()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Network(input_size<span class="op">=</span><span class="dv">1</span>, hidden_size<span class="op">=</span><span class="dv">10</span>, output_size<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> LossODE()</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="set-x-values" class="level2">
+<h2 class="anchored" data-anchor-id="set-x-values">Set x-values</h2>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="training" class="level2">
+<h2 class="anchored" data-anchor-id="training">Training</h2>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">50</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(num_epochs):</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(steps_per_epoch):</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(model, x)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Epoch [</span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>num_epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [1/50], Loss: 1.5249</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [2/50], Loss: 0.2989</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [3/50], Loss: 0.1454</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [4/50], Loss: 0.1034</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [5/50], Loss: 0.0734</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [6/50], Loss: 0.0502</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [7/50], Loss: 0.0188</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [8/50], Loss: 0.0083</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [9/50], Loss: 0.0057</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [10/50], Loss: 0.0047</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [11/50], Loss: 0.0041</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [12/50], Loss: 0.0037</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [13/50], Loss: 0.0032</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [14/50], Loss: 0.0025</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [15/50], Loss: 0.0018</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [16/50], Loss: 0.0013</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [17/50], Loss: 0.0009</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [18/50], Loss: 0.0006</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [19/50], Loss: 0.0004</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [20/50], Loss: 0.0003</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [21/50], Loss: 0.0002</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [22/50], Loss: 0.0001</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [23/50], Loss: 0.0001</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [24/50], Loss: 0.0001</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [25/50], Loss: 0.0001</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [26/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [27/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [28/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [29/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [30/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [31/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [32/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [33/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [34/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [35/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [36/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [37/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [38/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [39/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [40/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [41/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [42/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [43/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [44/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [45/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [46/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [47/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [48/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [49/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [50/50], Loss: 0.0000</code></pre>
+</div>
+</div>
+</section>
+<section id="visualize-learned-and-analytical-solution" class="level2">
+<h2 class="anchored" data-anchor-id="visualize-learned-and-analytical-solution">Visualize learned and analytical solution</h2>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">15</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> model(x)</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, label<span class="op">=</span><span class="st">"Predicted"</span>)</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>plt.plot(x, torch.exp(<span class="op">-</span><span class="fl">0.5</span><span class="op">*</span>x)<span class="op">*</span>(<span class="fl">0.5</span><span class="op">*</span>torch.cos(x<span class="op">*</span>(<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">2</span>)<span class="op">+</span><span class="dv">3</span><span class="op">*</span>((<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">10</span>)<span class="op">*</span>torch.sin(x<span class="op">*</span>(<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">2</span>)), <span class="st">'--'</span>, label<span class="op">=</span><span class="st">"Analytical"</span>)</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y"</span>)</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="SolvingODEsUsingANNs_files/figure-html/cell-8-output-1.png" width="823" height="503"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="second-ode" class="level1">
+<h1>Second ODE</h1>
+<section id="define-custom-loss-function-1" class="level2">
+<h2 class="anchored" data-anchor-id="define-custom-loss-function-1">Define Custom Loss Function</h2>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LossODE(nn.Module):</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(LossODE, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> forward(<span class="va">self</span>, model, x):</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x.clone().detach().requires_grad_(<span class="va">True</span>)</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> model(x)</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>    dy_dx <span class="op">=</span> torch.autograd.grad(</span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>      outputs<span class="op">=</span>y,</span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>      inputs<span class="op">=</span>x,</span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>      grad_outputs<span class="op">=</span>torch.ones_like(y),</span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a>      create_graph<span class="op">=</span><span class="va">True</span></span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>      )[<span class="dv">0</span>]</span>
+<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a>    loss_DE <span class="op">=</span> torch.mean((dy_dx <span class="op">-</span> <span class="dv">2</span><span class="op">*</span>x<span class="op">*</span>(<span class="dv">2</span><span class="op">-</span>y))<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a>    loss_initial <span class="op">=</span> (y[<span class="dv">0</span>] <span class="op">+</span> <span class="dv">1</span>)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a>    loss_total <span class="op">=</span> loss_DE <span class="op">+</span> loss_initial</span>
+<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss_total</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="construct-model-loss-and-optimizer-1" class="level1">
+<h1>Construct model, loss and optimizer</h1>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Network(input_size<span class="op">=</span><span class="dv">1</span>, hidden_size<span class="op">=</span><span class="dv">10</span>, output_size<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> LossODE()</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="set-x-values-1" class="level1">
+<h1>Set x-values</h1>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="training-1" class="level1">
+<h1>Training</h1>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">50</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(num_epochs):</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(steps_per_epoch):</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(model, x)</span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
+<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Epoch [</span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>num_epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [1/50], Loss: 5.3767</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [2/50], Loss: 3.5814</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [3/50], Loss: 1.6433</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [4/50], Loss: 0.4984</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [5/50], Loss: 0.1697</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [6/50], Loss: 0.0807</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [7/50], Loss: 0.0445</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [8/50], Loss: 0.0309</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [9/50], Loss: 0.0235</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [10/50], Loss: 0.0190</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [11/50], Loss: 0.0151</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [12/50], Loss: 0.0103</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [13/50], Loss: 0.0059</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [14/50], Loss: 0.0037</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [15/50], Loss: 0.0027</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [16/50], Loss: 0.0018</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [17/50], Loss: 0.0010</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [18/50], Loss: 0.0005</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [19/50], Loss: 0.0003</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [20/50], Loss: 0.0001</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [21/50], Loss: 0.0001</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [22/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [23/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [24/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [25/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [26/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [27/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [28/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [29/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [30/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [31/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [32/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [33/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [34/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [35/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [36/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [37/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [38/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [39/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [40/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [41/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [42/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [43/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [44/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [45/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [46/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [47/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [48/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [49/50], Loss: 0.0000</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch [50/50], Loss: 0.0000</code></pre>
+</div>
+</div>
+</section>
+<section id="visualize-learned-and-analytical-solution-1" class="level1">
+<h1>Visualize learned and analytical solution</h1>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> model(x)</span>
+<span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-5"><a href="#cb112-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb112-6"><a href="#cb112-6" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, label<span class="op">=</span><span class="st">"Predicted"</span>)</span>
+<span id="cb112-7"><a href="#cb112-7" aria-hidden="true" tabindex="-1"></a>plt.plot(x, <span class="dv">2</span> <span class="op">-</span> <span class="dv">3</span><span class="op">*</span>torch.exp(<span class="op">-</span>x<span class="op">**</span><span class="dv">2</span>), <span class="st">'--'</span>, label<span class="op">=</span><span class="st">"Analytical"</span>)</span>
+<span id="cb112-8"><a href="#cb112-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb112-9"><a href="#cb112-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y"</span>)</span>
+<span id="cb112-10"><a href="#cb112-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb112-11"><a href="#cb112-11" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
+<span id="cb112-12"><a href="#cb112-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="SolvingODEsUsingANNs_files/figure-html/cell-13-output-1.png" width="823" height="503"></p>
+</div>
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
