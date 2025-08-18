@@ -1,6 +1,7 @@
 To Dos:
 1. seed setzen für sampling UND neural network training
-2. Plots:
+2. rng für sampling von mixture
+3. Plots:
   - visualization of histogram
   - vergleich cdfs
   - vergleich pdfs
@@ -24,13 +25,15 @@ import torch.optim as optim
 # Data Generation
 
 ```{python}
+rng = np.random.default_rng(42)
+
 # construct 2-component Gaussian mixture distribution
 comp1 = stats.Normal(mu=2, sigma=0.25)
 comp2 = stats.Normal(mu=6, sigma=0.5)
 mix = stats.Mixture([comp1, comp2], weights=[0.2, 0.8])
 
-#n = 100
-#x = mix.sample(n)
+n = 100
+x = mix.sample(n, rng=rng)
 ```
 
 # Visualization of the analytic PDF
@@ -97,7 +100,7 @@ optimizer = optim.Adam(model.parameters(), lr=1e-3)
 ```{python}
 # sample data, sort it and convert to torch tensor
 n = 200
-x = mix.sample(n)
+x = mix.sample(n, rng=rng)
 x = torch.from_numpy(np.sort(x)).float().unsqueeze(1)
 
 # set monotonicity points
@@ -110,6 +113,10 @@ delta = 0.1*(max(x)-min(x))/n_mon_points
 # Training
 
 ```{python}
+# HIER SEEDS SETZEN
+# np.seed für u resampling
+# torch seeds für nn training
+
 num_epochs = 200
 steps_per_epoch = 1000
 
