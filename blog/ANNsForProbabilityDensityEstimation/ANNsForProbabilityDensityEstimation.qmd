@@ -32,8 +32,9 @@ comp1 = stats.Normal(mu=2, sigma=0.25)
 comp2 = stats.Normal(mu=6, sigma=0.5)
 mix = stats.Mixture([comp1, comp2], weights=[0.2, 0.8])
 
-n = 100
-x = mix.sample(n, rng=rng)
+#n = 100
+#x = mix.sample(n, rng=rng)
+#print(x)
 ```
 
 # Visualization of the analytic PDF
@@ -103,6 +104,8 @@ n = 200
 x = mix.sample(n, rng=rng)
 x = torch.from_numpy(np.sort(x)).float().unsqueeze(1)
 
+print(x)
+
 # set monotonicity points
 lambda_mon = 1e6
 n_mon_points = 1000
@@ -116,6 +119,10 @@ delta = 0.1*(max(x)-min(x))/n_mon_points
 # HIER SEEDS SETZEN
 # np.seed für u resampling
 # torch seeds für nn training
+seed = 1
+random.seed(seed)
+np.random.seed(seed)
+torch.manual_seed(seed)
 
 num_epochs = 200
 steps_per_epoch = 1000
