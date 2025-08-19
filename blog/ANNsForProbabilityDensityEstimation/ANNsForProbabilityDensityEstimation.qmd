@@ -1,10 +1,15 @@
 To Dos:
+ACHTUNG BEI MEINER WEBSITE ERSCHEINT KOMISCHERWEISE IN URL ERGÄNZUNG T.S. SMITH; HABE ES EVTL GEÄNDERT MITTELS TITEL IN IDEX file in oberster Hierarchie
 1. seed setzen für sampling UND neural network training
+WICHTIG: auch in ANN für ODEs seed für NN training setzen
+WICHTIG: Kommentar auch in ANN für ODEs bzgl. epochs & PRINT REPLACE ÜBERNEHMEN
 2. rng für sampling von mixture
 3. Plots:
+  - TRAININGSFORTSCHRITT
   - visualization of histogram
   - vergleich cdfs
   - vergleich pdfs
+  - evtl. irgendein KDE für verschiedene Bandwidths
 4. habe jetzt als innere aktivierungsfunktion tanh, hatte davor sigmoid
 5. Ableitung des Netzwerks bestimmen und plotten als Density Estimate und das mit dem echten vergleichen
 6. INSIGHTS: Vermutung je weniger overlap zwischen den beiden Components desto; je größer die Sample Size desto genauer matcht NN der echten Verteilungsfunktion

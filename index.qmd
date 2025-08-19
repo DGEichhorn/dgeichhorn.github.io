@@ -1,5 +1,5 @@
 ---
-title: "J. T. Smith"
+title: "Dominik G. Eichhorn"
 image: inputs/dawgs.png
 resources: inputs/resume.pdf
 about:
