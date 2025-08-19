@@ -13,6 +13,7 @@ To Dos:
 
 ```{python}
 import numpy as np
+import random
 from scipy import stats           # for sampling
 
 import matplotlib.pyplot as plt   # for visualization
@@ -25,7 +26,7 @@ import torch.optim as optim
 # Data Generation
 
 ```{python}
-rng = np.random.default_rng(42)
+rng = np.random.default_rng(1)
 
 # construct 2-component Gaussian mixture distribution
 comp1 = stats.Normal(mu=2, sigma=0.25)
@@ -103,8 +104,6 @@ optimizer = optim.Adam(model.parameters(), lr=1e-3)
 n = 200
 x = mix.sample(n, rng=rng)
 x = torch.from_numpy(np.sort(x)).float().unsqueeze(1)
-
-print(x)
 
 # set monotonicity points
 lambda_mon = 1e6
