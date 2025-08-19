@@ -114,6 +114,8 @@ delta = 0.1*(max(x)-min(x))/n_mon_points
 
 # Training
 
+ wichtiger kommentar: in jedem step wird ganzer datensatz verwendet; epochs dienen nur dazu dass nicht in jedem step fortschritt gedruck wird
+
 ```{python}
 # HIER SEEDS SETZEN
 # np.seed für u resampling
@@ -142,7 +144,8 @@ for epoch in range(num_epochs):
     loss.backward()
     optimizer.step()
   
-  print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
+  #print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
+  print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}", end="\r", flush=True)
 
 ```
 
