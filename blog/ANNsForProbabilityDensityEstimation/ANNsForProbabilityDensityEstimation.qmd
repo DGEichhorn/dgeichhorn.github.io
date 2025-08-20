@@ -1,11 +1,9 @@
 To Dos:
 ACHTUNG BEI MEINER WEBSITE ERSCHEINT KOMISCHERWEISE IN URL ERGÄNZUNG T.S. SMITH; HABE ES EVTL GEÄNDERT MITTELS TITEL IN IDEX file in oberster Hierarchie
-WICHTIG: Kommentar auch in ANN für ODEs bzgl. epochs & PRINT REPLACE ÜBERNEHMEN
+
 3. Plots:
   - TRAININGSFORTSCHRITT
   - visualization of histogram
-  - vergleich cdfs
-  - vergleich pdfs
   - evtl. irgendein KDE für verschiedene Bandwidths
 4. habe jetzt als innere aktivierungsfunktion tanh, hatte davor sigmoid
 5. Ableitung des Netzwerks bestimmen und plotten als Density Estimate und das mit dem echten vergleichen
@@ -43,7 +41,7 @@ mix = stats.Mixture([comp1, comp2], weights=[0.2, 0.8])
 x = np.linspace(0, 10, 1000)
 
 plt.figure(figsize=(10,5))
-plt.plot(x, mix.pdf(x), colour="", linestyle="")
+plt.plot(x, mix.pdf(x), color="C0", linestyle="dashed")
 plt.title("True Probability Density Function")
 plt.xlabel("Density")
 plt.ylabel("x")
@@ -150,11 +148,11 @@ for epoch in range(num_epochs):
 ```{python}
 xx = torch.linspace(0, 10, 1000).unsqueeze(1)
 with torch.no_grad():
-    yy = model(xx)
+    cdf_est = model(xx)
 
 plt.figure(figsize=(10, 5))
-plt.plot(xx.numpy(), yy.numpy(), label="Learned CDF")
-plt.plot(xx.numpy(), mix.cdf(xx), label="True CDF", linestyle="dashed)
+plt.plot(xx.numpy(), cdf_est.numpy(), color="C3", label="Estimated CDF")
+plt.plot(xx.numpy(), mix.cdf(xx), color="C0", label="True CDF", linestyle="dashed")
 plt.title("Cumulative Density Function (CDF)")
 plt.xlabel("x")
 plt.ylabel("Cumulative Density")
@@ -163,43 +161,37 @@ plt.show()
 
 ```
 
+# Function to compute derivate of NN w.r.t. to input x
 
 ```{python}
-# Define a function to compute derivative of the NN output wrt input
-def compute_pdf_from_cdf(model, x):
-    x = x.requires_grad_(True)  # enable grad w.r.t x
-    cdf = model(x)
-    grad_outputs = torch.ones_like(cdf)
-    pdf = torch.autograd.grad(
-        outputs=cdf,
-        inputs=x,
-        grad_outputs=grad_outputs,
-        create_graph=True,
-        retain_graph=True,
-        only_inputs=True
+def ComputePDF(model, x):
+  x = x.requires_grad_(True)
+  cdf = model(x)
+  grad_outputs = torch.ones_like(cdf)
+  pdf = torch.autograd.grad(
+    outputs=cdf,
+    inputs=x,
+    grad_outputs=grad_outputs
     )[0]
-    return pdf
+  return pdf
 
-# Create a grid of points where we want to evaluate PDF
-xx = torch.linspace(0, 10, 1000).unsqueeze(1)
+```
 
-# Compute CDF and PDF estimates
-with torch.no_grad():
-    cdf_est = model(xx)
+# Plot PDF
 
-pdf_est = compute_pdf_from_cdf(model, xx).detach()
+```{python}
+pdf_est = ComputePDF(model, xx).detach()
+xx_np = xx.detach().numpy()
 
-# Compute true PDF from the mixture for comparison
-xx_np = xx.detach().numpy().flatten()
-true_pdf = mix.pdf(xx_np)
 
-# Plot
-plt.figure(figsize=(10, 6))
-plt.plot(xx_np, pdf_est.numpy(), label="NN PDF Estimate")
-plt.plot(xx_np, true_pdf, label="True PDF", linestyle='dashed')
-plt.title("PDF estimated by derivative of NN CDF vs True PDF")
+plt.figure(figsize=(10, 5))
+plt.plot(xx_np, pdf_est.numpy(), color="C3", label="Estimated PDF")
+plt.plot(xx_np, mix.pdf(xx_np), color="C0", label="True PDF", linestyle='dashed')
+plt.title("Probability Density Function (PDF)")
 plt.xlabel("x")
 plt.ylabel("Density")
 plt.legend()
 plt.show()
+
 ```
+
