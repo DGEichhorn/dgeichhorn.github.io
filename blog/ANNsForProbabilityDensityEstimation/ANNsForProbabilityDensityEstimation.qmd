@@ -1,9 +1,10 @@
-To Dos: ACHTUNG BEI MEINER WEBSITE ERSCHEINT KOMISCHERWEISE IN URL ERGÄNZUNG T.S. SMITH; HABE ES EVTL GEÄNDERT MITTELS TITEL IN IDEX file in oberster Hierarchie
+ACHTUNG: bei NN training scheint doch noch randomness drin zu sein; WICHTIG SETZE DESHALB WEITERE SEEDS INSBESONDERE FÜR random
 
 # Load Packages
 
 ```{python}
 # for sampling
+import random
 import numpy as np
 from scipy import stats
 
@@ -112,6 +113,7 @@ wichtiger kommentar: in jedem step wird ganzer datensatz verwendet; epochs diene
 #| output: false
 
 seed = 42
+random.seed(seed)
 np.random.seed(seed)
 torch.manual_seed(seed)
 

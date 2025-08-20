@@ -1,6 +1,18 @@
+---
+title: "Post titel"
+description: "Post description"
+author: "Author"
+date: "5/22/2021"
+#image: "cover.jpg"
+categories:
+  - Science
+  - Technology
+---
+
 % Back up ODE: torch.mean( (dy_dx - (x+y)/x)**2 ) + (y[0] + 0.1)**2
 
 # To Dos:
+- ACHTUNG: evtl noch randomness in NN training (diese ausmerzen) UND ODER EINEN ANDEREN SEED VERWENDEN
 - nach zweiter LossODE: HIDE code show plots
   - construct model, criterion and loss
   - training
