@@ -208,8 +208,8 @@ with torch.no_grad():
   y = model(x)
 
 plt.figure(figsize=(8, 5))
-plt.plot(x, y, label="Predicted")
-plt.plot(x, 2 - 3*torch.exp(-x**2), '--', label="Analytical")
+plt.plot(x, y, color="C3", label="Neural Network")
+plt.plot(x, 2 - 3*torch.exp(-x**2), color="C0" , label="Analytical", linestyle="dotted")
 plt.xlabel("x")
 plt.ylabel("y")
 plt.legend()
