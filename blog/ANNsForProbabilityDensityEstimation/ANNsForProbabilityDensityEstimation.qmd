@@ -118,7 +118,6 @@ delta = 0.1*(max(x)-min(x))/n_mon_points
 
 ```{python}
 seed = 42
-random.seed(seed)
 np.random.seed(seed)
 torch.manual_seed(seed)
 
