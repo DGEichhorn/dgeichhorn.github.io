@@ -1,12 +1,4 @@
-To Dos:
-ACHTUNG BEI MEINER WEBSITE ERSCHEINT KOMISCHERWEISE IN URL ERGÄNZUNG T.S. SMITH; HABE ES EVTL GEÄNDERT MITTELS TITEL IN IDEX file in oberster Hierarchie
-
-3. Plots:
-  - TRAININGSFORTSCHRITT
-  - visualization of histogram
-  - evtl. irgendein KDE für verschiedene Bandwidths
-4. habe jetzt als innere aktivierungsfunktion tanh, hatte davor sigmoid
-5. Ableitung des Netzwerks bestimmen und plotten als Density Estimate und das mit dem echten vergleichen
+To Dos: ACHTUNG BEI MEINER WEBSITE ERSCHEINT KOMISCHERWEISE IN URL ERGÄNZUNG T.S. SMITH; HABE ES EVTL GEÄNDERT MITTELS TITEL IN IDEX file in oberster Hierarchie
 
 # Load Packages
 
@@ -36,7 +28,8 @@ mix = stats.Mixture([comp1, comp2], weights=[0.2, 0.8])
 # Visualization of the analytic PDF
 
 ```{python}
-#| echo: false
+#| code-fold: true
+#| code-summary: "Show the code"
 
 x = np.linspace(0, 10, 1000)
 
@@ -113,7 +106,7 @@ delta = 0.1*(max(x)-min(x))/n_mon_points
 
 # Training
 
- wichtiger kommentar: in jedem step wird ganzer datensatz verwendet; epochs dienen nur dazu dass nicht in jedem step fortschritt gedruck wird
+wichtiger kommentar: in jedem step wird ganzer datensatz verwendet; epochs dienen nur dazu dass nicht in jedem step fortschritt gedruck wird
 
 ```{python}
 seed = 42
@@ -138,12 +131,10 @@ for epoch in range(num_epochs):
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
-  
+    
   print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}", end="\r", flush=True)
 
 ```
-
-
 
 ```{python}
 xx = torch.linspace(0, 10, 1000).unsqueeze(1)
@@ -194,4 +185,3 @@ plt.legend()
 plt.show()
 
 ```
-
