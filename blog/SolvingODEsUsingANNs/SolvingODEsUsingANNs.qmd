@@ -84,6 +84,9 @@ x = torch.linspace(0, 5, 100)[:, None]
 ## Training
 
 ```{python}
+seed = 42
+torch.manual_seed(seed)
+
 num_epochs = 50
 steps_per_epoch = 1000
 

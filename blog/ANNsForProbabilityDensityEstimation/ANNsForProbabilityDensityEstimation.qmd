@@ -31,16 +31,10 @@ import torch.optim as optim
 # Data Generation
 
 ```{python}
-rng = np.random.default_rng(42)
-
 # construct 2-component Gaussian mixture distribution
 comp1 = stats.Normal(mu=2, sigma=0.25)
 comp2 = stats.Normal(mu=6, sigma=0.5)
 mix = stats.Mixture([comp1, comp2], weights=[0.2, 0.8])
-
-#n = 100
-#x = mix.sample(n, rng=rng)
-#print(x)
 ```
 
 # Visualization of the analytic PDF
@@ -107,6 +101,7 @@ optimizer = optim.Adam(model.parameters(), lr=1e-3)
 ```{python}
 # sample data, sort it and convert to torch tensor
 n = 200
+rng = np.random.default_rng(42)
 x = mix.sample(n, rng=rng)
 x = torch.from_numpy(np.sort(x)).float().unsqueeze(1)
 
@@ -122,9 +117,6 @@ delta = 0.1*(max(x)-min(x))/n_mon_points
  wichtiger kommentar: in jedem step wird ganzer datensatz verwendet; epochs dienen nur dazu dass nicht in jedem step fortschritt gedruck wird
 
 ```{python}
-# HIER SEEDS SETZEN
-# np.seed für u resampling
-# torch seeds für nn training
 seed = 42
 random.seed(seed)
 np.random.seed(seed)
