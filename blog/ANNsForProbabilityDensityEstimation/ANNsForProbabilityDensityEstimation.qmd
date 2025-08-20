@@ -13,13 +13,15 @@ WICHTIG: Kommentar auch in ANN für ODEs bzgl. epochs & PRINT REPLACE ÜBERNEHME
 # Load Packages
 
 ```{python}
+# for sampling
 import numpy as np
-import random
-from scipy import stats           # for sampling
+from scipy import stats
 
-import matplotlib.pyplot as plt   # for visualization
+# for visualization
+import matplotlib.pyplot as plt
 
-import torch                      # for constructing, learning, using NNs
+# for constructing, learning, using NNs
+import torch
 import torch.nn as nn
 import torch.optim as optim
 ```
@@ -39,9 +41,12 @@ mix = stats.Mixture([comp1, comp2], weights=[0.2, 0.8])
 #| echo: false
 
 x = np.linspace(0, 10, 1000)
-plt.clf()
-plt.plot(x, mix.pdf(x))
-plt.title("Analytic PDF")
+
+plt.figure(figsize=(10,5))
+plt.plot(x, mix.pdf(x), colour="", linestyle="")
+plt.title("True Probability Density Function")
+plt.xlabel("Density")
+plt.ylabel("x")
 plt.show()
 ```
 
@@ -136,7 +141,6 @@ for epoch in range(num_epochs):
     loss.backward()
     optimizer.step()
   
-  #print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
   print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}", end="\r", flush=True)
 
 ```
@@ -144,16 +148,16 @@ for epoch in range(num_epochs):
 
 
 ```{python}
-import matplotlib.pyplot as plt
-xx = torch.linspace(0, 10, 500).unsqueeze(1)
+xx = torch.linspace(0, 10, 1000).unsqueeze(1)
 with torch.no_grad():
     yy = model(xx)
 
 plt.figure(figsize=(10, 5))
-#plt.plot(x.numpy(), u.numpy(), label="Target (sorted uniform)", color='green')
-plt.plot(xx.numpy(), yy.numpy(), label="Learned CDF", color='blue')
-plt.plot(xx.numpy(), mix.cdf(xx), label="Learned CDF", color='red')
-plt.title("NN fitting empirical CDF")
+plt.plot(xx.numpy(), yy.numpy(), label="Learned CDF")
+plt.plot(xx.numpy(), mix.cdf(xx), label="True CDF", linestyle="dashed)
+plt.title("Cumulative Density Function (CDF)")
+plt.xlabel("x")
+plt.ylabel("Cumulative Density")
 plt.legend()
 plt.show()
 
@@ -177,7 +181,7 @@ def compute_pdf_from_cdf(model, x):
     return pdf
 
 # Create a grid of points where we want to evaluate PDF
-xx = torch.linspace(0, 10, 100).unsqueeze(1)
+xx = torch.linspace(0, 10, 1000).unsqueeze(1)
 
 # Compute CDF and PDF estimates
 with torch.no_grad():
@@ -191,8 +195,8 @@ true_pdf = mix.pdf(xx_np)
 
 # Plot
 plt.figure(figsize=(10, 6))
-plt.plot(xx_np, pdf_est.numpy(), label='NN PDF Estimate', color='blue')
-plt.plot(xx_np, true_pdf, label='True PDF', color='red', linestyle='dashed')
+plt.plot(xx_np, pdf_est.numpy(), label="NN PDF Estimate")
+plt.plot(xx_np, true_pdf, label="True PDF", linestyle='dashed')
 plt.title("PDF estimated by derivative of NN CDF vs True PDF")
 plt.xlabel("x")
 plt.ylabel("Density")
