@@ -211,10 +211,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1>Visualization of the analytic PDF</h1>
 <div class="cell" data-execution_count="3">
 <details>
-<summary>Show the code</summary>
+<summary>Show code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">1000</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">5</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">5</span>))</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>plt.plot(x, mix.pdf(x), color<span class="op">=</span><span class="st">"C0"</span>, linestyle<span class="op">=</span><span class="st">"dashed"</span>)</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"True Probability Density Function"</span>)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Density"</span>)</span>
@@ -222,7 +222,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-4-output-1.png" width="812" height="449"></p>
+<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-4-output-1.png" width="663" height="449"></p>
 </div>
 </div>
 </section>
@@ -316,657 +316,63 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Epoch [</span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>num_epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>, end<span class="op">=</span><span class="st">"</span><span class="ch">\r</span><span class="st">"</span>, flush<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [1/200], Loss: 0.0752</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [2/200], Loss: 0.0681</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [3/200], Loss: 0.0649</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [4/200], Loss: 0.0489</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [5/200], Loss: 0.0391</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [6/200], Loss: 0.0302</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [7/200], Loss: 0.0189</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [8/200], Loss: 0.0164</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [9/200], Loss: 0.0131</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [10/200], Loss: 0.0077</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [11/200], Loss: 0.0066</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [12/200], Loss: 0.0057</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [13/200], Loss: 0.0047</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [14/200], Loss: 0.0046</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [15/200], Loss: 0.0068</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [16/200], Loss: 0.0040</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [17/200], Loss: 0.0030</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [18/200], Loss: 0.0049</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [19/200], Loss: 0.0031</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [20/200], Loss: 0.0023</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [21/200], Loss: 0.0019</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [22/200], Loss: 0.0023</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [23/200], Loss: 0.0023</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [24/200], Loss: 0.0014</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [25/200], Loss: 0.0013</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [26/200], Loss: 0.0033</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [27/200], Loss: 0.0018</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [28/200], Loss: 0.0025</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [29/200], Loss: 0.0015</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [30/200], Loss: 0.0016</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [31/200], Loss: 0.0024</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [32/200], Loss: 0.0030</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [33/200], Loss: 0.0026</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [34/200], Loss: 0.0029</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [35/200], Loss: 0.0023</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [36/200], Loss: 0.0019</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [37/200], Loss: 0.0020</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [38/200], Loss: 0.0014</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [39/200], Loss: 0.0013</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [40/200], Loss: 0.0067</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [41/200], Loss: 0.0020</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [42/200], Loss: 0.0015</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [43/200], Loss: 0.0015</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [44/200], Loss: 0.0019</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [45/200], Loss: 0.0034</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [46/200], Loss: 0.0018</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [47/200], Loss: 0.0016</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [48/200], Loss: 0.0016</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [49/200], Loss: 0.0014</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [50/200], Loss: 0.0014</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [51/200], Loss: 0.0012</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [52/200], Loss: 0.0009</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [53/200], Loss: 0.0014</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [54/200], Loss: 0.0016</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [55/200], Loss: 0.0023</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [56/200], Loss: 0.0010</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [57/200], Loss: 0.0012</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [58/200], Loss: 0.0022</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [59/200], Loss: 0.0011</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [60/200], Loss: 0.0012</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [61/200], Loss: 0.0016</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [62/200], Loss: 0.0039</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [63/200], Loss: 0.0022</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [64/200], Loss: 0.0016</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [65/200], Loss: 0.0020</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [66/200], Loss: 0.0012</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [67/200], Loss: 0.0012</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [68/200], Loss: 0.0011</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [69/200], Loss: 0.0026</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [70/200], Loss: 0.0013</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [71/200], Loss: 0.0035</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [72/200], Loss: 0.0020</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [73/200], Loss: 0.0024</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [74/200], Loss: 0.0020</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [75/200], Loss: 0.0078</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [76/200], Loss: 0.0008</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [77/200], Loss: 0.0012</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [78/200], Loss: 0.0015</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [79/200], Loss: 0.0018</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [80/200], Loss: 0.0014</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [81/200], Loss: 0.0013</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [82/200], Loss: 0.0019</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [83/200], Loss: 0.0010</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [84/200], Loss: 0.0009</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [85/200], Loss: 0.0011</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [86/200], Loss: 0.0006</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [87/200], Loss: 0.0022</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [88/200], Loss: 0.0026</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [89/200], Loss: 0.0016</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [90/200], Loss: 0.0017</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [91/200], Loss: 0.0012</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [92/200], Loss: 0.0013</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [93/200], Loss: 0.0018</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [94/200], Loss: 0.0017</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [95/200], Loss: 0.0010</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [96/200], Loss: 0.0012</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [97/200], Loss: 0.0012</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [98/200], Loss: 0.0015</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [99/200], Loss: 0.0013</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [100/200], Loss: 0.0013</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [101/200], Loss: 0.0024</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [102/200], Loss: 0.0037</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [103/200], Loss: 0.0019</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [104/200], Loss: 0.0028</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [105/200], Loss: 0.0022</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [106/200], Loss: 0.0015</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [107/200], Loss: 0.0008</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [108/200], Loss: 0.0017</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [109/200], Loss: 0.0011</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [110/200], Loss: 0.0040</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [111/200], Loss: 0.0013</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [112/200], Loss: 0.0019</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [113/200], Loss: 0.0014</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [114/200], Loss: 0.0014</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [115/200], Loss: 0.0008</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [116/200], Loss: 0.0012</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [117/200], Loss: 0.0032</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [118/200], Loss: 0.0009</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [119/200], Loss: 0.0011</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [120/200], Loss: 0.0012</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [121/200], Loss: 0.0012</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [122/200], Loss: 0.0020</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [123/200], Loss: 0.0007</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [124/200], Loss: 0.0011</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [125/200], Loss: 0.0008</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [126/200], Loss: 0.0009</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [127/200], Loss: 0.0025</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [128/200], Loss: 0.0025</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [129/200], Loss: 0.0017</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [130/200], Loss: 0.0010</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [131/200], Loss: 0.0014</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [132/200], Loss: 0.0015</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [133/200], Loss: 0.0027</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [134/200], Loss: 0.0058</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [135/200], Loss: 0.0013</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [136/200], Loss: 0.0031</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [137/200], Loss: 0.0013</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [138/200], Loss: 0.0008</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [139/200], Loss: 0.0011</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [140/200], Loss: 0.0007</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [141/200], Loss: 0.0014</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [142/200], Loss: 0.0017</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [143/200], Loss: 0.0010</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [144/200], Loss: 0.0018</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [145/200], Loss: 0.0010</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [146/200], Loss: 0.0007</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [147/200], Loss: 0.0008</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [148/200], Loss: 0.0009</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [149/200], Loss: 0.0013</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [150/200], Loss: 0.0025</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [151/200], Loss: 0.0017</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [152/200], Loss: 0.0015</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [153/200], Loss: 0.0009</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [154/200], Loss: 0.0010</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [155/200], Loss: 0.0013</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [156/200], Loss: 0.0030</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [157/200], Loss: 0.0013</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [158/200], Loss: 0.0020</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [159/200], Loss: 0.0015</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [160/200], Loss: 0.0011</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [161/200], Loss: 0.0006</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [162/200], Loss: 0.0018</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [163/200], Loss: 0.0021</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [164/200], Loss: 0.0011</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [165/200], Loss: 0.0015</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [166/200], Loss: 0.0006</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [167/200], Loss: 0.0008</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [168/200], Loss: 0.0007</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [169/200], Loss: 0.0006</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [170/200], Loss: 0.0006</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [171/200], Loss: 0.0010</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [172/200], Loss: 0.0009</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [173/200], Loss: 0.0007</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [174/200], Loss: 0.0013</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [175/200], Loss: 0.0009</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [176/200], Loss: 0.0008</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [177/200], Loss: 0.0005</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [178/200], Loss: 0.0009</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [179/200], Loss: 0.0008</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [180/200], Loss: 0.0008</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [181/200], Loss: 0.0007</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [182/200], Loss: 0.0011</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [183/200], Loss: 0.0012</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [184/200], Loss: 0.0006</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [185/200], Loss: 0.0054</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [186/200], Loss: 0.0009</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [187/200], Loss: 0.0019</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [188/200], Loss: 0.0013</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [189/200], Loss: 0.0016</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [190/200], Loss: 0.0045</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [191/200], Loss: 0.0005</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [192/200], Loss: 0.0018</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [193/200], Loss: 0.0005</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [194/200], Loss: 0.0008</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [195/200], Loss: 0.0012</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [196/200], Loss: 0.0025</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [197/200], Loss: 0.0022</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [198/200], Loss: 0.0014</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [199/200], Loss: 0.0006</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [200/200], Loss: 0.0009</code></pre>
-</div>
 </div>
 <div class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb209"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb209-1"><a href="#cb209-1" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">1000</span>).unsqueeze(<span class="dv">1</span>)</span>
-<span id="cb209-2"><a href="#cb209-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb209-3"><a href="#cb209-3" aria-hidden="true" tabindex="-1"></a>    cdf_est <span class="op">=</span> model(xx)</span>
-<span id="cb209-4"><a href="#cb209-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb209-5"><a href="#cb209-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
-<span id="cb209-6"><a href="#cb209-6" aria-hidden="true" tabindex="-1"></a>plt.plot(xx.numpy(), cdf_est.numpy(), color<span class="op">=</span><span class="st">"C3"</span>, label<span class="op">=</span><span class="st">"Estimated CDF"</span>)</span>
-<span id="cb209-7"><a href="#cb209-7" aria-hidden="true" tabindex="-1"></a>plt.plot(xx.numpy(), mix.cdf(xx), color<span class="op">=</span><span class="st">"C0"</span>, label<span class="op">=</span><span class="st">"True CDF"</span>, linestyle<span class="op">=</span><span class="st">"dashed"</span>)</span>
-<span id="cb209-8"><a href="#cb209-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Cumulative Density Function (CDF)"</span>)</span>
-<span id="cb209-9"><a href="#cb209-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
-<span id="cb209-10"><a href="#cb209-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Cumulative Density"</span>)</span>
-<span id="cb209-11"><a href="#cb209-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb209-12"><a href="#cb209-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details>
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">1000</span>).unsqueeze(<span class="dv">1</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    cdf_est <span class="op">=</span> model(xx)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>plt.plot(xx.numpy(), cdf_est.numpy(), color<span class="op">=</span><span class="st">"C3"</span>, label<span class="op">=</span><span class="st">"Estimated CDF"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>plt.plot(xx.numpy(), mix.cdf(xx), color<span class="op">=</span><span class="st">"C0"</span>, label<span class="op">=</span><span class="st">"True CDF"</span>, linestyle<span class="op">=</span><span class="st">"dashed"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Cumulative Density Function (CDF)"</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Cumulative Density"</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
-<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-10-output-1.png" width="812" height="449"></p>
+<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-10-output-1.png" width="663" height="449"></p>
 </div>
 </div>
 </section>
 <section id="function-to-compute-derivate-of-nn-w.r.t.-to-input-x" class="level1">
 <h1>Function to compute derivate of NN w.r.t. to input x</h1>
 <div class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb210"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb210-1"><a href="#cb210-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ComputePDF(model, x):</span>
-<span id="cb210-2"><a href="#cb210-2" aria-hidden="true" tabindex="-1"></a>  x <span class="op">=</span> x.requires_grad_(<span class="va">True</span>)</span>
-<span id="cb210-3"><a href="#cb210-3" aria-hidden="true" tabindex="-1"></a>  cdf <span class="op">=</span> model(x)</span>
-<span id="cb210-4"><a href="#cb210-4" aria-hidden="true" tabindex="-1"></a>  grad_outputs <span class="op">=</span> torch.ones_like(cdf)</span>
-<span id="cb210-5"><a href="#cb210-5" aria-hidden="true" tabindex="-1"></a>  pdf <span class="op">=</span> torch.autograd.grad(</span>
-<span id="cb210-6"><a href="#cb210-6" aria-hidden="true" tabindex="-1"></a>    outputs<span class="op">=</span>cdf,</span>
-<span id="cb210-7"><a href="#cb210-7" aria-hidden="true" tabindex="-1"></a>    inputs<span class="op">=</span>x,</span>
-<span id="cb210-8"><a href="#cb210-8" aria-hidden="true" tabindex="-1"></a>    grad_outputs<span class="op">=</span>grad_outputs</span>
-<span id="cb210-9"><a href="#cb210-9" aria-hidden="true" tabindex="-1"></a>    )[<span class="dv">0</span>]</span>
-<span id="cb210-10"><a href="#cb210-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> pdf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ComputePDF(model, x):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  x <span class="op">=</span> x.requires_grad_(<span class="va">True</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  cdf <span class="op">=</span> model(x)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  grad_outputs <span class="op">=</span> torch.ones_like(cdf)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  pdf <span class="op">=</span> torch.autograd.grad(</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    outputs<span class="op">=</span>cdf,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    inputs<span class="op">=</span>x,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    grad_outputs<span class="op">=</span>grad_outputs</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    )[<span class="dv">0</span>]</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> pdf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="plot-pdf" class="level1">
 <h1>Plot PDF</h1>
 <div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb211"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb211-1"><a href="#cb211-1" aria-hidden="true" tabindex="-1"></a>pdf_est <span class="op">=</span> ComputePDF(model, xx).detach()</span>
-<span id="cb211-2"><a href="#cb211-2" aria-hidden="true" tabindex="-1"></a>xx_np <span class="op">=</span> xx.detach().numpy()</span>
-<span id="cb211-3"><a href="#cb211-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb211-4"><a href="#cb211-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb211-5"><a href="#cb211-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
-<span id="cb211-6"><a href="#cb211-6" aria-hidden="true" tabindex="-1"></a>plt.plot(xx_np, pdf_est.numpy(), color<span class="op">=</span><span class="st">"C3"</span>, label<span class="op">=</span><span class="st">"Estimated PDF"</span>)</span>
-<span id="cb211-7"><a href="#cb211-7" aria-hidden="true" tabindex="-1"></a>plt.plot(xx_np, mix.pdf(xx_np), color<span class="op">=</span><span class="st">"C0"</span>, label<span class="op">=</span><span class="st">"True PDF"</span>, linestyle<span class="op">=</span><span class="st">'dashed'</span>)</span>
-<span id="cb211-8"><a href="#cb211-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Probability Density Function (PDF)"</span>)</span>
-<span id="cb211-9"><a href="#cb211-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
-<span id="cb211-10"><a href="#cb211-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
-<span id="cb211-11"><a href="#cb211-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb211-12"><a href="#cb211-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details>
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pdf_est <span class="op">=</span> ComputePDF(model, xx).detach()</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>xx_np <span class="op">=</span> xx.detach().numpy()</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>plt.plot(xx_np, pdf_est.numpy(), color<span class="op">=</span><span class="st">"C3"</span>, label<span class="op">=</span><span class="st">"Estimated PDF"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>plt.plot(xx_np, mix.pdf(xx_np), color<span class="op">=</span><span class="st">"C0"</span>, label<span class="op">=</span><span class="st">"True PDF"</span>, linestyle<span class="op">=</span><span class="st">'dashed'</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Probability Density Function (PDF)"</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
-<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-12-output-1.png" width="812" height="449"></p>
+<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-12-output-1.png" width="663" height="449"></p>
 </div>
 </div>
 

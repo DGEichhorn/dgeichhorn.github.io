@@ -29,11 +29,11 @@ mix = stats.Mixture([comp1, comp2], weights=[0.2, 0.8])
 
 ```{python}
 #| code-fold: true
-#| code-summary: "Show the code"
+#| code-summary: "Show code"
 
 x = np.linspace(0, 10, 1000)
 
-plt.figure(figsize=(10,5))
+plt.figure(figsize=(8,5))
 plt.plot(x, mix.pdf(x), color="C0", linestyle="dashed")
 plt.title("True Probability Density Function")
 plt.xlabel("Density")
@@ -109,6 +109,8 @@ delta = 0.1*(max(x)-min(x))/n_mon_points
 wichtiger kommentar: in jedem step wird ganzer datensatz verwendet; epochs dienen nur dazu dass nicht in jedem step fortschritt gedruck wird
 
 ```{python}
+#| output: false
+
 seed = 42
 np.random.seed(seed)
 torch.manual_seed(seed)
@@ -137,11 +139,14 @@ for epoch in range(num_epochs):
 ```
 
 ```{python}
+#| code-fold: true
+#| code-summary: "Show code"
+
 xx = torch.linspace(0, 10, 1000).unsqueeze(1)
 with torch.no_grad():
     cdf_est = model(xx)
 
-plt.figure(figsize=(10, 5))
+plt.figure(figsize=(8, 5))
 plt.plot(xx.numpy(), cdf_est.numpy(), color="C3", label="Estimated CDF")
 plt.plot(xx.numpy(), mix.cdf(xx), color="C0", label="True CDF", linestyle="dashed")
 plt.title("Cumulative Density Function (CDF)")
@@ -171,11 +176,14 @@ def ComputePDF(model, x):
 # Plot PDF
 
 ```{python}
+#| code-fold: true
+#| code-summary: "Show code"
+
 pdf_est = ComputePDF(model, xx).detach()
 xx_np = xx.detach().numpy()
 
 
-plt.figure(figsize=(10, 5))
+plt.figure(figsize=(8, 5))
 plt.plot(xx_np, pdf_est.numpy(), color="C3", label="Estimated PDF")
 plt.plot(xx_np, mix.pdf(xx_np), color="C0", label="True PDF", linestyle='dashed')
 plt.title("Probability Density Function (PDF)")

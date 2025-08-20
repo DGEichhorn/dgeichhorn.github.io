@@ -294,8 +294,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">50</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">3000</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(num_epochs):</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(steps_per_epoch):</span>
@@ -307,174 +307,57 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Epoch [</span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>num_epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [1/50], Loss: 2.1639</code></pre>
+<pre><code>Epoch [1/10], Loss: 0.1986</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [2/50], Loss: 0.5120</code></pre>
+<pre><code>Epoch [2/10], Loss: 0.0790</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [3/50], Loss: 0.2129</code></pre>
+<pre><code>Epoch [3/10], Loss: 0.0292</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [4/50], Loss: 0.1240</code></pre>
+<pre><code>Epoch [4/10], Loss: 0.0050</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [5/50], Loss: 0.0951</code></pre>
+<pre><code>Epoch [5/10], Loss: 0.0018</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [6/50], Loss: 0.0757</code></pre>
+<pre><code>Epoch [6/10], Loss: 0.0010</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [7/50], Loss: 0.0639</code></pre>
+<pre><code>Epoch [7/10], Loss: 0.0008</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [8/50], Loss: 0.0489</code></pre>
+<pre><code>Epoch [8/10], Loss: 0.0006</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [9/50], Loss: 0.0099</code></pre>
+<pre><code>Epoch [9/10], Loss: 0.0004</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [10/50], Loss: 0.0079</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [11/50], Loss: 0.0064</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [12/50], Loss: 0.0049</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [13/50], Loss: 0.0036</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [14/50], Loss: 0.0024</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [15/50], Loss: 0.0016</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [16/50], Loss: 0.0011</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [17/50], Loss: 0.0007</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [18/50], Loss: 0.0005</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [19/50], Loss: 0.0003</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [20/50], Loss: 0.0002</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [21/50], Loss: 0.0002</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [22/50], Loss: 0.0002</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [23/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [24/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [25/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [26/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [27/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [28/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [29/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [30/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [31/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [32/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [33/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [34/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [35/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [36/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [37/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [38/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [39/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [40/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [41/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [42/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [43/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [44/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [45/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [46/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [47/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [48/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [49/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [50/50], Loss: 0.0000</code></pre>
+<pre><code>Epoch [10/10], Loss: 0.0002</code></pre>
 </div>
 </div>
 </section>
 <section id="visualize-learned-and-analytical-solution" class="level2">
 <h2 class="anchored" data-anchor-id="visualize-learned-and-analytical-solution">Visualize learned and analytical solution</h2>
 <div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">15</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> model(x)</span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
-<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, label<span class="op">=</span><span class="st">"Predicted"</span>)</span>
-<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>plt.plot(x, torch.exp(<span class="op">-</span><span class="fl">0.5</span><span class="op">*</span>x)<span class="op">*</span>(<span class="fl">0.5</span><span class="op">*</span>torch.cos(x<span class="op">*</span>(<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">2</span>)<span class="op">+</span><span class="dv">3</span><span class="op">*</span>((<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">10</span>)<span class="op">*</span>torch.sin(x<span class="op">*</span>(<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">2</span>)), <span class="st">'--'</span>, label<span class="op">=</span><span class="st">"Analytical"</span>)</span>
-<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
-<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y"</span>)</span>
-<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
-<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details>
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">15</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> model(x)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, label<span class="op">=</span><span class="st">"Predicted"</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>plt.plot(x, torch.exp(<span class="op">-</span><span class="fl">0.5</span><span class="op">*</span>x)<span class="op">*</span>(<span class="fl">0.5</span><span class="op">*</span>torch.cos(x<span class="op">*</span>(<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">2</span>)<span class="op">+</span><span class="dv">3</span><span class="op">*</span>((<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">10</span>)<span class="op">*</span>torch.sin(x<span class="op">*</span>(<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">2</span>)), <span class="st">'--'</span>, label<span class="op">=</span><span class="st">"Analytical"</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y"</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
-<p><img src="SolvingODEsUsingANNs_files/figure-html/cell-8-output-1.png" width="823" height="503"></p>
+<p><img src="SolvingODEsUsingANNs_files/figure-html/cell-8-output-1.png" width="674" height="429"></p>
 </div>
 </div>
 </section>
@@ -484,227 +367,110 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="define-custom-loss-function-1" class="level2">
 <h2 class="anchored" data-anchor-id="define-custom-loss-function-1">Define Custom Loss Function</h2>
 <div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LossODE(nn.Module):</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(LossODE, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> forward(<span class="va">self</span>, model, x):</span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x.clone().detach().requires_grad_(<span class="va">True</span>)</span>
-<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> model(x)</span>
-<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>    dy_dx <span class="op">=</span> torch.autograd.grad(</span>
-<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>      outputs<span class="op">=</span>y,</span>
-<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>      inputs<span class="op">=</span>x,</span>
-<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>      grad_outputs<span class="op">=</span>torch.ones_like(y),</span>
-<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a>      create_graph<span class="op">=</span><span class="va">True</span></span>
-<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>      )[<span class="dv">0</span>]</span>
-<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a>    loss_DE <span class="op">=</span> torch.mean((dy_dx <span class="op">-</span> <span class="dv">2</span><span class="op">*</span>x<span class="op">*</span>(<span class="dv">2</span><span class="op">-</span>y))<span class="op">**</span><span class="dv">2</span>)</span>
-<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a>    loss_initial <span class="op">=</span> (y[<span class="dv">0</span>] <span class="op">+</span> <span class="dv">1</span>)<span class="op">**</span><span class="dv">2</span></span>
-<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a>    loss_total <span class="op">=</span> loss_DE <span class="op">+</span> loss_initial</span>
-<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss_total</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LossODE(nn.Module):</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(LossODE, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> forward(<span class="va">self</span>, model, x):</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x.clone().detach().requires_grad_(<span class="va">True</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> model(x)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    dy_dx <span class="op">=</span> torch.autograd.grad(</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>      outputs<span class="op">=</span>y,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>      inputs<span class="op">=</span>x,</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>      grad_outputs<span class="op">=</span>torch.ones_like(y),</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>      create_graph<span class="op">=</span><span class="va">True</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>      )[<span class="dv">0</span>]</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    loss_DE <span class="op">=</span> torch.mean((dy_dx <span class="op">-</span> <span class="dv">2</span><span class="op">*</span>x<span class="op">*</span>(<span class="dv">2</span><span class="op">-</span>y))<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    loss_initial <span class="op">=</span> (y[<span class="dv">0</span>] <span class="op">+</span> <span class="dv">1</span>)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    loss_total <span class="op">=</span> loss_DE <span class="op">+</span> loss_initial</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss_total</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="construct-model-loss-and-optimizer-1" class="level1">
 <h1>Construct model, loss and optimizer</h1>
 <div class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Network(input_size<span class="op">=</span><span class="dv">1</span>, hidden_size<span class="op">=</span><span class="dv">10</span>, output_size<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> LossODE()</span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Network(input_size<span class="op">=</span><span class="dv">1</span>, hidden_size<span class="op">=</span><span class="dv">10</span>, output_size<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> LossODE()</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="set-x-values-1" class="level1">
 <h1>Set x-values</h1>
 <div class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="training-1" class="level1">
 <h1>Training</h1>
 <div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">50</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">1000</span></span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(num_epochs):</span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(steps_per_epoch):</span>
-<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(model, x)</span>
-<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
-<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
-<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
-<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Epoch [</span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>num_epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">3000</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(num_epochs):</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(steps_per_epoch):</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(model, x)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Epoch [</span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>num_epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [1/50], Loss: 3.7341</code></pre>
+<pre><code>Epoch [1/10], Loss: 0.3274</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [2/50], Loss: 1.3562</code></pre>
+<pre><code>Epoch [2/10], Loss: 0.0380</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [3/50], Loss: 0.3274</code></pre>
+<pre><code>Epoch [3/10], Loss: 0.0141</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [4/50], Loss: 0.1196</code></pre>
+<pre><code>Epoch [4/10], Loss: 0.0080</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [5/50], Loss: 0.0697</code></pre>
+<pre><code>Epoch [5/10], Loss: 0.0025</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [6/50], Loss: 0.0380</code></pre>
+<pre><code>Epoch [6/10], Loss: 0.0003</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [7/50], Loss: 0.0226</code></pre>
+<pre><code>Epoch [7/10], Loss: 0.0000</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [8/50], Loss: 0.0168</code></pre>
+<pre><code>Epoch [8/10], Loss: 0.0000</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [9/50], Loss: 0.0141</code></pre>
+<pre><code>Epoch [9/10], Loss: 0.0000</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [10/50], Loss: 0.0126</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [11/50], Loss: 0.0107</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [12/50], Loss: 0.0080</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [13/50], Loss: 0.0051</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [14/50], Loss: 0.0034</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [15/50], Loss: 0.0025</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [16/50], Loss: 0.0016</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [17/50], Loss: 0.0008</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [18/50], Loss: 0.0003</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [19/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [20/50], Loss: 0.0001</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [21/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [22/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [23/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [24/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [25/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [26/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [27/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [28/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [29/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [30/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [31/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [32/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [33/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [34/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [35/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [36/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [37/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [38/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [39/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [40/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [41/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [42/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [43/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [44/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [45/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [46/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [47/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [48/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [49/50], Loss: 0.0000</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch [50/50], Loss: 0.0000</code></pre>
+<pre><code>Epoch [10/10], Loss: 0.0000</code></pre>
 </div>
 </div>
 </section>
 <section id="visualize-learned-and-analytical-solution-1" class="level1">
 <h1>Visualize learned and analytical solution</h1>
 <div class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span>
-<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> model(x)</span>
-<span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb112-5"><a href="#cb112-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
-<span id="cb112-6"><a href="#cb112-6" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, label<span class="op">=</span><span class="st">"Predicted"</span>)</span>
-<span id="cb112-7"><a href="#cb112-7" aria-hidden="true" tabindex="-1"></a>plt.plot(x, <span class="dv">2</span> <span class="op">-</span> <span class="dv">3</span><span class="op">*</span>torch.exp(<span class="op">-</span>x<span class="op">**</span><span class="dv">2</span>), <span class="st">'--'</span>, label<span class="op">=</span><span class="st">"Analytical"</span>)</span>
-<span id="cb112-8"><a href="#cb112-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
-<span id="cb112-9"><a href="#cb112-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y"</span>)</span>
-<span id="cb112-10"><a href="#cb112-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb112-11"><a href="#cb112-11" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
-<span id="cb112-12"><a href="#cb112-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details>
+<summary>Show code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> model(x)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, label<span class="op">=</span><span class="st">"Predicted"</span>)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>plt.plot(x, <span class="dv">2</span> <span class="op">-</span> <span class="dv">3</span><span class="op">*</span>torch.exp(<span class="op">-</span>x<span class="op">**</span><span class="dv">2</span>), <span class="st">'--'</span>, label<span class="op">=</span><span class="st">"Analytical"</span>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y"</span>)</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-display">
-<p><img src="SolvingODEsUsingANNs_files/figure-html/cell-13-output-1.png" width="823" height="503"></p>
+<p><img src="SolvingODEsUsingANNs_files/figure-html/cell-13-output-1.png" width="674" height="429"></p>
 </div>
 </div>
 
