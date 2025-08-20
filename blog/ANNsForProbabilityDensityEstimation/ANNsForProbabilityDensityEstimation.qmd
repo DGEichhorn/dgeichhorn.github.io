@@ -1,3 +1,14 @@
+---
+title: "Post titel: PDE via NN"
+description: "Post description"
+author: "Author"
+date: "5/22/2021"
+#image: "cover.jpg"
+categories:
+  - Science
+  - Technology
+---
+
 ACHTUNG: bei NN training scheint doch noch randomness drin zu sein; WICHTIG SETZE DESHALB WEITERE SEEDS INSBESONDERE FÜR random
 
 # Load Packages

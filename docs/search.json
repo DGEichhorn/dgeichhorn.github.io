@@ -9,9 +9,9 @@
   {
     "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html",
     "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html",
-    "title": "Back up ODE: torch.mean( (dy_dx - (x+y)/x)2 ) + (y[0] + 0.1)2",
+    "title": "Post titel: ODE via NN",
     "section": "",
-    "text": "nach zweiter LossODE: HIDE code show plots\n\nconstruct model, criterion and loss\ntraining\nvisualization with analyticaly solution"
+    "text": "% Back up ODE: torch.mean( (dy_dx - (x+y)/x)2 ) + (y[0] + 0.1)2"
   },
   {
     "objectID": "blog/CopulasForFF5Factors/CopulasForFF5Factors.html",
@@ -72,42 +72,42 @@
   {
     "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#define-custom-loss-function",
     "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#define-custom-loss-function",
-    "title": "Back up ODE: torch.mean( (dy_dx - (x+y)/x)2 ) + (y[0] + 0.1)2",
+    "title": "Post titel: ODE via NN",
     "section": "Define Custom Loss Function",
     "text": "Define Custom Loss Function\n\nclass LossODE(nn.Module):\n  def __init__(self):\n    super(LossODE, self).__init__()\n  \n  def forward(self, model, x):\n    x = x.clone().detach().requires_grad_(True)\n    y = model(x)\n    \n    dy_dx = torch.autograd.grad(\n      outputs=y,\n      inputs=x,\n      grad_outputs=torch.ones_like(y),\n      create_graph=True\n      )[0]\n    \n    d2y_dx2 = torch.autograd.grad(\n      outputs=dy_dx,\n      inputs=x,\n      grad_outputs=torch.ones_like(dy_dx),\n      create_graph=True)[0]\n    \n    loss_DE = torch.mean((d2y_dx2 + 1*dy_dx + 4*y)**2)\n    loss_initial = (y[0] - 0.5)**2 + (dy_dx[0] - 2)**2\n    loss_total = loss_DE + loss_initial\n    \n    return loss_total"
   },
   {
     "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#construct-model-loss-and-optimizer",
     "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#construct-model-loss-and-optimizer",
-    "title": "Back up ODE: torch.mean( (dy_dx - (x+y)/x)2 ) + (y[0] + 0.1)2",
+    "title": "Post titel: ODE via NN",
     "section": "Construct model, loss and optimizer",
     "text": "Construct model, loss and optimizer\n\nmodel = Network(input_size=1, hidden_size=10, output_size=1)\ncriterion = LossODE()\noptimizer = optim.Adam(model.parameters(), lr=1e-3)"
   },
   {
     "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#set-x-values",
     "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#set-x-values",
-    "title": "Back up ODE: torch.mean( (dy_dx - (x+y)/x)2 ) + (y[0] + 0.1)2",
+    "title": "Post titel: ODE via NN",
     "section": "Set x-values",
     "text": "Set x-values\n\nx = torch.linspace(0, 5, 100)[:, None]"
   },
   {
     "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#training",
     "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#training",
-    "title": "Back up ODE: torch.mean( (dy_dx - (x+y)/x)2 ) + (y[0] + 0.1)2",
+    "title": "Post titel: ODE via NN",
     "section": "Training",
-    "text": "Training\nWICHTIG: Kommentar auch in ANN für ODEs bzgl. epochs & PRINT REPLACE ÜBERNEHMEN\n\nseed = 42\ntorch.manual_seed(seed)\n\nnum_epochs = 10\nsteps_per_epoch = 3000\n\nfor epoch in range(num_epochs):\n  for step in range(steps_per_epoch):\n    loss = criterion(model, x)\n    \n    optimizer.zero_grad()\n    loss.backward()\n    optimizer.step()\n    \n  print(f\"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}\")\n\nEpoch [1/10], Loss: 0.1986\n\n\nEpoch [2/10], Loss: 0.0790\n\n\nEpoch [3/10], Loss: 0.0292\n\n\nEpoch [4/10], Loss: 0.0050\n\n\nEpoch [5/10], Loss: 0.0018\n\n\nEpoch [6/10], Loss: 0.0010\n\n\nEpoch [7/10], Loss: 0.0008\n\n\nEpoch [8/10], Loss: 0.0006\n\n\nEpoch [9/10], Loss: 0.0004\n\n\nEpoch [10/10], Loss: 0.0002"
+    "text": "Training\nWICHTIG: Kommentar auch in ANN für ODEs bzgl. epochs & PRINT REPLACE ÜBERNEHMEN\n\nseed = 42\ntorch.manual_seed(seed)\n\nnum_epochs = 10\nsteps_per_epoch = 3000\n\nfor epoch in range(num_epochs):\n  for step in range(steps_per_epoch):\n    loss = criterion(model, x)\n    \n    optimizer.zero_grad()\n    loss.backward()\n    optimizer.step()\n    \n  print(f\"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}\")\n\nEpoch [1/10], Loss: 0.6632\n\n\nEpoch [2/10], Loss: 0.1216\n\n\nEpoch [3/10], Loss: 0.0654\n\n\nEpoch [4/10], Loss: 0.0057\n\n\nEpoch [5/10], Loss: 0.0034\n\n\nEpoch [6/10], Loss: 0.0016\n\n\nEpoch [7/10], Loss: 0.0008\n\n\nEpoch [8/10], Loss: 0.0004\n\n\nEpoch [9/10], Loss: 0.0002\n\n\nEpoch [10/10], Loss: 0.0002"
   },
   {
     "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#visualize-learned-and-analytical-solution",
     "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#visualize-learned-and-analytical-solution",
-    "title": "Back up ODE: torch.mean( (dy_dx - (x+y)/x)2 ) + (y[0] + 0.1)2",
+    "title": "Post titel: ODE via NN",
     "section": "Visualize learned and analytical solution",
     "text": "Visualize learned and analytical solution\n\n\nShow code\nx = torch.linspace(0, 15, 100)[:, None]\nwith torch.no_grad():\n  y = model(x)\n\nplt.figure(figsize=(8, 5))\nplt.plot(x, y, label=\"Predicted\")\nplt.plot(x, torch.exp(-0.5*x)*(0.5*torch.cos(x*(15)**0.5/2)+3*((15)**0.5/10)*torch.sin(x*(15)**0.5/2)), '--', label=\"Analytical\")\nplt.xlabel(\"x\")\nplt.ylabel(\"y\")\nplt.legend()\nplt.grid()\nplt.show()"
   },
   {
     "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#define-custom-loss-function-1",
     "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#define-custom-loss-function-1",
-    "title": "Back up ODE: torch.mean( (dy_dx - (x+y)/x)2 ) + (y[0] + 0.1)2",
+    "title": "Post titel: ODE via NN",
     "section": "Define Custom Loss Function",
     "text": "Define Custom Loss Function\n\nclass LossODE(nn.Module):\n  def __init__(self):\n    super(LossODE, self).__init__()\n  \n  def forward(self, model, x):\n    x = x.clone().detach().requires_grad_(True)\n    y = model(x)\n    \n    dy_dx = torch.autograd.grad(\n      outputs=y,\n      inputs=x,\n      grad_outputs=torch.ones_like(y),\n      create_graph=True\n      )[0]\n    \n    loss_DE = torch.mean((dy_dx - 2*x*(2-y))**2)\n    loss_initial = (y[0] + 1)**2\n    loss_total = loss_DE + loss_initial\n    \n    return loss_total"
   }

@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Author">
+<meta name="dcterms.date" content="2021-05-22">
+<meta name="description" content="Post description">
 
-<title>Dominik Eichhorn – solvingodesusinganns</title>
+<title>Dominik Eichhorn - Post titel: ODE via NN</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -189,23 +192,46 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Back up ODE: torch.mean( (dy_dx - (x+y)/x)<strong>2 ) + (y[0] + 0.1)</strong>2</h1>
-</div>
+<h1 class="title">Post titel: ODE via NN</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Science</div>
+    <div class="quarto-category">Technology</div>
+  </div>
+  </div>
 
+<div>
+  <div class="description">
+    Post description
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Author </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 22, 2021</p>
+    </div>
+  </div>
     
   </div>
   
 
 </header>
 
+<p>% Back up ODE: torch.mean( (dy_dx - (x+y)/x)<strong>2 ) + (y[0] + 0.1)</strong>2</p>
 <section id="to-dos" class="level1">
 <h1>To Dos:</h1>
 <ul>
+<li>ACHTUNG: evtl noch randomness in NN training (diese ausmerzen) UND ODER EINEN ANDEREN SEED VERWENDEN</li>
 <li>nach zweiter LossODE: HIDE code show plots
 <ul>
 <li>construct model, criterion and loss</li>
@@ -307,31 +333,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Epoch [</span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>num_epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [1/10], Loss: 0.1986</code></pre>
+<pre><code>Epoch [1/10], Loss: 0.6632</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [2/10], Loss: 0.0790</code></pre>
+<pre><code>Epoch [2/10], Loss: 0.1216</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [3/10], Loss: 0.0292</code></pre>
+<pre><code>Epoch [3/10], Loss: 0.0654</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [4/10], Loss: 0.0050</code></pre>
+<pre><code>Epoch [4/10], Loss: 0.0057</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [5/10], Loss: 0.0018</code></pre>
+<pre><code>Epoch [5/10], Loss: 0.0034</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [6/10], Loss: 0.0010</code></pre>
+<pre><code>Epoch [6/10], Loss: 0.0016</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Epoch [7/10], Loss: 0.0008</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [8/10], Loss: 0.0006</code></pre>
+<pre><code>Epoch [8/10], Loss: 0.0004</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [9/10], Loss: 0.0004</code></pre>
+<pre><code>Epoch [9/10], Loss: 0.0002</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Epoch [10/10], Loss: 0.0002</code></pre>
