@@ -333,34 +333,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Epoch [</span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>num_epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [1/10], Loss: 0.1614</code></pre>
+<pre><code>Epoch [1/10], Loss: 0.1530</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [2/10], Loss: 0.0779</code></pre>
+<pre><code>Epoch [2/10], Loss: 0.0672</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [3/10], Loss: 0.0125</code></pre>
+<pre><code>Epoch [3/10], Loss: 0.0492</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [4/10], Loss: 0.0042</code></pre>
+<pre><code>Epoch [4/10], Loss: 0.0032</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [5/10], Loss: 0.0027</code></pre>
+<pre><code>Epoch [5/10], Loss: 0.0022</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [6/10], Loss: 0.0004</code></pre>
+<pre><code>Epoch [6/10], Loss: 0.0017</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [7/10], Loss: 0.0001</code></pre>
+<pre><code>Epoch [7/10], Loss: 0.0014</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [8/10], Loss: 0.0000</code></pre>
+<pre><code>Epoch [8/10], Loss: 0.0011</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [9/10], Loss: 0.0000</code></pre>
+<pre><code>Epoch [9/10], Loss: 0.0006</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [10/10], Loss: 0.0000</code></pre>
+<pre><code>Epoch [10/10], Loss: 0.0002</code></pre>
 </div>
 </div>
 </section>
@@ -369,7 +369,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="7">
 <details>
 <summary>Show code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">15</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">15</span>, <span class="dv">1000</span>)[:, <span class="va">None</span>]</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> model(x)</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -486,7 +486,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="12">
 <details>
 <summary>Show code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">1000</span>)[:, <span class="va">None</span>]</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> model(x)</span>
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
