@@ -121,7 +121,7 @@ for epoch in range(num_epochs):
 #| code-fold: true
 #| code-summary: "Show code"
 
-x = torch.linspace(0, 15, 100)[:, None]
+x = torch.linspace(0, 15, 1000)[:, None]
 with torch.no_grad():
   y = model(x)
 
@@ -204,7 +204,7 @@ for epoch in range(num_epochs):
 #| code-fold: true
 #| code-summary: "Show code"
 
-x = torch.linspace(-5, 5, 100)[:, None]
+x = torch.linspace(-5, 5, 1000)[:, None]
 with torch.no_grad():
   y = model(x)
 

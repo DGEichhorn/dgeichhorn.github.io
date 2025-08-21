@@ -179,10 +179,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#second-ode" id="toc-second-ode" class="nav-link" data-scroll-target="#second-ode">Second ODE</a>
   <ul class="collapse">
   <li><a href="#define-custom-loss-function-1" id="toc-define-custom-loss-function-1" class="nav-link" data-scroll-target="#define-custom-loss-function-1">Define Custom Loss Function</a></li>
-  </ul></li>
   <li><a href="#construct-model-loss-and-optimizer-1" id="toc-construct-model-loss-and-optimizer-1" class="nav-link" data-scroll-target="#construct-model-loss-and-optimizer-1">Construct model, loss and optimizer</a></li>
   <li><a href="#set-x-values-1" id="toc-set-x-values-1" class="nav-link" data-scroll-target="#set-x-values-1">Set x-values</a></li>
   <li><a href="#training-1" id="toc-training-1" class="nav-link" data-scroll-target="#training-1">Training</a></li>
+  </ul></li>
   <li><a href="#visualize-learned-and-analytical-solution-1" id="toc-visualize-learned-and-analytical-solution-1" class="nav-link" data-scroll-target="#visualize-learned-and-analytical-solution-1">Visualize learned and analytical solution</a></li>
   </ul>
 </nav>
@@ -333,34 +333,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Epoch [</span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>num_epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [1/10], Loss: 0.6632</code></pre>
+<pre><code>Epoch [1/10], Loss: 0.1614</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [2/10], Loss: 0.1216</code></pre>
+<pre><code>Epoch [2/10], Loss: 0.0779</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [3/10], Loss: 0.0654</code></pre>
+<pre><code>Epoch [3/10], Loss: 0.0125</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [4/10], Loss: 0.0057</code></pre>
+<pre><code>Epoch [4/10], Loss: 0.0042</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [5/10], Loss: 0.0034</code></pre>
+<pre><code>Epoch [5/10], Loss: 0.0027</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [6/10], Loss: 0.0016</code></pre>
+<pre><code>Epoch [6/10], Loss: 0.0004</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [7/10], Loss: 0.0008</code></pre>
+<pre><code>Epoch [7/10], Loss: 0.0001</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [8/10], Loss: 0.0004</code></pre>
+<pre><code>Epoch [8/10], Loss: 0.0000</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [9/10], Loss: 0.0002</code></pre>
+<pre><code>Epoch [9/10], Loss: 0.0000</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [10/10], Loss: 0.0002</code></pre>
+<pre><code>Epoch [10/10], Loss: 0.0000</code></pre>
 </div>
 </div>
 </section>
@@ -374,16 +374,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> model(x)</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, label<span class="op">=</span><span class="st">"Predicted"</span>)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>plt.plot(x, torch.exp(<span class="op">-</span><span class="fl">0.5</span><span class="op">*</span>x)<span class="op">*</span>(<span class="fl">0.5</span><span class="op">*</span>torch.cos(x<span class="op">*</span>(<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">2</span>)<span class="op">+</span><span class="dv">3</span><span class="op">*</span>((<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">10</span>)<span class="op">*</span>torch.sin(x<span class="op">*</span>(<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">2</span>)), <span class="st">'--'</span>, label<span class="op">=</span><span class="st">"Analytical"</span>)</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y"</span>)</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, color<span class="op">=</span><span class="st">"C3"</span>, label<span class="op">=</span><span class="st">"Neural Network"</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>plt.plot(x, torch.exp(<span class="op">-</span><span class="fl">0.5</span><span class="op">*</span>x)<span class="op">*</span>(<span class="fl">0.5</span><span class="op">*</span>torch.cos(x<span class="op">*</span>(<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">2</span>)<span class="op">+</span><span class="dv">3</span><span class="op">*</span>((<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">10</span>)<span class="op">*</span>torch.sin(x<span class="op">*</span>(<span class="dv">15</span>)<span class="op">**</span><span class="fl">0.5</span><span class="op">/</span><span class="dv">2</span>)), color<span class="op">=</span><span class="st">"C0"</span>, label<span class="op">=</span><span class="st">"Analytical"</span>, linestyle<span class="op">=</span><span class="st">"dotted"</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Solution of the ODE"</span>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y"</span>)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<p><img src="SolvingODEsUsingANNs_files/figure-html/cell-8-output-1.png" width="674" height="429"></p>
+<p><img src="SolvingODEsUsingANNs_files/figure-html/cell-8-output-1.png" width="674" height="449"></p>
 </div>
 </div>
 </section>
@@ -415,36 +416,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss_total</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-</section>
-<section id="construct-model-loss-and-optimizer-1" class="level1">
-<h1>Construct model, loss and optimizer</h1>
+<section id="construct-model-loss-and-optimizer-1" class="level2">
+<h2 class="anchored" data-anchor-id="construct-model-loss-and-optimizer-1">Construct model, loss and optimizer</h2>
 <div class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Network(input_size<span class="op">=</span><span class="dv">1</span>, hidden_size<span class="op">=</span><span class="dv">10</span>, output_size<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> LossODE()</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="set-x-values-1" class="level1">
-<h1>Set x-values</h1>
+<section id="set-x-values-1" class="level2">
+<h2 class="anchored" data-anchor-id="set-x-values-1">Set x-values</h2>
 <div class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="training-1" class="level1">
-<h1>Training</h1>
+<section id="training-1" class="level2">
+<h2 class="anchored" data-anchor-id="training-1">Training</h2>
 <div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">3000</span></span>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(num_epochs):</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(steps_per_epoch):</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(model, x)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Epoch [</span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>num_epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">3000</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(num_epochs):</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(steps_per_epoch):</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(model, x)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Epoch [</span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>num_epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Epoch [1/10], Loss: 0.3274</code></pre>
 </div>
@@ -477,6 +480,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
+</section>
 <section id="visualize-learned-and-analytical-solution-1" class="level1">
 <h1>Visualize learned and analytical solution</h1>
 <div class="cell" data-execution_count="12">
@@ -487,16 +491,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> model(x)</span>
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, label<span class="op">=</span><span class="st">"Predicted"</span>)</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>plt.plot(x, <span class="dv">2</span> <span class="op">-</span> <span class="dv">3</span><span class="op">*</span>torch.exp(<span class="op">-</span>x<span class="op">**</span><span class="dv">2</span>), <span class="st">'--'</span>, label<span class="op">=</span><span class="st">"Analytical"</span>)</span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y"</span>)</span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>plt.plot(x, y, color<span class="op">=</span><span class="st">"C3"</span>, label<span class="op">=</span><span class="st">"Neural Network"</span>)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>plt.plot(x, <span class="dv">2</span> <span class="op">-</span> <span class="dv">3</span><span class="op">*</span>torch.exp(<span class="op">-</span>x<span class="op">**</span><span class="dv">2</span>), color<span class="op">=</span><span class="st">"C0"</span> , label<span class="op">=</span><span class="st">"Analytical"</span>, linestyle<span class="op">=</span><span class="st">"dotted"</span>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Solution of the ODE"</span>)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y"</span>)</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<p><img src="SolvingODEsUsingANNs_files/figure-html/cell-13-output-1.png" width="674" height="429"></p>
+<p><img src="SolvingODEsUsingANNs_files/figure-html/cell-13-output-1.png" width="674" height="449"></p>
 </div>
 </div>
 
