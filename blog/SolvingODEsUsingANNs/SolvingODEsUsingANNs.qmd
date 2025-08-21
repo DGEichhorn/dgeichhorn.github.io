@@ -28,6 +28,13 @@ import torch.optim as optim
 import matplotlib.pyplot as plt     # for visualization
 ```
 
+# set seed for reproducibility
+
+```{python}
+seed = 42
+torch.manual_seed(seed)
+```
+
 # Define Neural Network
 
 ```{python}
@@ -98,9 +105,6 @@ x = torch.linspace(0, 5, 100)[:, None]
 WICHTIG: Kommentar auch in ANN für ODEs bzgl. epochs & PRINT REPLACE ÜBERNEHMEN
 
 ```{python}
-seed = 42
-torch.manual_seed(seed)
-
 num_epochs = 10
 steps_per_epoch = 3000
 

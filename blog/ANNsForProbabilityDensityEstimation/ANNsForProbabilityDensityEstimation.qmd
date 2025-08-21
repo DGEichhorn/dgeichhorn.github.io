@@ -9,6 +9,10 @@ categories:
   - Technology
 ---
 
+To Dos:
+- Favicon
+- evtl 
+
 ACHTUNG: bei NN training scheint doch noch randomness drin zu sein; WICHTIG SETZE DESHALB WEITERE SEEDS INSBESONDERE FÜR random
 
 # Load Packages
@@ -28,12 +32,22 @@ import torch.nn as nn
 import torch.optim as optim
 ```
 
+# Set Seed for reproducibility of data generation and neural network training
+
+```{python}
+seed = 42
+random.seed(seed)
+np.random.seed(seed)
+torch.manual_seed(seed)
+```
+
+
 # Data Generation
 
 ```{python}
 # construct 2-component Gaussian mixture distribution
 comp1 = stats.Normal(mu=2, sigma=0.25)
-comp2 = stats.Normal(mu=6, sigma=0.5)
+comp2 = stats.Normal(mu=5, sigma=0.5)
 mix = stats.Mixture([comp1, comp2], weights=[0.2, 0.8])
 ```
 
@@ -104,8 +118,8 @@ optimizer = optim.Adam(model.parameters(), lr=1e-3)
 
 ```{python}
 # sample data, sort it and convert to torch tensor
-n = 200
-rng = np.random.default_rng(42)
+n = 300
+rng = np.random.default_rng(seed)
 x = mix.sample(n, rng=rng)
 x = torch.from_numpy(np.sort(x)).float().unsqueeze(1)
 
@@ -123,13 +137,9 @@ wichtiger kommentar: in jedem step wird ganzer datensatz verwendet; epochs diene
 ```{python}
 #| output: false
 
-seed = 42
-random.seed(seed)
-np.random.seed(seed)
-torch.manual_seed(seed)
 
-num_epochs = 200
-steps_per_epoch = 1000
+num_epochs = 100
+steps_per_epoch = 2500
 
 for epoch in range(num_epochs):
   for step in range(steps_per_epoch):
