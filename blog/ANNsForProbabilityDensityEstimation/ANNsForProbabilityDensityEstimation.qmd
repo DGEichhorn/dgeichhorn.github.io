@@ -9,11 +9,9 @@ categories:
   - Technology
 ---
 
-To Dos:
-- Favicon
-- evtl 
-
-ACHTUNG: bei NN training scheint doch noch randomness drin zu sein; WICHTIG SETZE DESHALB WEITERE SEEDS INSBESONDERE FÜR random
+To Dos: 
+- Favicon 
+- evtl
 
 # Load Packages
 
@@ -41,7 +39,6 @@ np.random.seed(seed)
 torch.manual_seed(seed)
 ```
 
-
 # Data Generation
 
 ```{python}
@@ -59,15 +56,13 @@ mix = stats.Mixture([comp1, comp2], weights=[0.2, 0.8])
 
 x = np.linspace(0, 10, 1000)
 
-plt.figure(figsize=(8,5))
+plt.figure(figsize=(7,5))
 plt.plot(x, mix.pdf(x), color="C0", linestyle="dotted")
 plt.title("True Probability Density Function")
 plt.xlabel("Density")
 plt.ylabel("x")
 plt.show()
 ```
-
-# Visualization of Histogram
 
 # Define Neural Network
 
@@ -136,6 +131,7 @@ wichtiger kommentar: in jedem step wird ganzer datensatz verwendet; epochs diene
 
 ```{python}
 #| output: false
+
 num_epochs = 100
 steps_per_epoch = 2500
 
@@ -155,9 +151,11 @@ for epoch in range(num_epochs):
     loss.backward()
     optimizer.step()
     
-  print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
+  print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}", end="\r", flush=True)
 
 ```
+
+# plot cdf
 
 ```{python}
 #| code-fold: true
@@ -178,7 +176,7 @@ plt.show()
 
 ```
 
-# Function to compute derivate of NN w.r.t. to input x
+# Function to compute derivative of NN w.r.t. to input x
 
 ```{python}
 def ComputePDF(model, x):
@@ -238,27 +236,24 @@ plt.ylabel("x")
 plt.show()
 ```
 
-
 # Set Seed for reproducibility of data generation and neural network training
 
 ```{python}
+#| code-fold: true
+#| code-summary: "Show code"
+#| output: false
+
+# set seed
 seed = 42
 random.seed(seed)
 np.random.seed(seed)
 torch.manual_seed(seed)
-```
 
-# Construct model, loss and optimizer
-
-```{python}
+# construct model, loss and optimizer
 model = Network(input_size=1, hidden_size=10, output_size=1)
 criterion = LossPDE()
 optimizer = optim.Adam(model.parameters(), lr=1e-3)
-```
 
-# Sample data and set monotonicity points
-
-```{python}
 # sample data, sort it and convert to torch tensor
 n = 200
 rng = np.random.default_rng(seed)
@@ -270,15 +265,12 @@ lambda_mon = 1e6
 n_mon_points = 1000
 mon_points = torch.linspace(x[0,0], x[-1,0], n_mon_points)[:, None]
 delta = 0.1*(max(x)-min(x))/n_mon_points
-```
 
-# Training
 
-```{python}
-#| output: false
 num_epochs = 100
 steps_per_epoch = 2500
 
+# training
 for epoch in range(num_epochs):
   for step in range(steps_per_epoch):
     preds = model(x)
@@ -295,9 +287,12 @@ for epoch in range(num_epochs):
     loss.backward()
     optimizer.step()
     
-  print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
+  print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}", end="\r", flush=True)
+
 
 ```
+
+# plot cdf
 
 ```{python}
 #| code-fold: true
@@ -338,10 +333,3 @@ plt.legend()
 plt.show()
 
 ```
-
-```{python}
-plt.clf()
-plt.hist(x, 20)
-plt.show()
-```
-

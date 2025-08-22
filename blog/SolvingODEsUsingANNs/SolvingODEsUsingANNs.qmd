@@ -168,6 +168,14 @@ class LossODE(nn.Module):
 
 ```
 
+## set seed for reproducibility
+
+```{python}
+seed = 42
+torch.manual_seed(seed)
+```
+
+
 ## Construct model, loss and optimizer
 
 ```{python}
