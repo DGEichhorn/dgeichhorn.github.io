@@ -12,10 +12,10 @@ about:
       href: mailto:dominik.g.eichhorn@gmail.com
     - text: GitHub
       icon: github
-      #href: 
+      href: https://github.com/DGEichhorn
     - text: LinkedIn
       icon: linkedin
-      #href: 
+      href: https://www.linkedin.com/in/dominik-eichhorn-119821192/
     - text: CV
       href: inputs/resume.pdf
 ---

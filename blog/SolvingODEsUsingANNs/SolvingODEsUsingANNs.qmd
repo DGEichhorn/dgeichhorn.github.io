@@ -129,7 +129,7 @@ x = torch.linspace(0, 15, 1000)[:, None]
 with torch.no_grad():
   y = model(x)
 
-plt.figure(figsize=(8, 5))
+plt.figure(figsize=(6, 5))
 plt.plot(x, y, color="C3", label="Neural Network")
 plt.plot(x, torch.exp(-0.5*x)*(0.5*torch.cos(x*(15)**0.5/2)+3*((15)**0.5/10)*torch.sin(x*(15)**0.5/2)), color="C0", label="Analytical", linestyle="dotted")
 plt.title("Solution of the ODE")
@@ -212,7 +212,7 @@ for epoch in range(num_epochs):
 ```
 # Visualize learned and analytical solution
 
-```{python}
+```{python, fig.align=center}
 #| code-fold: true
 #| code-summary: "Show code"
 
@@ -220,7 +220,7 @@ x = torch.linspace(-5, 5, 1000)[:, None]
 with torch.no_grad():
   y = model(x)
 
-plt.figure(figsize=(8, 5))
+plt.figure(figsize=(6, 5))
 plt.plot(x, y, color="C3", label="Neural Network")
 plt.plot(x, 2 - 3*torch.exp(-x**2), color="C0" , label="Analytical", linestyle="dotted")
 plt.title("Solution of the ODE")

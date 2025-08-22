@@ -57,7 +57,7 @@ mix = stats.Mixture([comp1, comp2], weights=[0.2, 0.8])
 
 x = np.linspace(0, 10, 1000)
 
-plt.figure(figsize=(7,5))
+plt.figure(figsize=(6,5))
 plt.plot(x, mix.pdf(x), color="C0", linestyle="dotted")
 plt.title("True Probability Density Function")
 plt.xlabel("Density")
@@ -166,7 +166,7 @@ xx = torch.linspace(0, 10, 1000).unsqueeze(1)
 with torch.no_grad():
     cdf_est = model(xx)
 
-plt.figure(figsize=(8, 5))
+plt.figure(figsize=(6, 5))
 plt.plot(xx.numpy(), cdf_est.numpy(), color="C3", label="Estimated CDF")
 plt.plot(xx.numpy(), mix.cdf(xx), color="C0", label="True CDF", linestyle="dotted")
 plt.title("Cumulative Density Function (CDF)")
@@ -203,7 +203,7 @@ pdf_est = ComputePDF(model, xx).detach()
 xx_np = xx.detach().numpy()
 
 
-plt.figure(figsize=(8, 5))
+plt.figure(figsize=(6, 5))
 plt.plot(xx_np, pdf_est.numpy(), color="C3", label="Estimated PDF")
 plt.plot(xx_np, mix.pdf(xx_np), color="C0", label="True PDF", linestyle="dotted")
 plt.title("Probability Density Function (PDF)")
@@ -229,7 +229,7 @@ dist = stats.weibull_min(c=1.8)
 
 x = np.linspace(0, 5, 1000)
 
-plt.figure(figsize=(8,5))
+plt.figure(figsize=(6,5))
 plt.plot(x, dist.pdf(x), color="C0", linestyle="dotted")
 plt.title("True Probability Density Function")
 plt.xlabel("Density")
@@ -303,7 +303,7 @@ xx = torch.linspace(0, 5, 1000).unsqueeze(1)
 with torch.no_grad():
     cdf_est = model(xx)
 
-plt.figure(figsize=(8, 5))
+plt.figure(figsize=(6, 5))
 plt.plot(xx.numpy(), cdf_est.numpy(), color="C3", label="Estimated CDF")
 plt.plot(xx.numpy(), dist.cdf(xx), color="C0", label="True CDF", linestyle="dotted")
 plt.title("Cumulative Density Function (CDF)")
@@ -324,7 +324,7 @@ pdf_est = ComputePDF(model, xx).detach()
 xx_np = xx.detach().numpy()
 
 
-plt.figure(figsize=(8, 5))
+plt.figure(figsize=(6, 5))
 plt.plot(xx_np, pdf_est.numpy(), color="C3", label="Estimated PDF")
 plt.plot(xx_np, dist.pdf(xx_np), color="C0", label="True PDF", linestyle="dotted")
 plt.title("Probability Density Function (PDF)")
