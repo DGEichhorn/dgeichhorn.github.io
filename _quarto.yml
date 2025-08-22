@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "Dominik Eichhorn"
+  title: "Dominik G. Eichhorn"
   navbar:
     left:
       - href: index.qmd

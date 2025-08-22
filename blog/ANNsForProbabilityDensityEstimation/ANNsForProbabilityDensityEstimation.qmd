@@ -10,7 +10,8 @@ categories:
 ---
 
 To Dos: 
-- Favicon 
+- sodala
+- Favicon: https://favicon.io/favicon-generator/ "DGE" Rounded Dangrek Regular 400 Normal 70; Farbe abstimmen mit der farbe meiner Website; Schriftart evtl auch anpassen
 - evtl
 
 # Load Packages
