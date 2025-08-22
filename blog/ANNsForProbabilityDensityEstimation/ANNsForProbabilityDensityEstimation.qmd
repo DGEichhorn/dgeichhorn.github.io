@@ -118,7 +118,7 @@ optimizer = optim.Adam(model.parameters(), lr=1e-3)
 
 ```{python}
 # sample data, sort it and convert to torch tensor
-n = 300
+n = 200
 rng = np.random.default_rng(seed)
 x = mix.sample(n, rng=rng)
 x = torch.from_numpy(np.sort(x)).float().unsqueeze(1)
@@ -136,8 +136,6 @@ wichtiger kommentar: in jedem step wird ganzer datensatz verwendet; epochs diene
 
 ```{python}
 #| output: false
-
-
 num_epochs = 100
 steps_per_epoch = 2500
 
@@ -216,3 +214,134 @@ plt.legend()
 plt.show()
 
 ```
+
+# Data Generation
+
+```{python}
+# construct Weibull distribution
+dist = stats.weibull_min(c=1.8)
+```
+
+# Visualization of the analytic PDF
+
+```{python}
+#| code-fold: true
+#| code-summary: "Show code"
+
+x = np.linspace(0, 5, 1000)
+
+plt.figure(figsize=(8,5))
+plt.plot(x, dist.pdf(x), color="C0", linestyle="dotted")
+plt.title("True Probability Density Function")
+plt.xlabel("Density")
+plt.ylabel("x")
+plt.show()
+```
+
+
+# Set Seed for reproducibility of data generation and neural network training
+
+```{python}
+seed = 42
+random.seed(seed)
+np.random.seed(seed)
+torch.manual_seed(seed)
+```
+
+# Construct model, loss and optimizer
+
+```{python}
+model = Network(input_size=1, hidden_size=10, output_size=1)
+criterion = LossPDE()
+optimizer = optim.Adam(model.parameters(), lr=1e-3)
+```
+
+# Sample data and set monotonicity points
+
+```{python}
+# sample data, sort it and convert to torch tensor
+n = 200
+rng = np.random.default_rng(seed)
+x = dist.rvs(n, random_state=rng)
+x = torch.from_numpy(np.sort(x)).float().unsqueeze(1)
+
+# set monotonicity points
+lambda_mon = 1e6
+n_mon_points = 1000
+mon_points = torch.linspace(x[0,0], x[-1,0], n_mon_points)[:, None]
+delta = 0.1*(max(x)-min(x))/n_mon_points
+```
+
+# Training
+
+```{python}
+#| output: false
+num_epochs = 100
+steps_per_epoch = 2500
+
+for epoch in range(num_epochs):
+  for step in range(steps_per_epoch):
+    preds = model(x)
+    
+    u = np.random.uniform(0, 1, n)
+    u = torch.from_numpy(np.sort(u)).float().unsqueeze(1)
+    
+    mon_l = model(mon_points)
+    mon_u = model(mon_points + delta)
+    
+    loss = criterion(preds, u, lambda_mon, mon_l, mon_u)
+    
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+    
+  print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
+
+```
+
+```{python}
+#| code-fold: true
+#| code-summary: "Show code"
+
+xx = torch.linspace(0, 5, 1000).unsqueeze(1)
+with torch.no_grad():
+    cdf_est = model(xx)
+
+plt.figure(figsize=(8, 5))
+plt.plot(xx.numpy(), cdf_est.numpy(), color="C3", label="Estimated CDF")
+plt.plot(xx.numpy(), dist.cdf(xx), color="C0", label="True CDF", linestyle="dotted")
+plt.title("Cumulative Density Function (CDF)")
+plt.xlabel("x")
+plt.ylabel("Cumulative Density")
+plt.legend()
+plt.show()
+
+```
+
+# Plot PDF
+
+```{python}
+#| code-fold: true
+#| code-summary: "Show code"
+
+pdf_est = ComputePDF(model, xx).detach()
+xx_np = xx.detach().numpy()
+
+
+plt.figure(figsize=(8, 5))
+plt.plot(xx_np, pdf_est.numpy(), color="C3", label="Estimated PDF")
+plt.plot(xx_np, dist.pdf(xx_np), color="C0", label="True PDF", linestyle="dotted")
+plt.title("Probability Density Function (PDF)")
+plt.xlabel("x")
+plt.ylabel("Density")
+plt.legend()
+plt.show()
+
+```
+
+```{python}
+plt.clf()
+plt.hist(x, 20)
+plt.show()
+```
+
