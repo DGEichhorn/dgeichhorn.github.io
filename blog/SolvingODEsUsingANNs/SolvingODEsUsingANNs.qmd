@@ -21,11 +21,13 @@ categories:
 # Load Packages
 
 ```{python}
-import torch                        # for constructing, learning, using NNs
+# for constructing, learning, using NNs
+import torch
 import torch.nn as nn 
 import torch.optim as optim
 
-import matplotlib.pyplot as plt     # for visualization
+# for visualization
+import matplotlib.pyplot as plt
 ```
 
 # set seed for reproducibility

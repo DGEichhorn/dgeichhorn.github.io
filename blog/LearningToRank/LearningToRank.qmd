@@ -11,6 +11,61 @@ categories:
 
 So this is really my first Blog Post. I am trying to implement various ranking approaches.
 
+
+# Get pairwise comparison data
+
+get NHL data from <https://www.hockey-reference.com/leagues/NHL_2025_games.html#games>
+
+```{r}
+library(rvest)        # for web page scraping
+library(dplyr)        # for data manipulations
+
+url <- "https://www.hockey-reference.com/leagues/NHL_2025_games.html"
+page <- read_html(url)
+
+games <- page %>%
+  html_node("table#games") %>%
+  html_table(header=TRUE) 
+
+games <- games[, 3:6]
+names(games) <- c("Visitor", "Goals.V", "Home", "Goals.H")
+
+teams <- sort(unique(games$Visitor))
+n_teams <- length(teams)
+```
+# Construct Adjacency Matrix from pairwise comparisons data
+
+adjacency matrix $W=[w_{ij}]_{i=1,\dots,n,\, j=1,\dots, n}$ i.e. i-th row says how often team i won against every other team
+
+```{r}
+# initialize adjacency matrix with zeros
+W <- matrix(
+  rep(0, n_teams^2),
+  nrow = n_teams,
+  dimnames = list(
+    teams, # row names
+    teams  # col names
+  )
+)
+
+# iteriere über alle Spiele:
+#   wenn goal.v > goal.h
+#   dann v,h += 1
+for (g in 1:dim(games)[1]) {
+  if (pull(games[g, "Goals.V"]) > pull(games[g, "Goals.H"])) {
+    W[pull(games[g, "Visitor"]), pull(games[g, "Home"])] <- 
+      W[pull(games[g, "Visitor"]), pull(games[g, "Home"])] + 1
+  }else{
+    W[pull(games[g, "Home"]), pull(games[g, "Visitor"])] <- 
+      W[pull(games[g, "Home"]), pull(games[g, "Visitor"])] + 1
+  }
+}
+
+print(W)
+```
+
+
+
 ```{r}
 library(BradleyTerry2)
 
