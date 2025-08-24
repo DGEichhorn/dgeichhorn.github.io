@@ -62,6 +62,7 @@ for (g in 1:dim(games)[1]) {
 }
 
 print(W)
+
 ```
 
 
