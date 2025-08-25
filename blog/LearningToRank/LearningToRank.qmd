@@ -23,6 +23,8 @@ So this is really my first Blog Post. I am trying to implement various ranking a
 get NHL data from <https://www.hockey-reference.com/leagues/NHL_2025_games.html#games>
 
 ```{r}
+#| warning: false
+
 library(rvest)        # for web page scraping
 library(dplyr)        # for data manipulations
 
@@ -39,6 +41,7 @@ names(games) <- c("Visitor", "Goals.V", "Home", "Goals.H")
 teams <- sort(unique(games$Visitor))
 n_teams <- length(teams)
 ```
+
 # Construct Adjacency Matrix from pairwise comparisons data
 
 adjacency matrix $W=[w_{ij}]_{i=1,\dots,n,\, j=1,\dots, n}$ i.e. i-th row says how often team i won against every other team
@@ -70,10 +73,43 @@ for (g in 1:dim(games)[1]) {
 print(W)
 
 ```
+# MLE Estimation Bradley Terry
+
+```{r}
+bradleyterry_mle <- function(W, n_iter=1000){
+  p <- dim(W)[1]
+  
+  theta.old <- rep(1, p)
+  names(theta.old) <- colnames(W)
+  
+  theta.new <- numeric(p)
+  names(theta.new) <- colnames(W)
+  
+  for (k in 1:n_iter) {
+    
+    for (i in 1:p) {
+      theta.new[i] <- 
+        sum(W[i,])/(sum((W[i,] + W[,i])/(theta.old[i]+theta.old)))
+    }
+    
+    # divide by geomtric mean
+    theta.new <- theta.new/prod(theta.new)^(1/p)
+    
+    theta.old <- theta.new
+  }
+  
+  return(theta.new)
+}
+
+
+
+```
 
 
 
 ```{r}
+#| warning: false
+
 library(BradleyTerry2)
 
 data(citations)
@@ -156,6 +192,8 @@ exp(BTabilities)*theta.old[1]
 
 
 ```{r}
+#| warning: false
+
 d <- 0.85
 
 r <- rep(1/p, p)
