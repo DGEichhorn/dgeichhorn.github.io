@@ -27,6 +27,7 @@ get NHL data from <https://www.hockey-reference.com/leagues/NHL_2025_games.html#
 
 library(rvest)        # for web page scraping
 library(dplyr)        # for data manipulations
+library(ggplot2)    # for visualization
 
 url <- "https://www.hockey-reference.com/leagues/NHL_2025_games.html"
 page <- read_html(url)
@@ -69,10 +70,8 @@ for (g in 1:dim(games)[1]) {
       W[pull(games[g, "Home"]), pull(games[g, "Visitor"])] + 1
   }
 }
-
-print(W)
-
 ```
+
 # MLE Estimation Bradley Terry
 
 ```{r}
@@ -101,9 +100,26 @@ bradleyterry_mle <- function(W, n_iter=1000){
   return(theta.new)
 }
 
-
-
+bt_mle <- bradleyterry_mle(W)
 ```
+
+# Plot ranking results
+
+```{r}
+df <- data.frame(
+  team = names(bt_mle),
+  score = as.numeric(bt_mle)
+)
+
+ggplot(df, aes(reorder(team, score), y=score)) +
+  geom_col(fill="steelblue") +
+  coord_flip() +
+  labs(title="TITEL",
+       y="y ACHSE",
+       x="x ACHSE") +
+  theme_minimal()
+```
+
 
 
 
