@@ -9,6 +9,12 @@ categories:
   - Technology
 ---
 
+# TO DO
+1. write function for bradley terry MLE estimation
+2. important return NAMED vector from MLE estimation
+
+
+
 So this is really my first Blog Post. I am trying to implement various ranking approaches.
 
 
@@ -93,7 +99,7 @@ p <- dim(W)[1]
 theta.old <- rep(1, p)
 theta.new <- numeric(p)
 
-for (k in 1:100) {
+for (k in 1:1000) {
   
   for (i in 1:p) {
     theta.new[i] <- sum(W[i,])/(sum((W[i,] + W[,i])/(theta.old[i]+theta.old)))
