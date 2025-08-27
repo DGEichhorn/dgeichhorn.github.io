@@ -10,8 +10,6 @@ categories:
 ---
 
 # TO DO
-1. write function for bradley terry MLE estimation
-2. important return NAMED vector from MLE estimation
 
 
 
@@ -20,27 +18,65 @@ So this is really my first Blog Post. I am trying to implement various ranking a
 
 # Get pairwise comparison data
 
-get NHL data from <https://www.hockey-reference.com/leagues/NHL_2025_games.html#games>
+get NHL data from <https://www.pro-football-reference.com/years/2024/games.htm>; OLD NHL: <https://www.hockey-reference.com/leagues/NHL_2025_games.html#games>
 
 ```{r}
 #| warning: false
 
 library(rvest)        # for web page scraping
 library(dplyr)        # for data manipulations
-library(ggplot2)    # for visualization
+library(ggplot2)      # for visualization
 
-url <- "https://www.hockey-reference.com/leagues/NHL_2025_games.html"
+url <- "https://www.pro-football-reference.com/years/2024/games.htm#games"
 page <- read_html(url)
 
 games <- page %>%
   html_node("table#games") %>%
-  html_table(header=TRUE) 
+  html_table(header=TRUE) %>%
+  as.data.frame()
 
-games <- games[, 3:6]
-names(games) <- c("Visitor", "Goals.V", "Home", "Goals.H")
+games <- games[, c(1,5,7)]
+names(games) <- c("Week", "Winner", "Loser")
 
-teams <- sort(unique(games$Visitor))
+# keep only games during regular season (i.e. int-valued week)
+games <- games %>%
+  filter(grepl("^[0-9]+$", Week)) %>%
+  select(Winner, Loser)
+
+teams <- sort(unique(c(games$Winner, games$Loser)))
 n_teams <- length(teams)
+```
+
+
+```{r}
+# initialize adjacency matrix with zeros
+W <- matrix(
+  rep(0, n_teams^2),
+  nrow = n_teams,
+  dimnames = list(
+    teams, # row names
+    teams  # col names
+  )
+)
+
+# iterate over all games
+for (g in 1:dim(games)[1]) {
+  W[games[g, "Winner"], games[g, "Loser"]] <- 
+    W[games[g, "Winner"], games[g, "Loser"]] + 1
+}
+
+# iteriere über alle Spiele:
+#   wenn goal.v > goal.h
+#   dann v,h += 1
+# for (g in 1:dim(games)[1]) {
+#   if (games[g, "Goals.V"] > games[g, "Goals.H"]) {
+#     W[games[g, "Visitor"], games[g, "Home"]] <- 
+#       W[games[g, "Visitor"], games[g, "Home"]] + 1
+#   }else{
+#     W[games[g, "Home"], games[g, "Visitor"]] <- 
+#       W[games[g, "Home"], games[g, "Visitor"]] + 1
+#   }
+# }
 ```
 
 # Construct Adjacency Matrix from pairwise comparisons data
