@@ -1,0 +1,10 @@
+Idea für eine Data Viz Post:
+- map plot: nutzung von libraries; vermeintliche einfach erklärung: in manchen districts sind mehr doofis die weniger in bibs gehen ABER: Nutzung hängt auch von Erreichbarkeit ab
+- map plot: erreichbarkeit von libraries
+- scatterplot: zusammenhang nutzung vs. erreichbarkeit
+- korrektur: (perc usage)/(perc 30 min walk erreichbar)
+
+
+Daten:
+- Nutzung von Libraries: https://www.ons.gov.uk/explore-local-statistics/indicators/visited-a-public-library
+- Erreichbarkeit von Libraries: https://www.ons.gov.uk/explore-local-statistics/indicators/library-walk
