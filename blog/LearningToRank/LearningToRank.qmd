@@ -125,6 +125,7 @@ ggplot(df, aes(reorder(team, score), y=score)) +
 ```{r}
 #| warning: false
 
+# evtl nicht die ganze library laden sondern nur BradleyTerry2:: an den notwendigen Stellen nutzen
 library(BradleyTerry2)
 
 b<-countsToBinomial(W)
@@ -139,12 +140,12 @@ log(theta.old/theta.old[1])
 BTabilities <- BTabilities(package_model)[,1]
 exp(BTabilities)*bt_mle[1]
 ```
+
 # Google Page Rank from scratch
 
 ```{r}
 
 ```
-
 
 #### old
 
