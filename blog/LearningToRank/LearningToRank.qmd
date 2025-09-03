@@ -11,14 +11,11 @@ categories:
 
 # TO DO
 
-
-
 So this is really my first Blog Post. I am trying to implement various ranking approaches.
-
 
 # Get pairwise comparison data
 
-get NHL data from <https://www.pro-football-reference.com/years/2024/games.htm>; OLD NHL: <https://www.hockey-reference.com/leagues/NHL_2025_games.html#games>
+get American Football data from <https://www.pro-football-reference.com/years/2024/games.htm>; OLD NHL: <https://www.hockey-reference.com/leagues/NHL_2025_games.html#games>
 
 ```{r}
 #| warning: false
@@ -47,9 +44,12 @@ teams <- sort(unique(c(games$Winner, games$Loser)))
 n_teams <- length(teams)
 ```
 
+# Construct Win Matrix from pairwise comparisons data
+
+adjacency matrix $W=[w_{ij}]_{i=1,\dots,n,\, j=1,\dots, n}$ i.e. i-th row says how often team i won against every other team
 
 ```{r}
-# initialize adjacency matrix with zeros
+# initialize win matrix with zeros
 W <- matrix(
   rep(0, n_teams^2),
   nrow = n_teams,
@@ -59,29 +59,94 @@ W <- matrix(
   )
 )
 
+# fill win matrix
 # iterate over all games
 for (g in 1:dim(games)[1]) {
   W[games[g, "Winner"], games[g, "Loser"]] <- 
     W[games[g, "Winner"], games[g, "Loser"]] + 1
 }
 
-# iteriere über alle Spiele:
-#   wenn goal.v > goal.h
-#   dann v,h += 1
-# for (g in 1:dim(games)[1]) {
-#   if (games[g, "Goals.V"] > games[g, "Goals.H"]) {
-#     W[games[g, "Visitor"], games[g, "Home"]] <- 
-#       W[games[g, "Visitor"], games[g, "Home"]] + 1
-#   }else{
-#     W[games[g, "Home"], games[g, "Visitor"]] <- 
-#       W[games[g, "Home"], games[g, "Visitor"]] + 1
-#   }
-# }
 ```
 
-# Construct Adjacency Matrix from pairwise comparisons data
+# Define function for mle estimation of Bradley Terry Model
 
-adjacency matrix $W=[w_{ij}]_{i=1,\dots,n,\, j=1,\dots, n}$ i.e. i-th row says how often team i won against every other team
+```{r}
+bradleyterry_mle <- function(W, n_iter=1000){
+  p <- dim(W)[1]
+  
+  theta.old <- rep(1, p)
+  names(theta.old) <- colnames(W)
+  
+  theta.new <- numeric(p)
+  names(theta.new) <- colnames(W)
+  
+  for (k in 1:n_iter) {
+    
+    for (i in 1:p) {
+      theta.new[i] <- 
+        sum(W[i,])/(sum((W[i,] + W[,i])/(theta.old[i]+theta.old)))
+    }
+    
+    # divide by geomtric mean
+    theta.new <- theta.new/prod(theta.new)^(1/p)
+    
+    theta.old <- theta.new
+  }
+  
+  return(theta.new)
+}
+```
+
+apply mle estimation function to W matrix
+
+```{r}
+bt_mle <- bradleyterry_mle(W)
+```
+
+# Plot ranking results
+
+```{r}
+df <- data.frame(
+  team = names(bt_mle),
+  score = as.numeric(bt_mle)
+)
+
+ggplot(df, aes(reorder(team, score), y=score)) +
+  geom_col(fill="steelblue") +
+  coord_flip() +
+  labs(title="TITEL",
+       y="y ACHSE",
+       x="x ACHSE") +
+  theme_minimal()
+```
+
+# compare my results to results of R Package Bradley Terry
+
+```{r}
+#| warning: false
+
+library(BradleyTerry2)
+
+b<-countsToBinomial(W)
+package_model <- BTm(cbind(win1, win2), player1, player2, data=b)
+BTabilities(package_model)
+
+# Converting my values into BTm ability values
+log(theta.old/theta.old[1])
+
+
+# Converting BTm values to my values
+BTabilities <- BTabilities(package_model)[,1]
+exp(BTabilities)*bt_mle[1]
+```
+# Google Page Rank from scratch
+
+```{r}
+
+```
+
+
+#### old
 
 ```{r}
 # initialize adjacency matrix with zeros
@@ -155,9 +220,6 @@ ggplot(df, aes(reorder(team, score), y=score)) +
        x="x ACHSE") +
   theme_minimal()
 ```
-
-
-
 
 ```{r}
 #| warning: false
@@ -241,8 +303,6 @@ exp(BTabilities)*theta.old[1]
 
 ```
 
-
-
 ```{r}
 #| warning: false
 
@@ -289,7 +349,6 @@ graphObj <- graph_from_adjacency_matrix(t(W), weighted = TRUE, mode = "directed"
 #  }
 ```
 
-
 ```{r}
 
 # link wo man daten als csv bekommt: https://www.hockey-reference.com/leagues/NHL_2025_games.html#games
@@ -327,5 +386,3 @@ schedule <- page %>%
 #head(schedule_clean)
 
 ```
-
-
