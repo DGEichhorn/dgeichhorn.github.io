@@ -169,7 +169,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul>
   <li><a href="#to-do" id="toc-to-do" class="nav-link active" data-scroll-target="#to-do">TO DO</a></li>
   <li><a href="#get-pairwise-comparison-data" id="toc-get-pairwise-comparison-data" class="nav-link" data-scroll-target="#get-pairwise-comparison-data">Get pairwise comparison data</a></li>
-  <li><a href="#construct-adjacency-matrix-from-pairwise-comparisons-data" id="toc-construct-adjacency-matrix-from-pairwise-comparisons-data" class="nav-link" data-scroll-target="#construct-adjacency-matrix-from-pairwise-comparisons-data">Construct Adjacency Matrix from pairwise comparisons data</a></li>
+  <li><a href="#construct-win-matrix-from-pairwise-comparisons-data" id="toc-construct-win-matrix-from-pairwise-comparisons-data" class="nav-link" data-scroll-target="#construct-win-matrix-from-pairwise-comparisons-data">Construct Win Matrix from pairwise comparisons data</a></li>
+  <li><a href="#define-function-for-mle-estimation-of-bradley-terry-model" id="toc-define-function-for-mle-estimation-of-bradley-terry-model" class="nav-link" data-scroll-target="#define-function-for-mle-estimation-of-bradley-terry-model">Define function for mle estimation of Bradley Terry Model</a></li>
+  <li><a href="#plot-ranking-results" id="toc-plot-ranking-results" class="nav-link" data-scroll-target="#plot-ranking-results">Plot ranking results</a></li>
+  <li><a href="#compare-my-results-to-results-of-r-package-bradley-terry" id="toc-compare-my-results-to-results-of-r-package-bradley-terry" class="nav-link" data-scroll-target="#compare-my-results-to-results-of-r-package-bradley-terry">compare my results to results of R Package Bradley Terry</a></li>
+  <li><a href="#google-page-rank-from-scratch" id="toc-google-page-rank-from-scratch" class="nav-link" data-scroll-target="#google-page-rank-from-scratch">Google Page Rank from scratch</a></li>
+  <li><a href="#compare-my-results-to-r-package-results" id="toc-compare-my-results-to-r-package-results" class="nav-link" data-scroll-target="#compare-my-results-to-r-package-results">compare my results to R Package results</a></li>
   </ul>
 </nav>
     </div>
@@ -216,37 +221,44 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="to-do" class="level1">
 <h1>TO DO</h1>
 <ol type="1">
-<li>write function for bradley terry MLE estimation</li>
-<li>important return NAMED vector from MLE estimation</li>
+<li>2mal metric für vergleich meine lösung vs.&nbsp;package</li>
+<li>plots zum vergleich der beiden rankings (u.a. plot(log(bt_mle), r))</li>
 </ol>
 <p>So this is really my first Blog Post. I am trying to implement various ranking approaches.</p>
 </section>
 <section id="get-pairwise-comparison-data" class="level1">
 <h1>Get pairwise comparison data</h1>
-<p>get NHL data from <a href="https://www.hockey-reference.com/leagues/NHL_2025_games.html#games" class="uri">https://www.hockey-reference.com/leagues/NHL_2025_games.html#games</a></p>
+<p>get American Football data from <a href="https://www.pro-football-reference.com/years/2024/games.htm" class="uri">https://www.pro-football-reference.com/years/2024/games.htm</a>; OLD NHL: <a href="https://www.hockey-reference.com/leagues/NHL_2025_games.html#games" class="uri">https://www.hockey-reference.com/leagues/NHL_2025_games.html#games</a></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)        <span class="co"># for web page scraping</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)        <span class="co"># for data manipulations</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://www.hockey-reference.com/leagues/NHL_2025_games.html"</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>page <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>games <span class="ot">&lt;-</span> page <span class="sc">%&gt;%</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_node</span>(<span class="st">"table#games"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_table</span>(<span class="at">header=</span><span class="cn">TRUE</span>) </span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>games <span class="ot">&lt;-</span> games[, <span class="dv">3</span><span class="sc">:</span><span class="dv">6</span>]</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(games) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Visitor"</span>, <span class="st">"Goals.V"</span>, <span class="st">"Home"</span>, <span class="st">"Goals.H"</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>teams <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(games<span class="sc">$</span>Visitor))</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>n_teams <span class="ot">&lt;-</span> <span class="fu">length</span>(teams)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)      <span class="co"># for visualization</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://www.pro-football-reference.com/years/2024/games.htm#games"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>page <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>games <span class="ot">&lt;-</span> page <span class="sc">%&gt;%</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_node</span>(<span class="st">"table#games"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_table</span>(<span class="at">header=</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>games <span class="ot">&lt;-</span> games[, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">7</span>)]</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(games) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Week"</span>, <span class="st">"Winner"</span>, <span class="st">"Loser"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># keep only games during regular season (i.e. int-valued week)</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>games <span class="ot">&lt;-</span> games <span class="sc">%&gt;%</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"^[0-9]+$"</span>, Week)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Winner, Loser)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>teams <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(<span class="fu">c</span>(games<span class="sc">$</span>Winner, games<span class="sc">$</span>Loser)))</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>n_teams <span class="ot">&lt;-</span> <span class="fu">length</span>(teams)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="construct-adjacency-matrix-from-pairwise-comparisons-data" class="level1">
-<h1>Construct Adjacency Matrix from pairwise comparisons data</h1>
+<section id="construct-win-matrix-from-pairwise-comparisons-data" class="level1">
+<h1>Construct Win Matrix from pairwise comparisons data</h1>
 <p>adjacency matrix <span class="math inline">\(W=[w_{ij}]_{i=1,\dots,n,\, j=1,\dots, n}\)</span> i.e.&nbsp;i-th row says how often team i won against every other team</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize adjacency matrix with zeros</span></span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize win matrix with zeros</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rep</span>(<span class="dv">0</span>, n_teams<span class="sc">^</span><span class="dv">2</span>),</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> n_teams,</span>
@@ -256,1058 +268,279 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># iteriere über alle Spiele:</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   wenn goal.v &gt; goal.h</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#   dann v,h += 1</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (g <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(games)[<span class="dv">1</span>]) {</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">pull</span>(games[g, <span class="st">"Goals.V"</span>]) <span class="sc">&gt;</span> <span class="fu">pull</span>(games[g, <span class="st">"Goals.H"</span>])) {</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    W[<span class="fu">pull</span>(games[g, <span class="st">"Visitor"</span>]), <span class="fu">pull</span>(games[g, <span class="st">"Home"</span>])] <span class="ot">&lt;-</span> </span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      W[<span class="fu">pull</span>(games[g, <span class="st">"Visitor"</span>]), <span class="fu">pull</span>(games[g, <span class="st">"Home"</span>])] <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    W[<span class="fu">pull</span>(games[g, <span class="st">"Home"</span>]), <span class="fu">pull</span>(games[g, <span class="st">"Visitor"</span>])] <span class="ot">&lt;-</span> </span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>      W[<span class="fu">pull</span>(games[g, <span class="st">"Home"</span>]), <span class="fu">pull</span>(games[g, <span class="st">"Visitor"</span>])] <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(W)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                      Anaheim Ducks Boston Bruins Buffalo Sabres Calgary Flames
-Anaheim Ducks                     0             2              0              1
-Boston Bruins                     0             0              1              2
-Buffalo Sabres                    2             3              0              1
-Calgary Flames                    3             0              1              0
-Carolina Hurricanes               1             2              1              2
-Chicago Blackhawks                2             1              0              0
-Colorado Avalanche                3             0              2              2
-Columbus Blue Jackets             0             2              2              1
-Dallas Stars                      1             2              1              3
-Detroit Red Wings                 1             1              3              2
-Edmonton Oilers                   1             2              1              2
-Florida Panthers                  2             2              3              1
-Los Angeles Kings                 3             1              1              0
-Minnesota Wild                    3             1              2              0
-Montreal Canadiens                1             1              4              0
-Nashville Predators               0             2              1              1
-New Jersey Devils                 1             2              2              0
-New York Islanders                0             2              2              0
-New York Rangers                  1             2              1              0
-Ottawa Senators                   1             3              0              2
-Philadelphia Flyers               2             1              2              0
-Pittsburgh Penguins               1             1              2              1
-San Jose Sharks                   0             1              1              0
-Seattle Kraken                    1             1              2              2
-St. Louis Blues                   3             1              0              3
-Tampa Bay Lightning               1             2              2              2
-Toronto Maple Leafs               2             3              3              2
-Utah Hockey Club                  1             1              2              3
-Vancouver Canucks                 3             1              1              2
-Vegas Golden Knights              4             2              1              3
-Washington Capitals               2             2              1              1
-Winnipeg Jets                     1             2              1              2
-                      Carolina Hurricanes Chicago Blackhawks Colorado Avalanche
-Anaheim Ducks                           1                  1                  0
-Boston Bruins                           1                  1                  2
-Buffalo Sabres                          2                  2                  0
-Calgary Flames                          0                  3                  1
-Carolina Hurricanes                     0                  2                  1
-Chicago Blackhawks                      0                  0                  2
-Colorado Avalanche                      1                  2                  0
-Columbus Blue Jackets                   2                  2                  1
-Dallas Stars                            0                  3                  1
-Detroit Red Wings                       1                  2                  0
-Edmonton Oilers                         1                  2                  2
-Florida Panthers                        2                  1                  0
-Los Angeles Kings                       2                  1                  1
-Minnesota Wild                          2                  3                  2
-Montreal Canadiens                      2                  0                  1
-Nashville Predators                     2                  3                  2
-New Jersey Devils                       2                  2                  0
-New York Islanders                      2                  1                  2
-New York Rangers                        0                  1                  0
-Ottawa Senators                         2                  1                  0
-Philadelphia Flyers                     0                  1                  0
-Pittsburgh Penguins                     0                  1                  0
-San Jose Sharks                         0                  2                  0
-Seattle Kraken                          1                  2                  0
-St. Louis Blues                         1                  3                  3
-Tampa Bay Lightning                     2                  1                  2
-Toronto Maple Leafs                     2                  2                  1
-Utah Hockey Club                        1                  3                  1
-Vancouver Canucks                       0                  3                  3
-Vegas Golden Knights                    0                  2                  1
-Washington Capitals                     2                  1                  1
-Winnipeg Jets                           1                  3                  3
-                      Columbus Blue Jackets Dallas Stars Detroit Red Wings
-Anaheim Ducks                             2            2                 1
-Boston Bruins                             1            0                 2
-Buffalo Sabres                            1            1                 1
-Calgary Flames                            1            0                 0
-Carolina Hurricanes                       2            2                 2
-Chicago Blackhawks                        0            1                 0
-Colorado Avalanche                        1            2                 2
-Columbus Blue Jackets                     0            1                 2
-Dallas Stars                              1            0                 1
-Detroit Red Wings                         1            1                 0
-Edmonton Oilers                           1            1                 1
-Florida Panthers                          3            2                 1
-Los Angeles Kings                         1            2                 1
-Minnesota Wild                            2            2                 1
-Montreal Canadiens                        2            1                 3
-Nashville Predators                       1            2                 0
-New Jersey Devils                         2            0                 1
-New York Islanders                        1            0                 0
-New York Rangers                          3            1                 3
-Ottawa Senators                           2            1                 3
-Philadelphia Flyers                       2            0                 2
-Pittsburgh Penguins                       1            1                 1
-San Jose Sharks                           1            0                 2
-Seattle Kraken                            1            0                 0
-St. Louis Blues                           0            0                 2
-Tampa Bay Lightning                       2            1                 2
-Toronto Maple Leafs                       1            1                 3
-Utah Hockey Club                          1            1                 1
-Vancouver Canucks                         1            1                 1
-Vegas Golden Knights                      1            1                 1
-Washington Capitals                       2            1                 2
-Winnipeg Jets                             1            3                 1
-                      Edmonton Oilers Florida Panthers Los Angeles Kings
-Anaheim Ducks                       3                0                 1
-Boston Bruins                       0                2                 1
-Buffalo Sabres                      1                1                 1
-Calgary Flames                      1                1                 3
-Carolina Hurricanes                 1                1                 0
-Chicago Blackhawks                  1                1                 2
-Colorado Avalanche                  1                2                 2
-Columbus Blue Jackets               1                0                 1
-Dallas Stars                        2                0                 1
-Detroit Red Wings                   1                2                 1
-Edmonton Oilers                     0                0                 1
-Florida Panthers                    2                0                 1
-Los Angeles Kings                   3                1                 0
-Minnesota Wild                      1                1                 1
-Montreal Canadiens                  1                4                 0
-Nashville Predators                 0                0                 1
-New Jersey Devils                   2                2                 1
-New York Islanders                  0                1                 0
-New York Rangers                    0                1                 0
-Ottawa Senators                     0                2                 1
-Philadelphia Flyers                 1                1                 0
-Pittsburgh Penguins                 1                1                 2
-San Jose Sharks                     0                0                 2
-Seattle Kraken                      1                1                 2
-St. Louis Blues                     0                0                 2
-Tampa Bay Lightning                 1                2                 1
-Toronto Maple Leafs                 2                1                 2
-Utah Hockey Club                    0                0                 0
-Vancouver Canucks                   1                2                 2
-Vegas Golden Knights                2                1                 1
-Washington Capitals                 2                3                 1
-Winnipeg Jets                       2                1                 0
-                      Minnesota Wild Montreal Canadiens Nashville Predators
-Anaheim Ducks                      0                  1                   3
-Boston Bruins                      1                  2                   0
-Buffalo Sabres                     0                  0                   1
-Calgary Flames                     3                  2                   2
-Carolina Hurricanes                0                  1                   0
-Chicago Blackhawks                 1                  2                   1
-Colorado Avalanche                 2                  1                   2
-Columbus Blue Jackets              0                  1                   1
-Dallas Stars                       2                  1                   2
-Detroit Red Wings                  1                  1                   2
-Edmonton Oilers                    2                  1                   3
-Florida Panthers                   1                  0                   2
-Los Angeles Kings                  2                  2                   2
-Minnesota Wild                     0                  2                   2
-Montreal Canadiens                 0                  0                   2
-Nashville Predators                1                  0                   0
-New Jersey Devils                  2                  3                   2
-New York Islanders                 1                  2                   1
-New York Rangers                   2                  2                   1
-Ottawa Senators                    2                  1                   2
-Philadelphia Flyers                1                  1                   2
-Pittsburgh Penguins                1                  3                   2
-San Jose Sharks                    0                  0                   0
-Seattle Kraken                     1                  2                   2
-St. Louis Blues                    1                  1                   4
-Tampa Bay Lightning                0                  1                   2
-Toronto Maple Leafs                0                  3                   1
-Utah Hockey Club                   3                  1                   1
-Vancouver Canucks                  1                  0                   1
-Vegas Golden Knights               3                  1                   2
-Washington Capitals                0                  2                   2
-Winnipeg Jets                      3                  2                   2
-                      New Jersey Devils New York Islanders New York Rangers
-Anaheim Ducks                         1                  2                1
-Boston Bruins                         1                  1                1
-Buffalo Sabres                        1                  1                2
-Calgary Flames                        2                  2                2
-Carolina Hurricanes                   2                  2                4
-Chicago Blackhawks                    0                  1                1
-Colorado Avalanche                    2                  0                2
-Columbus Blue Jackets                 1                  3                1
-Dallas Stars                          2                  2                1
-Detroit Red Wings                     2                  3                0
-Edmonton Oilers                       0                  2                2
-Florida Panthers                      1                  2                2
-Los Angeles Kings                     1                  2                2
-Minnesota Wild                        0                  1                0
-Montreal Canadiens                    0                  1                1
-Nashville Predators                   0                  1                1
-New Jersey Devils                     0                  1                3
-New York Islanders                    2                  0                0
-New York Rangers                      1                  4                0
-Ottawa Senators                       2                  1                1
-Philadelphia Flyers                   2                  2                2
-Pittsburgh Penguins                   2                  1                1
-San Jose Sharks                       2                  0                0
-Seattle Kraken                        0                  2                1
-St. Louis Blues                       1                  1                2
-Tampa Bay Lightning                   2                  2                2
-Toronto Maple Leafs                   3                  2                2
-Utah Hockey Club                      0                  1                1
-Vancouver Canucks                     1                  1                0
-Vegas Golden Knights                  2                  0                0
-Washington Capitals                   2                  2                3
-Winnipeg Jets                         2                  1                2
-                      Ottawa Senators Philadelphia Flyers Pittsburgh Penguins
-Anaheim Ducks                       1                   0                   1
-Boston Bruins                       1                   2                   2
-Buffalo Sabres                      4                   1                   1
-Calgary Flames                      0                   2                   1
-Carolina Hurricanes                 1                   3                   3
-Chicago Blackhawks                  1                   1                   1
-Colorado Avalanche                  2                   2                   2
-Columbus Blue Jackets               1                   2                   2
-Dallas Stars                        1                   2                   1
-Detroit Red Wings                   1                   1                   2
-Edmonton Oilers                     2                   1                   1
-Florida Panthers                    1                   2                   2
-Los Angeles Kings                   1                   2                   0
-Minnesota Wild                      0                   1                   1
-Montreal Canadiens                  3                   2                   0
-Nashville Predators                 0                   0                   0
-New Jersey Devils                   1                   2                   2
-New York Islanders                  2                   2                   3
-New York Rangers                    2                   1                   3
-Ottawa Senators                     0                   2                   2
-Philadelphia Flyers                 1                   0                   2
-Pittsburgh Penguins                 1                   2                   0
-San Jose Sharks                     0                   0                   1
-Seattle Kraken                      0                   2                   2
-St. Louis Blues                     1                   0                   1
-Tampa Bay Lightning                 2                   1                   3
-Toronto Maple Leafs                 0                   3                   2
-Utah Hockey Club                    0                   2                   1
-Vancouver Canucks                   1                   1                   1
-Vegas Golden Knights                2                   2                   1
-Washington Capitals                 2                   4                   2
-Winnipeg Jets                       2                   1                   2
-                      San Jose Sharks Seattle Kraken St. Louis Blues
-Anaheim Ducks                       3              2               0
-Boston Bruins                       1              1               1
-Buffalo Sabres                      1              0               2
-Calgary Flames                      4              2               0
-Carolina Hurricanes                 2              1               1
-Chicago Blackhawks                  1              1               0
-Colorado Avalanche                  3              3               1
-Columbus Blue Jackets               1              1               2
-Dallas Stars                        3              3               3
-Detroit Red Wings                   0              2               0
-Edmonton Oilers                     4              3               3
-Florida Panthers                    2              1               2
-Los Angeles Kings                   2              2               1
-Minnesota Wild                      3              2               3
-Montreal Canadiens                  2              0               1
-Nashville Predators                 3              1               0
-New Jersey Devils                   0              2               1
-New York Islanders                  2              0               1
-New York Rangers                    2              1               0
-Ottawa Senators                     2              2               1
-Philadelphia Flyers                 2              0               2
-Pittsburgh Penguins                 1              0               1
-San Jose Sharks                     0              2               1
-Seattle Kraken                      2              0               1
-St. Louis Blues                     2              2               0
-Tampa Bay Lightning                 1              2               1
-Toronto Maple Leafs                 0              2               0
-Utah Hockey Club                    2              1               2
-Vancouver Canucks                   4              1               1
-Vegas Golden Knights                3              2               2
-Washington Capitals                 1              2               1
-Winnipeg Jets                       3              3               3
-                      Tampa Bay Lightning Toronto Maple Leafs Utah Hockey Club
-Anaheim Ducks                           1                   0                2
-Boston Bruins                           2                   1                1
-Buffalo Sabres                          1                   0                0
-Calgary Flames                          0                   0                0
-Carolina Hurricanes                     1                   1                1
-Chicago Blackhawks                      1                   0                1
-Colorado Avalanche                      0                   1                2
-Columbus Blue Jackets                   1                   2                1
-Dallas Stars                            1                   1                3
-Detroit Red Wings                       2                   1                1
-Edmonton Oilers                         1                   0                3
-Florida Panthers                        2                   3                2
-Los Angeles Kings                       1                   0                3
-Minnesota Wild                          2                   2                1
-Montreal Canadiens                      2                   1                1
-Nashville Predators                     0                   1                2
-New Jersey Devils                       1                   0                2
-New York Islanders                      1                   1                1
-New York Rangers                        1                   1                1
-Ottawa Senators                         2                   3                2
-Philadelphia Flyers                     2                   0                0
-Pittsburgh Penguins                     0                   1                1
-San Jose Sharks                         1                   2                1
-Seattle Kraken                          0                   0                2
-St. Louis Blues                         1                   2                2
-Tampa Bay Lightning                     0                   0                1
-Toronto Maple Leafs                     4                   0                2
-Utah Hockey Club                        1                   0                0
-Vancouver Canucks                       0                   2                0
-Vegas Golden Knights                    1                   1                2
-Washington Capitals                     1                   2                1
-Winnipeg Jets                           1                   1                2
-                      Vancouver Canucks Vegas Golden Knights
-Anaheim Ducks                         1                    0
-Boston Bruins                         1                    0
-Buffalo Sabres                        1                    1
-Calgary Flames                        2                    1
-Carolina Hurricanes                   2                    2
-Chicago Blackhawks                    0                    1
-Colorado Avalanche                    0                    2
-Columbus Blue Jackets                 1                    1
-Dallas Stars                          2                    2
-Detroit Red Wings                     1                    1
-Edmonton Oilers                       2                    2
-Florida Panthers                      0                    1
-Los Angeles Kings                     1                    3
-Minnesota Wild                        2                    0
-Montreal Canadiens                    2                    1
-Nashville Predators                   2                    1
-New Jersey Devils                     1                    0
-New York Islanders                    1                    2
-New York Rangers                      2                    2
-Ottawa Senators                       1                    0
-Philadelphia Flyers                   1                    0
-Pittsburgh Penguins                   1                    1
-San Jose Sharks                       0                    0
-Seattle Kraken                        3                    1
-St. Louis Blues                       2                    1
-Tampa Bay Lightning                   2                    1
-Toronto Maple Leafs                   0                    1
-Utah Hockey Club                      3                    1
-Vancouver Canucks                     0                    0
-Vegas Golden Knights                  4                    0
-Washington Capitals                   1                    2
-Winnipeg Jets                         2                    1
-                      Washington Capitals Winnipeg Jets
-Anaheim Ducks                           0             2
-Boston Bruins                           1             0
-Buffalo Sabres                          2             1
-Calgary Flames                          1             1
-Carolina Hurricanes                     2             1
-Chicago Blackhawks                      1             0
-Colorado Avalanche                      1             1
-Columbus Blue Jackets                   2             1
-Dallas Stars                            1             1
-Detroit Red Wings                       1             1
-Edmonton Oilers                         0             1
-Florida Panthers                        0             1
-Los Angeles Kings                       1             3
-Minnesota Wild                          2             0
-Montreal Canadiens                      1             0
-Nashville Predators                     0             2
-New Jersey Devils                       2             0
-New York Islanders                      1             1
-New York Rangers                        0             0
-Ottawa Senators                         1             0
-Philadelphia Flyers                     0             1
-Pittsburgh Penguins                     2             0
-San Jose Sharks                         1             0
-Seattle Kraken                          0             0
-St. Louis Blues                         1             1
-Tampa Bay Lightning                     2             1
-Toronto Maple Leafs                     1             1
-Utah Hockey Club                        1             2
-Vancouver Canucks                       1             1
-Vegas Golden Knights                    0             2
-Washington Capitals                     0             0
-Winnipeg Jets                           2             0</code></pre>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># fill win matrix</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># iterate over all games</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (g <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(games)[<span class="dv">1</span>]) {</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  W[games[g, <span class="st">"Winner"</span>], games[g, <span class="st">"Loser"</span>]] <span class="ot">&lt;-</span> </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    W[games[g, <span class="st">"Winner"</span>], games[g, <span class="st">"Loser"</span>]] <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+</section>
+<section id="define-function-for-mle-estimation-of-bradley-terry-model" class="level1">
+<h1>Define function for mle estimation of Bradley Terry Model</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BradleyTerry2)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(citations)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>team.names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"FCN"</span>, <span class="st">"VfB"</span>, <span class="st">"BVB"</span>, <span class="st">"HSV"</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">0</span>),</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="dv">4</span>,</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    team.names,  <span class="co"># Row names</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    team.names   <span class="co"># Column names</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># number of teams</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">dim</span>(W)[<span class="dv">1</span>]</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>theta.old <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, p)</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>theta.new <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p)</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>) {</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) {</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    theta.new[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>(W[i,])<span class="sc">/</span>(<span class="fu">sum</span>((W[i,] <span class="sc">+</span> W[,i])<span class="sc">/</span>(theta.old[i]<span class="sc">+</span>theta.old)))</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># divide by geomtric mean</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  theta.new <span class="ot">&lt;-</span> theta.new<span class="sc">/</span><span class="fu">prod</span>(theta.new)<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span>p)</span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  theta.old <span class="ot">&lt;-</span> theta.new</span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="co"># wahrsch dass FCN gegen VfB gewinnt: </span></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="fl">1.042565</span><span class="sc">/</span>(<span class="fl">1.042565</span><span class="sc">+</span> <span class="fl">0.795519</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.567202</code></pre>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>bradleyterry_mle <span class="ot">&lt;-</span> <span class="cf">function</span>(W, <span class="at">n_iter=</span><span class="dv">1000</span>){</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">dim</span>(W)[<span class="dv">1</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  theta.old <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, p)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(theta.old) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(W)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  theta.new <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(theta.new) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(W)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter) {</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) {</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      theta.new[i] <span class="ot">&lt;-</span> </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sum</span>(W[i,])<span class="sc">/</span>(<span class="fu">sum</span>((W[i,] <span class="sc">+</span> W[,i])<span class="sc">/</span>(theta.old[i]<span class="sc">+</span>theta.old)))</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># divide by geomtric mean</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    theta.new <span class="ot">&lt;-</span> theta.new<span class="sc">/</span><span class="fu">prod</span>(theta.new)<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span>p)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    theta.old <span class="ot">&lt;-</span> theta.new</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(theta.new)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>b<span class="ot">&lt;-</span><span class="fu">countsToBinomial</span>(W)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>citation_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="dv">714</span>, <span class="dv">730</span>, <span class="dv">498</span>, <span class="dv">221</span>,    <span class="co"># Biometrika</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">33</span>, <span class="dv">425</span>, <span class="dv">68</span>, <span class="dv">17</span>,       <span class="co"># Comm Statist</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="dv">320</span>, <span class="dv">813</span>, <span class="dv">1072</span>, <span class="dv">142</span>,   <span class="co"># JASA</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="dv">284</span>, <span class="dv">276</span>, <span class="dv">325</span>, <span class="dv">188</span>),   <span class="co"># JRSS-B</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="dv">4</span>,</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign row and column names</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(citation_matrix) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Biometrika"</span>, <span class="st">"Comm Statist"</span>, <span class="st">"JASA"</span>, <span class="st">"JRSS-B"</span>)</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(citation_matrix) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Biometrika"</span>, <span class="st">"Comm Statist"</span>, <span class="st">"JASA"</span>, <span class="st">"JRSS-B"</span>)</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>citations.sf <span class="ot">&lt;-</span> <span class="fu">countsToBinomial</span>(citations)</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>a<span class="ot">&lt;-</span><span class="fu">countsToBinomial</span>(citation_matrix)</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>citations.sf <span class="ot">&lt;-</span> <span class="fu">countsToBinomial</span>(W)</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(citations.sf)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"journal1"</span>, <span class="st">"journal2"</span>)</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="do">## Fit the "standard" Bradley-Terry model</span></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>citeModel <span class="ot">&lt;-</span> <span class="fu">BTm</span>(<span class="fu">cbind</span>(win1, win2), journal1, journal2, <span class="at">data =</span> citations.sf)</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="fu">BTabilities</span>(citeModel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>apply mle estimation function to W matrix</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>bt_mle <span class="ot">&lt;-</span> <span class="fu">bradleyterry_mle</span>(W)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="plot-ranking-results" class="level1">
+<h1>Plot ranking results</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">team =</span> <span class="fu">names</span>(bt_mle),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">score =</span> <span class="fu">as.numeric</span>(bt_mle)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="fu">reorder</span>(team, score), <span class="at">y=</span>score)) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill=</span><span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"TITEL"</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"y ACHSE"</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"x ACHSE"</span>) <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="LearningToRank_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="compare-my-results-to-results-of-r-package-bradley-terry" class="level1">
+<h1>compare my results to results of R Package Bradley Terry</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># evtl nicht die ganze library laden sondern nur BradleyTerry2:: an den notwendigen Stellen nutzen</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BradleyTerry2)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>b<span class="ot">&lt;-</span><span class="fu">countsToBinomial</span>(W)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>package_model <span class="ot">&lt;-</span> <span class="fu">BTm</span>(<span class="fu">cbind</span>(win1, win2), player1, player2, <span class="at">data=</span>b)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">BTabilities</span>(package_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>       ability     s.e.
-FCN 0.00000000 0.000000
-VfB 0.05301869 1.484210
-BVB 0.95329538 1.450889
-HSV 3.00933786 1.436988</code></pre>
+<pre><code>                         ability      s.e.
+Arizona Cardinals      0.0000000 0.0000000
+Atlanta Falcons       -0.1045449 0.8415298
+Baltimore Ravens       1.1418104 0.8676834
+Buffalo Bills          1.1877988 0.8601418
+Carolina Panthers     -1.1014454 0.8393499
+Chicago Bears         -0.9715400 0.8249687
+Cincinnati Bengals    -0.0567534 0.8709882
+Cleveland Browns      -1.8616368 0.9452417
+Dallas Cowboys        -0.4066470 0.8489731
+Denver Broncos         0.3610488 0.8457617
+Detroit Lions          2.5050022 0.9885558
+Green Bay Packers      0.9721904 0.8207348
+Houston Texans         0.1539970 0.8664170
+Indianapolis Colts    -0.6713506 0.8470376
+Jacksonville Jaguars  -1.9802343 0.8936397
+Kansas City Chiefs     2.1471437 1.0010453
+Las Vegas Raiders     -1.3872235 0.8926616
+Los Angeles Chargers   0.5523284 0.8457519
+Los Angeles Rams       0.4710335 0.7428602
+Miami Dolphins        -0.7946729 0.7850284
+Minnesota Vikings      1.9035464 0.9331217
+New England Patriots  -1.7985685 0.8431329
+New Orleans Saints    -1.0977606 0.8733501
+New York Giants       -1.6615983 0.9370010
+New York Jets         -1.3766081 0.8251299
+Philadelphia Eagles    1.5252550 0.9178396
+Pittsburgh Steelers    0.3596589 0.8594350
+San Francisco 49ers   -0.4485519 0.7422259
+Seattle Seahawks       0.4412204 0.7354132
+Tampa Bay Buccaneers   0.4422769 0.8533135
+Tennessee Titans      -2.1339592 0.9368089
+Washington Commanders  0.7176168 0.8500985</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Converting my values into BTm ability values</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(theta.old<span class="sc">/</span>theta.old[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(bt_mle<span class="sc">/</span>bt_mle[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.00000000 0.05301869 0.95329538 3.00933787</code></pre>
+<pre><code>    Arizona Cardinals       Atlanta Falcons      Baltimore Ravens 
+            0.0000000            -0.1045449             1.1418104 
+        Buffalo Bills     Carolina Panthers         Chicago Bears 
+            1.1877988            -1.1014454            -0.9715400 
+   Cincinnati Bengals      Cleveland Browns        Dallas Cowboys 
+           -0.0567534            -1.8616368            -0.4066470 
+       Denver Broncos         Detroit Lions     Green Bay Packers 
+            0.3610488             2.5050022             0.9721904 
+       Houston Texans    Indianapolis Colts  Jacksonville Jaguars 
+            0.1539970            -0.6713506            -1.9802343 
+   Kansas City Chiefs     Las Vegas Raiders  Los Angeles Chargers 
+            2.1471437            -1.3872235             0.5523284 
+     Los Angeles Rams        Miami Dolphins     Minnesota Vikings 
+            0.4710335            -0.7946729             1.9035464 
+ New England Patriots    New Orleans Saints       New York Giants 
+           -1.7985685            -1.0977606            -1.6615983 
+        New York Jets   Philadelphia Eagles   Pittsburgh Steelers 
+           -1.3766081             1.5252550             0.3596589 
+  San Francisco 49ers      Seattle Seahawks  Tampa Bay Buccaneers 
+           -0.4485519             0.4412204             0.4422769 
+     Tennessee Titans Washington Commanders 
+           -2.1339592             0.7176168 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Converting BTm values to my values</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>BTabilities <span class="ot">&lt;-</span> <span class="fu">BTabilities</span>(citeModel)[,<span class="dv">1</span>]</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(BTabilities)<span class="sc">*</span>theta.old[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>BTabilities <span class="ot">&lt;-</span> <span class="fu">BTabilities</span>(package_model)[,<span class="dv">1</span>]</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(BTabilities)<span class="sc">*</span>bt_mle[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      FCN       VfB       BVB       HSV 
-0.3664427 0.3863953 0.9506421 7.4292498 </code></pre>
+<pre><code>    Arizona Cardinals       Atlanta Falcons      Baltimore Ravens 
+            1.0972960             0.9883723             3.4372074 
+        Buffalo Bills     Carolina Panthers         Chicago Bears 
+            3.5989702             0.3647306             0.4153262 
+   Cincinnati Bengals      Cleveland Browns        Dallas Cowboys 
+            1.0367550             0.1705396             0.7306666 
+       Denver Broncos         Detroit Lions     Green Bay Packers 
+            1.5744371            13.4348377             2.9009532 
+       Houston Texans    Indianapolis Colts  Jacksonville Jaguars 
+            1.2799820             0.5607379             0.1514673 
+   Kansas City Chiefs     Las Vegas Raiders  Los Angeles Chargers 
+            9.3932631             0.2740692             1.9063251 
+     Los Angeles Rams        Miami Dolphins     Minnesota Vikings 
+            1.7574827             0.4956804             7.3624697 
+ New England Patriots    New Orleans Saints       New York Giants 
+            0.1816417             0.3660770             0.2083055 
+        New York Jets   Philadelphia Eagles   Pittsburgh Steelers 
+            0.2769941             5.0435188             1.5722503 
+  San Francisco 49ers      Seattle Seahawks  Tampa Bay Buccaneers 
+            0.7006807             1.7058601             1.7076632 
+     Tennessee Titans Washington Commanders 
+            0.1298844             2.2489553 </code></pre>
 </div>
 </div>
+</section>
+<section id="google-page-rank-from-scratch" class="level1">
+<h1>Google Page Rank from scratch</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fl">0.85</span></span>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> n_teams</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span>p, p)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fl">0.85</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># W_ij: number of times team j lost against team i</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>W</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span>p, p)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># W_ij: number of times team j lost against team i</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#W</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co"># c_j: number of times team j lost (=colSums of W)</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">colSums</span>(W)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>d)<span class="sc">*</span><span class="fu">rep</span>(<span class="dv">1</span>,p) <span class="sc">%*%</span> <span class="fu">t</span>(<span class="fu">rep</span>(<span class="dv">1</span>,p))<span class="sc">/</span>p <span class="sc">+</span> d<span class="sc">*</span>W<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span>c) </span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> A<span class="sc">%*%</span>r</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    FCN VfB BVB HSV
-FCN   0   1   0   0
-VfB   0   0   1   0
-BVB   1   0   0   1
-HSV   5   4   4   0</code></pre>
+<pre><code>                             [,1]
+Arizona Cardinals     0.023078736
+Atlanta Falcons       0.038286369
+Baltimore Ravens      0.061258396
+Buffalo Bills         0.071380275
+Carolina Panthers     0.013294979
+Chicago Bears         0.016268901
+Cincinnati Bengals    0.023895114
+Cleveland Browns      0.020751663
+Dallas Cowboys        0.026341877
+Denver Broncos        0.048459390
+Detroit Lions         0.056625881
+Green Bay Packers     0.028293675
+Houston Texans        0.031835544
+Indianapolis Colts    0.017257968
+Jacksonville Jaguars  0.009367408
+Kansas City Chiefs    0.058884281
+Las Vegas Raiders     0.017925304
+Los Angeles Chargers  0.030433727
+Los Angeles Rams      0.043601426
+Miami Dolphins        0.018825457
+Minnesota Vikings     0.034682922
+New England Patriots  0.024486948
+New Orleans Saints    0.013432521
+New York Giants       0.011337971
+New York Jets         0.013269218
+Philadelphia Eagles   0.047576348
+Pittsburgh Steelers   0.041487365
+San Francisco 49ers   0.021443657
+Seattle Seahawks      0.030969888
+Tampa Bay Buccaneers  0.058166828
+Tennessee Titans      0.011932274
+Washington Commanders 0.035147688</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># c_j: number of times team j lost (=colSums of W)</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">colSums</span>(W)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>d)<span class="sc">*</span><span class="fu">rep</span>(<span class="dv">1</span>,p) <span class="sc">%*%</span> <span class="fu">t</span>(<span class="fu">rep</span>(<span class="dv">1</span>,p))<span class="sc">/</span>p <span class="sc">+</span> d<span class="sc">*</span>W<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span>c) </span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(r)</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> A<span class="sc">%*%</span>r</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.25 0.25 0.25 0.25
-         [,1]
-FCN 0.0800000
-VfB 0.0800000
-BVB 0.2854167
-HSV 0.5545833
-          [,1]
-FCN 0.05110000
-VfB 0.08602083
-BVB 0.52022917
-HSV 0.34265000
-          [,1]
-FCN 0.05212354
-VfB 0.12593896
-BVB 0.33599167
-HSV 0.48594583
-          [,1]
-FCN 0.05890962
-VfB 0.09461858
-BVB 0.45793813
-HSV 0.38853367
-          [,1]
-FCN 0.05358516
-VfB 0.11534948
-BVB 0.37609915
-HSV 0.45496621
-          [,1]
-FCN 0.05710941
-VfB 0.10143685
-BVB 0.43181251
-HSV 0.40964122
-          [,1]
-FCN 0.05474427
-VfB 0.11090813
-BVB 0.39378554
-HSV 0.44056207
-          [,1]
-FCN 0.05635438
-VfB 0.10444354
-BVB 0.41973320
-HSV 0.41946888
-         [,1]
-FCN 0.0552554
-VfB 0.1088546
-BVB 0.4020321
-HSV 0.4338579
-          [,1]
-FCN 0.05600529
-VfB 0.10584545
-BVB 0.41410704
-HSV 0.42404222
-          [,1]
-FCN 0.05549373
-VfB 0.10789820
-BVB 0.40586997
-HSV 0.43073811
-          [,1]
-FCN 0.05584269
-VfB 0.10649789
-BVB 0.41148900
-HSV 0.42617041
-          [,1]
-FCN 0.05560464
-VfB 0.10745313
-BVB 0.40765590
-HSV 0.42928633
-          [,1]
-FCN 0.05576703
-VfB 0.10680150
-BVB 0.41027071
-HSV 0.42716076
-          [,1]
-FCN 0.05565626
-VfB 0.10724602
-BVB 0.40848698
-HSV 0.42861075
-          [,1]
-FCN 0.05573182
-VfB 0.10694279
-BVB 0.40970377
-HSV 0.42762162
-          [,1]
-FCN 0.05568027
-VfB 0.10714964
-BVB 0.40887372
-HSV 0.42829637
-          [,1]
-FCN 0.05571544
-VfB 0.10700853
-BVB 0.40943995
-HSV 0.42783608
-          [,1]
-FCN 0.05569145
-VfB 0.10710479
-BVB 0.40905369
-HSV 0.42815007
-          [,1]
-FCN 0.05570781
-VfB 0.10703913
-BVB 0.40931718
-HSV 0.42793588
-          [,1]
-FCN 0.05569665
-VfB 0.10708392
-BVB 0.40913743
-HSV 0.42808199
-          [,1]
-FCN 0.05570427
-VfB 0.10705336
-BVB 0.40926005
-HSV 0.42798232
-          [,1]
-FCN 0.05569907
-VfB 0.10707421
-BVB 0.40917641
-HSV 0.42805031
-          [,1]
-FCN 0.05570262
-VfB 0.10705999
-BVB 0.40923347
-HSV 0.42800393
-         [,1]
-FCN 0.0557002
-VfB 0.1070697
-BVB 0.4091945
-HSV 0.4280356
-          [,1]
-FCN 0.05570185
-VfB 0.10706307
-BVB 0.40922110
-HSV 0.42801398
-          [,1]
-FCN 0.05570072
-VfB 0.10706759
-BVB 0.40920298
-HSV 0.42802871
-          [,1]
-FCN 0.05570149
-VfB 0.10706451
-BVB 0.40921534
-HSV 0.42801866
-          [,1]
-FCN 0.05570097
-VfB 0.10706661
-BVB 0.40920691
-HSV 0.42802552
-          [,1]
-FCN 0.05570132
-VfB 0.10706517
-BVB 0.40921266
-HSV 0.42802084
-          [,1]
-FCN 0.05570108
-VfB 0.10706615
-BVB 0.40920874
-HSV 0.42802403
-          [,1]
-FCN 0.05570125
-VfB 0.10706549
-BVB 0.40921141
-HSV 0.42802186
-          [,1]
-FCN 0.05570113
-VfB 0.10706594
-BVB 0.40920959
-HSV 0.42802334
-          [,1]
-FCN 0.05570121
-VfB 0.10706563
-BVB 0.40921083
-HSV 0.42802233
-          [,1]
-FCN 0.05570116
-VfB 0.10706584
-BVB 0.40920998
-HSV 0.42802302
-          [,1]
-FCN 0.05570119
-VfB 0.10706570
-BVB 0.40921056
-HSV 0.42802255
-          [,1]
-FCN 0.05570117
-VfB 0.10706580
-BVB 0.40921017
-HSV 0.42802287
-          [,1]
-FCN 0.05570119
-VfB 0.10706573
-BVB 0.40921044
-HSV 0.42802265
-          [,1]
-FCN 0.05570117
-VfB 0.10706577
-BVB 0.40921025
-HSV 0.42802280
-          [,1]
-FCN 0.05570118
-VfB 0.10706574
-BVB 0.40921038
-HSV 0.42802270
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921029
-HSV 0.42802277
-          [,1]
-FCN 0.05570118
-VfB 0.10706575
-BVB 0.40921035
-HSV 0.42802272
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921031
-HSV 0.42802275
-          [,1]
-FCN 0.05570118
-VfB 0.10706575
-BVB 0.40921034
-HSV 0.42802273
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921032
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706575
-BVB 0.40921033
-HSV 0.42802273
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921032
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274
-          [,1]
-FCN 0.05570118
-VfB 0.10706576
-BVB 0.40921033
-HSV 0.42802274</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>graphObj <span class="ot">&lt;-</span> <span class="fu">graph_from_adjacency_matrix</span>(<span class="fu">t</span>(W), <span class="at">weighted =</span> <span class="cn">TRUE</span>, <span class="at">mode =</span> <span class="st">"directed"</span>)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>(prVec <span class="ot">&lt;-</span> <span class="fu">page_rank</span>(graphObj)<span class="sc">$</span>vector)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>       FCN        VfB        BVB        HSV 
-0.05570118 0.10706576 0.40921033 0.42802274 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># loss matrix: L_ij is number of times team i lost against team j</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#L &lt;- t(W)</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># normalize cols to make it a column stochastic matrix</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co">#A &lt;- sweep(L, 2, colSums(L), FUN = "/")</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">#for (i in 1:100) {</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">#    r &lt;- d * (A %*% r) + (1 - d) * 1/p</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">#    #if (sum(abs(r_new - r)) &lt; tol) {</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co">#    #  break</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co">#    #}</span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co">#    #r &lt;- r_new</span></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co">#    print(r)</span></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co">#  }</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+</section>
+<section id="compare-my-results-to-r-package-results" class="level1">
+<h1>compare my results to R Package results</h1>
+<p>wichtig: evtl. igraph:: verwenden anstatt gesamte library zu laden um klarer zu machen wo genau wir eigentlich was aus dieser library verwende</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># link wo man daten als csv bekommt: https://www.hockey-reference.com/leagues/NHL_2025_games.html#games</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># URL of the schedule page</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://www.hockey-reference.com/leagues/NHL_2025_games.html"</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the webpage</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>page <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url)</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the Regular Season Schedule table (it has id="games")</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>schedule <span class="ot">&lt;-</span> page <span class="sc">%&gt;%</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_node</span>(<span class="st">"table#games"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_table</span>(<span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">fill =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean up data as needed</span></span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co">#schedule_clean &lt;- schedule %&gt;%</span></span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="co">#  # Convert Date column to Date type</span></span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="co">#  mutate(Date = as.Date(Date)) %&gt;%</span></span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="co">#  # Clean Time (e.g. add timezone if needed), convert numeric columns</span></span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a><span class="co">#  mutate(</span></span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a><span class="co">#    Visitor = Visitor,</span></span>
-<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a><span class="co">#    Home = Home,</span></span>
-<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a><span class="co">#    `Visitor G` = as.integer(`Visitor G`),</span></span>
-<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="co">#    `Home G` = as.integer(`Home G`),</span></span>
-<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a><span class="co">#    Att. = as.integer(gsub(",", "", Att.)),</span></span>
-<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a><span class="co">#    Time = Time</span></span>
-<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a><span class="co">#  )</span></span>
-<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a><span class="co"># View the result</span></span>
-<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a><span class="co">#str(schedule_clean)</span></span>
-<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a><span class="co">#head(schedule_clean)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Paket 'igraph' wurde unter R Version 4.2.3 erstellt</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attache Paket: 'igraph'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Die folgenden Objekte sind maskiert von 'package:dplyr':
+
+    as_data_frame, groups, union</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Die folgenden Objekte sind maskiert von 'package:stats':
+
+    decompose, spectrum</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Das folgende Objekt ist maskiert 'package:base':
+
+    union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>graphObj <span class="ot">&lt;-</span> <span class="fu">graph_from_adjacency_matrix</span>(<span class="fu">t</span>(W), <span class="at">weighted =</span> <span class="cn">TRUE</span>, <span class="at">mode =</span> <span class="st">"directed"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>(prVec <span class="ot">&lt;-</span> <span class="fu">page_rank</span>(graphObj)<span class="sc">$</span>vector)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Arizona Cardinals       Atlanta Falcons      Baltimore Ravens 
+          0.023078736           0.038286369           0.061258396 
+        Buffalo Bills     Carolina Panthers         Chicago Bears 
+          0.071380275           0.013294979           0.016268901 
+   Cincinnati Bengals      Cleveland Browns        Dallas Cowboys 
+          0.023895114           0.020751663           0.026341877 
+       Denver Broncos         Detroit Lions     Green Bay Packers 
+          0.048459390           0.056625881           0.028293675 
+       Houston Texans    Indianapolis Colts  Jacksonville Jaguars 
+          0.031835544           0.017257968           0.009367408 
+   Kansas City Chiefs     Las Vegas Raiders  Los Angeles Chargers 
+          0.058884281           0.017925304           0.030433727 
+     Los Angeles Rams        Miami Dolphins     Minnesota Vikings 
+          0.043601426           0.018825457           0.034682922 
+ New England Patriots    New Orleans Saints       New York Giants 
+          0.024486948           0.013432521           0.011337971 
+        New York Jets   Philadelphia Eagles   Pittsburgh Steelers 
+          0.013269218           0.047576348           0.041487365 
+  San Francisco 49ers      Seattle Seahawks  Tampa Bay Buccaneers 
+          0.021443657           0.030969888           0.058166828 
+     Tennessee Titans Washington Commanders 
+          0.011932274           0.035147688 </code></pre>
+</div>
 </div>
 
 

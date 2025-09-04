@@ -3,6 +3,7 @@
     "listing": "/blog/index.html",
     "items": [
       "/blog/post-1/index.html",
+      "/blog/LibrariesInUK/LibrariesInUK.html",
       "/blog/LearningToRank/LearningToRank.html",
       "/blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html",
       "/blog/ANNsForProbabilityDensityEstimation/ANNsForProbabilityDensityEstimation.html",

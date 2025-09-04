@@ -26,38 +26,38 @@ Here’s a reproducible example in R:
 # Install if needed
 # install.packages(c("sf", "ggplot2", "dplyr"))
 
-library(sf)
-library(ggplot2)
-library(dplyr)
-
-# --- Step 1: Load UK Local Authority boundaries (ONS Geoportal provides shapefiles) ---
-# Example: use Local Authority Districts (2022) boundaries (generalised, clipped)
-# Download from: https://geoportal.statistics.gov.uk/
-shapefile <- "Local_Authority_Districts_(December_2022)_UK_BUC.shp"
-uk_lad <- st_read(shapefile)
-
-# Inspect codes
-head(uk_lad)
-
-# --- Step 2: Example data ---
-# Suppose you have some variable for each LAD code
-set.seed(123)
-example_data <- data.frame(
-  lad22cd = uk_lad$LAD22CD, # local authority codes
-  value = runif(nrow(uk_lad), 0, 100) # random values
-)
-
-# --- Step 3: Join shapefile with data ---
-uk_map <- uk_lad %>%
-  left_join(example_data, by = c("LAD22CD" = "lad22cd"))
-
-# --- Step 4: Plot heatmap ---
-ggplot(uk_map) +
-  geom_sf(aes(fill = value), colour = NA) +
-  scale_fill_viridis_c(option = "plasma") +
-  theme_minimal() +
-  labs(title = "Example Heatmap by UK Local Authority",
-       fill = "Value")
+# library(sf)
+# library(ggplot2)
+# library(dplyr)
+# 
+# # --- Step 1: Load UK Local Authority boundaries (ONS Geoportal provides shapefiles) ---
+# # Example: use Local Authority Districts (2022) boundaries (generalised, clipped)
+# # Download from: https://geoportal.statistics.gov.uk/
+# shapefile <- "Local_Authority_Districts_(December_2022)_UK_BUC.shp"
+# uk_lad <- st_read(shapefile)
+# 
+# # Inspect codes
+# head(uk_lad)
+# 
+# # --- Step 2: Example data ---
+# # Suppose you have some variable for each LAD code
+# set.seed(123)
+# example_data <- data.frame(
+#   lad22cd = uk_lad$LAD22CD, # local authority codes
+#   value = runif(nrow(uk_lad), 0, 100) # random values
+# )
+# 
+# # --- Step 3: Join shapefile with data ---
+# uk_map <- uk_lad %>%
+#   left_join(example_data, by = c("LAD22CD" = "lad22cd"))
+# 
+# # --- Step 4: Plot heatmap ---
+# ggplot(uk_map) +
+#   geom_sf(aes(fill = value), colour = NA) +
+#   scale_fill_viridis_c(option = "plasma") +
+#   theme_minimal() +
+#   labs(title = "Example Heatmap by UK Local Authority",
+#        fill = "Value")
 
 ```
 

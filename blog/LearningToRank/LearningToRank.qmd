@@ -11,6 +11,11 @@ categories:
 
 # TO DO
 
+1. 2mal metric für vergleich meine lösung vs. package
+2. plots zum vergleich der beiden rankings (u.a. plot(log(bt_mle), r))
+
+
+
 So this is really my first Blog Post. I am trying to implement various ranking approaches.
 
 # Get pairwise comparison data
@@ -133,7 +138,7 @@ package_model <- BTm(cbind(win1, win2), player1, player2, data=b)
 BTabilities(package_model)
 
 # Converting my values into BTm ability values
-log(theta.old/theta.old[1])
+log(bt_mle/bt_mle[1])
 
 
 # Converting BTm values to my values
@@ -144,175 +149,16 @@ exp(BTabilities)*bt_mle[1]
 # Google Page Rank from scratch
 
 ```{r}
-
-```
-
-#### old
-
-```{r}
-# initialize adjacency matrix with zeros
-W <- matrix(
-  rep(0, n_teams^2),
-  nrow = n_teams,
-  dimnames = list(
-    teams, # row names
-    teams  # col names
-  )
-)
-
-# iteriere über alle Spiele:
-#   wenn goal.v > goal.h
-#   dann v,h += 1
-for (g in 1:dim(games)[1]) {
-  if (pull(games[g, "Goals.V"]) > pull(games[g, "Goals.H"])) {
-    W[pull(games[g, "Visitor"]), pull(games[g, "Home"])] <- 
-      W[pull(games[g, "Visitor"]), pull(games[g, "Home"])] + 1
-  }else{
-    W[pull(games[g, "Home"]), pull(games[g, "Visitor"])] <- 
-      W[pull(games[g, "Home"]), pull(games[g, "Visitor"])] + 1
-  }
-}
-```
-
-# MLE Estimation Bradley Terry
-
-```{r}
-bradleyterry_mle <- function(W, n_iter=1000){
-  p <- dim(W)[1]
-  
-  theta.old <- rep(1, p)
-  names(theta.old) <- colnames(W)
-  
-  theta.new <- numeric(p)
-  names(theta.new) <- colnames(W)
-  
-  for (k in 1:n_iter) {
-    
-    for (i in 1:p) {
-      theta.new[i] <- 
-        sum(W[i,])/(sum((W[i,] + W[,i])/(theta.old[i]+theta.old)))
-    }
-    
-    # divide by geomtric mean
-    theta.new <- theta.new/prod(theta.new)^(1/p)
-    
-    theta.old <- theta.new
-  }
-  
-  return(theta.new)
-}
-
-bt_mle <- bradleyterry_mle(W)
-```
-
-# Plot ranking results
-
-```{r}
-df <- data.frame(
-  team = names(bt_mle),
-  score = as.numeric(bt_mle)
-)
-
-ggplot(df, aes(reorder(team, score), y=score)) +
-  geom_col(fill="steelblue") +
-  coord_flip() +
-  labs(title="TITEL",
-       y="y ACHSE",
-       x="x ACHSE") +
-  theme_minimal()
-```
-
-```{r}
 #| warning: false
 
-library(BradleyTerry2)
-
-data(citations)
-
-team.names <- c("FCN", "VfB", "BVB", "HSV")
-
-W <- matrix(
-  c(0, 1, 0, 0,
-    0, 0, 1, 0,
-    1, 0, 0, 1,
-    5, 4, 4, 0),
-  nrow = 4,
-  byrow = TRUE,
-  dimnames = list(
-    team.names,  # Row names
-    team.names   # Column names
-  )
-)
-
-# number of teams
-p <- dim(W)[1]
-
-theta.old <- rep(1, p)
-theta.new <- numeric(p)
-
-for (k in 1:1000) {
-  
-  for (i in 1:p) {
-    theta.new[i] <- sum(W[i,])/(sum((W[i,] + W[,i])/(theta.old[i]+theta.old)))
-  }
-  
-  # divide by geomtric mean
-  theta.new <- theta.new/prod(theta.new)^(1/p)
-  
-  theta.old <- theta.new
-}
-
-# wahrsch dass FCN gegen VfB gewinnt: 
-1.042565/(1.042565+ 0.795519)
-
-
-b<-countsToBinomial(W)
-
-citation_matrix <- matrix(
-  c(714, 730, 498, 221,    # Biometrika
-    33, 425, 68, 17,       # Comm Statist
-    320, 813, 1072, 142,   # JASA
-    284, 276, 325, 188),   # JRSS-B
-  nrow = 4,
-  byrow = TRUE
-)
-
-# Assign row and column names
-rownames(citation_matrix) <- c("Biometrika", "Comm Statist", "JASA", "JRSS-B")
-colnames(citation_matrix) <- c("Biometrika", "Comm Statist", "JASA", "JRSS-B")
-
-citations.sf <- countsToBinomial(citations)
-
-a<-countsToBinomial(citation_matrix)
-
-
-
-
-citations.sf <- countsToBinomial(W)
-names(citations.sf)[1:2] <- c("journal1", "journal2")
-## Fit the "standard" Bradley-Terry model
-citeModel <- BTm(cbind(win1, win2), journal1, journal2, data = citations.sf)
-BTabilities(citeModel)
-
-# Converting my values into BTm ability values
-log(theta.old/theta.old[1])
-
-
-# Converting BTm values to my values
-BTabilities <- BTabilities(citeModel)[,1]
-exp(BTabilities)*theta.old[1]
-
-```
-
-```{r}
-#| warning: false
+p <- n_teams
 
 d <- 0.85
 
 r <- rep(1/p, p)
 
 # W_ij: number of times team j lost against team i
-W
+#W
 
 # c_j: number of times team j lost (=colSums of W)
 
@@ -321,69 +167,20 @@ c <- colSums(W)
 A <- (1-d)*rep(1,p) %*% t(rep(1,p))/p + d*W%*%diag(1/c) 
 
 for (i in 1:100) {
-  print(r)
   r <- A%*%r
 }
 
+print(r)
+```
+# compare my results to R Package results
 
+wichtig: evtl. igraph:: verwenden anstatt gesamte library zu laden um klarer zu machen wo genau wir eigentlich was aus dieser library verwende
+
+```{r}
 library(igraph)
 
 graphObj <- graph_from_adjacency_matrix(t(W), weighted = TRUE, mode = "directed")
 (prVec <- page_rank(graphObj)$vector)
-
-# loss matrix: L_ij is number of times team i lost against team j
-#L <- t(W)
-
-
-# normalize cols to make it a column stochastic matrix
-#A <- sweep(L, 2, colSums(L), FUN = "/")
-
-
-
-#for (i in 1:100) {
-#    r <- d * (A %*% r) + (1 - d) * 1/p
-#    #if (sum(abs(r_new - r)) < tol) {
-#    #  break
-#    #}
-#    #r <- r_new
-#    print(r)
-#  }
 ```
 
-```{r}
 
-# link wo man daten als csv bekommt: https://www.hockey-reference.com/leagues/NHL_2025_games.html#games
-
-library(rvest)
-library(dplyr)
-
-# URL of the schedule page
-url <- "https://www.hockey-reference.com/leagues/NHL_2025_games.html"
-
-# Read the webpage
-page <- read_html(url)
-
-# Extract the Regular Season Schedule table (it has id="games")
-schedule <- page %>%
-  html_node("table#games") %>%
-  html_table(header = TRUE, fill = TRUE)
-
-# Clean up data as needed
-#schedule_clean <- schedule %>%
-#  # Convert Date column to Date type
-#  mutate(Date = as.Date(Date)) %>%
-#  # Clean Time (e.g. add timezone if needed), convert numeric columns
-#  mutate(
-#    Visitor = Visitor,
-#    Home = Home,
-#    `Visitor G` = as.integer(`Visitor G`),
-#    `Home G` = as.integer(`Home G`),
-#    Att. = as.integer(gsub(",", "", Att.)),
-#    Time = Time
-#  )
-
-# View the result
-#str(schedule_clean)
-#head(schedule_clean)
-
-```
