@@ -16,7 +16,7 @@ categories:
 
 
 
-So this is really my first Blog Post. I am trying to implement various ranking approaches.
+I am trying to implement various ranking approaches.
 
 # Get pairwise comparison data
 
