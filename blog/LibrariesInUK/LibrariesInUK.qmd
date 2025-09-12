@@ -4,6 +4,8 @@ Idea für eine Data Viz Post:
 - scatterplot: zusammenhang nutzung vs. erreichbarkeit
 - korrektur: (perc usage)/(perc 30 min walk erreichbar)
 
+Link für Plotting/Creating Maps in R: "https://datatricks.co.uk/creating-maps-in-r-2019"
+
 
 Daten:
 - Nutzung von Libraries: https://www.ons.gov.uk/explore-local-statistics/indicators/visited-a-public-library
