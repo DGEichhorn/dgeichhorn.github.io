@@ -1,1 +1,35 @@
 /* css styles */
+/* Change top navbar background */
+.navbar {
+  background-color: #0b0b64 !important; /* Your color */
+}
+
+/* Change navbar text color */
+.navbar a {
+  color: white !important;
+}
+
+/* Regular links */
+a {
+  color: #0b0b64;   /* Change to your color */
+}
+
+/* Links when hovered */
+a:hover {
+  color: #0b0b64;
+  text-decoration: underline; /* optional */
+}
+
+/* Target about card links */
+.about-links a {
+  color: #0b0b64; /* default state */
+  text-decoration: none;
+}
+
+/* Hover state */
+.about-links a:hover,
+.about-links a:hover i,      /* icons */
+.about-links a:hover svg {   /* SVG icons (GitHub, LinkedIn, etc.) */
+  color: #0b0b64 !important;  /* enforce your color */
+  text-decoration: underline; /* optional */
+}

@@ -8,14 +8,14 @@ about:
   image-width: 15em
   links: 
     - text: Email
-      icon: envelope
       href: mailto:dominik.g.eichhorn@gmail.com
+      icon: envelope
     - text: GitHub
-      icon: github
       href: https://github.com/DGEichhorn
+      icon: github
     - text: LinkedIn
+      href: https://www.linkedin.com/in/dgeichhorn
       icon: linkedin
-      href: https://www.linkedin.com/in/dominik-eichhorn-119821192/
     - text: CV
       href: inputs/resume.pdf
 ---
