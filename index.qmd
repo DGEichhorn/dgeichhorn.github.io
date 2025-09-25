@@ -1,6 +1,6 @@
 ---
 title: "Dominik G. Eichhorn"
-image: inputs/avatar.png
+image: inputs/avatar2.png
 resources: inputs/resume.pdf
 about:
   template: jolla
