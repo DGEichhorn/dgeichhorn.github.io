@@ -6,6 +6,7 @@ website:
   title: "Dominik G. Eichhorn"
   favicon: inputs/logo.png
   navbar:
+    pinned: true
     left:
       - text: Home
         href: index.qmd
