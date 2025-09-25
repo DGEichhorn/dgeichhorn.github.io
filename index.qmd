@@ -1,6 +1,6 @@
 ---
 title: "Dominik G. Eichhorn"
-image: inputs/mypic.png
+image: inputs/avatar.png
 resources: inputs/resume.pdf
 about:
   template: jolla
@@ -20,10 +20,11 @@ about:
       href: inputs/resume.pdf
 ---
 
-This is a Quarto website.
+<!--This is a Quarto website.
 
 To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
 
 ```{r}
 1 + 1
 ```
+-->
