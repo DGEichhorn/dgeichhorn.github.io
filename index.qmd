@@ -1,6 +1,6 @@
 ---
-title: "Dominik G. Eichhorn"
-image: inputs/avatar2.png
+title: "Hi, I'm Dominik."
+image: inputs/avatar.png
 resources: inputs/resume.pdf
 about:
   template: jolla
