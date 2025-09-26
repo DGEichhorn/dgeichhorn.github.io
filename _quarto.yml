@@ -6,22 +6,27 @@ website:
   title: "Dominik G. Eichhorn"
   favicon: inputs/logo.png
   navbar:
+    background: "#0b0b64"
+    foreground: "white"
     pinned: true
     left:
       - text: Home
         href: index.qmd
-      - text: About
+      - text: About me
         href: about.qmd
       - text: CV
-        href: inputs/resume.pdf
-      - text: Other Stuff
-        href: projects.qmd
+        menu:
+          - text: EN
+            href: inputs/resume.pdf
+          - text: DE
+            href: inputs/resume.pdf
       - text: Coding/Projects
         href: blog/index.qmd
 
 format:
   html:
     theme: cosmo
+    linkcolor: "#0b0b64"
     css: styles.css
     toc: true
 

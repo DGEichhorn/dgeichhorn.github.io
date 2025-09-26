@@ -65,9 +65,9 @@ ul.task-list{list-style: none;}
     }
 
     const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-subtitle','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-date","listing-title","listing-author","listing-subtitle","listing-image","listing-description"],
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -108,14 +108,21 @@ ul.task-list{list-style: none;}
     <a class="nav-link" href="../index.html">Home</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html">About</a>
+    <a class="nav-link" href="../about.html">About me</a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../inputs/resume.pdf">CV</a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-cv" role="button" data-bs-toggle="dropdown" aria-expanded="false">CV</a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-cv">    
+        <li>
+    <a class="dropdown-item" href="../inputs/resume.pdf">
+ <span class="dropdown-text">EN</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../projects.html">Other Stuff</a>
+        <li>
+    <a class="dropdown-item" href="../inputs/resume.pdf">
+ <span class="dropdown-text">DE</span></a>
   </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link active" href="../blog/index.html" aria-current="page">Coding/Projects</a>
   </li>  
@@ -330,39 +337,7 @@ Alicia
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="6" data-listing-date-sort="1725141600000" data-listing-file-modified-sort="1758894917086" data-listing-reading-time-sort="0.52">
-<div class="thumbnail">
-<a href="../blog/particles/index.html">
-<div class="thumbnail-image">
-
-</div>
-</a><p><a href="../blog/particles/index.html"></a></p>
-</div>
-<div class="body">
-<a href="../blog/particles/index.html">
-<h3 class="no-anchor listing-title">
-Some particles
-</h3>
-<div class="listing-subtitle">
-A quarto doc with some crazy particles in the header background
-</div>
-<div class="listing-description">
-This doc showcases how to use <code>particle.js</code> to get a nice header in your quarto document.
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="../blog/particles/index.html">
-<div class="listing-date">
-Sep 1, 2024
-</div>
-<div class="listing-author">
-Yan Holtz
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="7" data-listing-file-modified-sort="1754070352706" data-listing-reading-time-sort="0.34">
+<div class="quarto-post image-right" data-index="6" data-listing-file-modified-sort="1754070352706" data-listing-reading-time-sort="0.34">
 <div class="thumbnail">
 <a href="../blog/CopulasForFF5Factors/CopulasForFF5Factors.html">
 <div class="thumbnail-image">
