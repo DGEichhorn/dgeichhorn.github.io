@@ -6,11 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Alicia">
-<meta name="dcterms.date" content="2021-05-23">
-<meta name="description" content="Post description for second post">
+<meta name="author" content="Yan Holtz">
+<meta name="dcterms.date" content="2024-09-01">
 
-<title>Dominik G. Eichhorn - Second Post</title>
+<title>Dominik G. Eichhorn - Some particles</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -97,57 +96,78 @@ ul.task-list{list-style: none;}
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" style="position: relative">
+  <!-- This is the div in which the particles will be included -->
+  <div id="particles-js"></div>
+
+  <!-- Actual content on top of the particles-->
+  <div class="title-block-content">
+    <img src="./logo.png" alt="logo of company" width="80px" height="80px" style="margin-bottom: 20px">
+        <h1 class="title">Some particles</h1>
+         <p class="subtitle">A quarto doc with some crazy particles in the header background</p>
+         <p class="author">Yan Holtz</p>
+         <p class="date">September 1, 2024</p>
+       </div>
+
+  <!-- Particle.js script loaded from a CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+
+  <!-- use the particle js library with our own config (json file). -->
+  <script>
+    particlesJS.load("particles-js", "./particles.json");
+  </script>
+</header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-is-particle.js" id="toc-what-is-particle.js" class="nav-link active" data-scroll-target="#what-is-particle.js">What is particle.js</a></li>
+  <li><a href="#how-to-use-it-in-quarto" id="toc-how-to-use-it-in-quarto" class="nav-link" data-scroll-target="#how-to-use-it-in-quarto">How to use it in Quarto?</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Second Post</h1>
-  <div class="quarto-categories">
-    <div class="quarto-category">Science</div>
-    <div class="quarto-category">Data</div>
-  </div>
-  </div>
+<style>
+  #particles-js {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+  }
 
-<div>
-  <div class="description">
-    Post description for second post
-  </div>
-</div>
-
-
-<div class="quarto-title-meta">
-
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Alicia </p>
-          </div>
-  </div>
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">May 23, 2021</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
-
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis imperdiet massa tincidunt nunc pulvinar sapien et ligula. Amet cursus sit amet dictum sit amet. Eget duis at tellus at urna condimentum. Convallis aenean et tortor at risus viverra. Tincidunt ornare massa eget egestas purus viverra accumsan. Et malesuada fames ac turpis egestas. At imperdiet dui accumsan sit amet. Ut ornare lectus sit amet est placerat. Enim nulla aliquet porttitor lacus luctus accumsan tortor posuere. Duis ultricies lacus sed turpis tincidunt id aliquet risus. Mattis enim ut tellus elementum sagittis. Dui id ornare arcu odio ut. Natoque penatibus et magnis dis. Libero justo laoreet sit amet cursus sit. Sed faucibus turpis in eu. Tempus iaculis urna id volutpat lacus laoreet.</p>
-<p>Phasellus vestibulum lorem sed risus. Eget felis eget nunc lobortis mattis. Sit amet aliquam id diam maecenas ultricies. Egestas maecenas pharetra convallis posuere morbi. Etiam erat velit scelerisque in dictum non consectetur a erat. Cras fermentum odio eu feugiat pretium nibh ipsum consequat. Viverra accumsan in nisl nisi scelerisque. Et netus et malesuada fames ac. Amet tellus cras adipiscing enim eu turpis egestas pretium aenean. Eget lorem dolor sed viverra ipsum nunc aliquet. Ultrices dui sapien eget mi proin sed libero enim sed. Ultricies mi eget mauris pharetra et ultrices neque. Ipsum suspendisse ultrices gravida dictum. A arcu cursus vitae congue mauris rhoncus aenean vel. Gravida arcu ac tortor dignissim convallis. Nulla posuere sollicitudin aliquam ultrices.</p>
+  .title-block-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 130px;
+    padding-bottom: 130px;
+  }
+</style>
 
 
+
+<p>This doc showcases how to use <code>particle.js</code> to get a nice header in your quarto document.</p>
+<p>let’s dive in.</p>
+<section id="what-is-particle.js" class="level1">
+<h1>What is particle.js</h1>
+<p>It’s a javascript library that draws stunning particles in a HTML document.</p>
+<p>You can check it on <a href="https://github.com/VincentGarreau/particles.js/">github</a>, and play with this <a href="https://vincentgarreau.com/particles.js/">little tool</a> to find the configuration that is right for you.</p>
+</section>
+<section id="how-to-use-it-in-quarto" class="level1">
+<h1>How to use it in Quarto?</h1>
+<p>It is possible thanks to a “template partials”. It’s a quarto option that allows to replace the code of a section of the document.</p>
+<p>The <code>title-block</code> partial can be used to customize the header, and inject some particles in it!</p>
+<p>For more explanation, check the gallery of <a href="https://www.productive-r-workflow.com/quarto-tricks">Quarto tips and tricks</a>!</p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
