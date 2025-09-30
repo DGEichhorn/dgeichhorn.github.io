@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Author">
 <meta name="dcterms.date" content="2021-05-22">
 <meta name="description" content="Post description">
 
@@ -142,14 +141,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <a class="nav-link" href="../../index.html">Home</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html">About</a>
+    <a class="nav-link" href="../../about.html">About me</a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../../inputs/resume.pdf">CV</a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-cv" role="button" data-bs-toggle="dropdown" aria-expanded="false">CV</a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-cv">    
+        <li>
+    <a class="dropdown-item" href="../../inputs/resume.pdf">
+ <span class="dropdown-text">EN</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../../projects.html">Other Stuff</a>
+        <li>
+    <a class="dropdown-item" href="../../inputs/resume.pdf">
+ <span class="dropdown-text">DE</span></a>
   </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="../../blog/index.html">Coding/Projects</a>
   </li>  
@@ -199,8 +205,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="quarto-title">
 <h1 class="title">Post titel: ODE via NN</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Science</div>
-    <div class="quarto-category">Technology</div>
+    <div class="quarto-category">Deep Learning</div>
   </div>
   </div>
 
@@ -213,12 +218,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Author </p>
-          </div>
-  </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
@@ -244,6 +243,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>visualization with analyticaly solution</li>
 </ul></li>
 </ul>
+<p>The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, more specifically multilayer perceptrons, can be used to numerically approximate the solutions of differential equations. What makes them suitable for this task is not only that they are highly flexible in approximating arbitrary functions but that they are differentiable.</p>
+<p>As long as they only use differentiable activation function they themselves as a composition of differentiable functions are differentiable</p>
+<p>the latter sets them apart from other highly flexible function approximators such as random forests or boosted trees</p>
+<p>werden zunächst die allgemeine idee grob umreißen und dann für zwei spezielle odes from scratch coden wie man mit NN diese numerisch lösen kann</p>
 </section>
 <section id="load-packages" class="level1">
 <h1>Load Packages</h1>
@@ -263,7 +266,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
-<pre><code>&lt;torch._C.Generator at 0x18450ca2630&gt;</code></pre>
+<pre><code>&lt;torch._C.Generator at 0x191deb92cd0&gt;</code></pre>
 </div>
 </div>
 </section>
@@ -436,7 +439,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
-<pre><code>&lt;torch._C.Generator at 0x18450ca2630&gt;</code></pre>
+<pre><code>&lt;torch._C.Generator at 0x191deb92cd0&gt;</code></pre>
 </div>
 </div>
 </section>

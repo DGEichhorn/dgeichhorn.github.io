@@ -1,12 +1,12 @@
 ---
 title: "Post titel: ODE via NN"
 description: "Post description"
-author: "Author"
+#author: "Author"
 date: "5/22/2021"
 #image: "cover.jpg"
 categories:
-  - Science
-  - Technology
+  - Deep Learning
+  - Python
 ---
 
 % Back up ODE: torch.mean( (dy_dx - (x+y)/x)**2 ) + (y[0] + 0.1)**2
@@ -17,6 +17,16 @@ categories:
   - construct model, criterion and loss
   - training
   - visualization with analyticaly solution
+
+The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, more specifically multilayer perceptrons, can be used to numerically approximate the solutions of differential equations. What makes them suitable for this task is not only that they are highly flexible in approximating arbitrary functions but that they are differentiable. 
+
+As long as they only use differentiable activation function they themselves as a composition of differentiable functions are differentiable
+
+the latter sets them apart from other highly flexible function approximators such as random forests or boosted trees
+
+
+
+werden zunächst die allgemeine idee grob umreißen und dann für zwei spezielle odes from scratch coden wie man mit NN diese numerisch lösen kann
 
 # Load Packages
 

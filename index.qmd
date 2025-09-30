@@ -1,7 +1,6 @@
 ---
 title: "Hi, I'm Dominik."
 image: inputs/avatar.png
-#resources: inputs/resume.pdf
 about:
   template: jolla
   image-shape: round
