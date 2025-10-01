@@ -116,7 +116,7 @@
     "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#set-seed-for-reproducibility-1",
     "title": "Post titel: ODE via NN",
     "section": "set seed for reproducibility",
-    "text": "set seed for reproducibility\n\nseed = 42\ntorch.manual_seed(seed)\n\n<torch._C.Generator at 0x21e2f8d3cd0>"
+    "text": "set seed for reproducibility\n\nseed = 42\ntorch.manual_seed(seed)\n\n<torch._C.Generator at 0x190701f3c10>"
   },
   {
     "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#construct-model-loss-and-optimizer-1",

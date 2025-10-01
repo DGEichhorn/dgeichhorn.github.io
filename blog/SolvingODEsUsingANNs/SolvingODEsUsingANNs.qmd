@@ -30,17 +30,32 @@ Let's first introduce some notation: $u(x)$ denotes an unknown function, $u: I \
 $$u^{(j)}(x)=\frac{d^j \, u}{d \, x^j}(x), \; j \in \mathbb{N}.$$
 An ordinary differential equation (ODE) of order $k$ is an equation of the following form:
 $$F \left( x, u(x), u^{(1)}(x), \dots, u^{(k)}(x) \right) = 0, \; \forall x \in I,$$
-where $F$ is a given function, $F: I \times  \mathbb{R}^{k+1} \to \mathbb{R}$. So solving an ODE amounts to finding a function $u$ which satisfies the relationship specified by $F$ between $u$ and its first $k$ derivatives, as well as $x$. Under certain assumptions (see Picard-Lindelöf theorem), for such an ODE a unique solution is guaranteed to exist for given initial conditions. These initial conditions specify the value of the unknown function and its first $k-1$ derivatives at a certain initial point $x_0 \in I$, i.e. something like
+where $F$ is a given function, $F: I \times  \mathbb{R}^{k+1} \to \mathbb{R}$. So solving an ODE means finding a function $u$ which satisfies the relationship specified by $F$ between $u$ and its first $k$ derivatives, as well as $x$. Under certain assumptions (see Picard-Lindelöf theorem), for such an ODE a unique solution is guaranteed to exist for given initial conditions. These initial conditions specify the value of the unknown function and its first $k-1$ derivatives at a certain initial point $x_0 \in I$, i.e. something like
 $$u(x_0)=u_0, \; u^{(1)}(x_0)=u_1, \; \dots, \; u^{(k-1)}(x_0)=u_{k-1}.$$
-While some ODEs can be solved analytically, in most cases the solution needs must be approximated numerically. 
-For this purpose, neural networks can be utilized, although the setting differs largely from the typical supervised learning setting.
+An ODE together with initial conditions is called an initial value problem (IVP). While some IVPs can be solved analytically, in most cases the solution needs must be approximated numerically. 
+For this purpose, neural networks can be utilized, although the setting differs greatly from the typical supervised learning setting.
 <!--A classical numerical procedure for finding approximate solutions is the Runge-Kutta method.-->
 
 # General Approach
 
-Let $N_{\theta}(x)$ denote a feed forward multilayer perceptron parametrized by $\theta$ (i.e. a vector containing all weights and biases), $N_{\theta}: I \to \mathbb{R}$. If the activation functions employed by $N_{\theta}$ are (infinitely) differentiable, $N_{\theta}$ is -- as a composition of (infinitely) differentiable functions -- itself (infinitely) differentiable. Examples of (infinitely) differentiable activation functions are $tanh$ and $sigmoid$. Their infinite differentiability is the crucial property that makes feed forward multilayer perceptrons unlike other highly flexible function approximators particularly well suited for representing solutions to ODEs.
+Let $N_{\theta}(x)$ denote a feed forward multilayer perceptron parametrized by $\theta$ (i.e. a vector containing all weights and biases), $N_{\theta}: I \to \mathbb{R}$. If the activation functions employed by $N_{\theta}$ are (infinitely) differentiable, $N_{\theta}$ is -- as a composition of (infinitely) differentiable functions -- itself (infinitely) differentiable. Examples of (infinitely) differentiable activation functions are $tanh$ and $sigmoid$. Their infinite differentiability is the crucial property that makes feed forward multilayer perceptrons unlike other highly flexible function approximators particularly well suited for representing solutions to IVPs.
 <!--Infinite differentiability sets feed forward multilayer perceptrons apart from other highly flexible function approximator such as random forests and makes them suitable for the task of solving ODEs.-->
 At any given $x$, the value of the derivatives can be computed using backpropagation.
+
+Finding a numerical approximation to the solution of an IVP using neural networks boils down to finding the parameter vector $\theta^\star$ for which the ODE and the initial conditions are (approximately) satisfied, i.e. for which
+$$F \left( x, N_{\theta^\star}(x), N_{\theta^\star}^{(1)}(x), \dots, N_{\theta^\star}^{(k)}(x) \right) \approx 0, \; \forall x \in I, $$
+and 
+$$N_{\theta^\star}(x_0) \approx u_0, \; N_{\theta^\star}^{(1)}(x_0) \approx u_1, \; \dots, \; N_{\theta^\star}^{(k-1)}(x_0) \approx u_{k-1}.$$
+with 
+$$N_{\theta^\star}^{(j)}(x) = \frac{d^j \, N_{\theta^\star}}{d \, x^j}(x), \; j \in \mathbb{N}.$$
+This can be achieved by minimizing a special loss function $L_{total}$ over a set of $n \in \mathbb{N}$ sample points from $I$, $x_i \in I, i=1,\dots, n$. The special loss function $L_{total}$ depending on $\theta$ consists of two parts:
+$$L_{total}(\theta) = L_{ODE}(\theta) + L_{IC}(\theta).$$
+$$L_{ODE}(\theta) = \frac{1}{n} \sum_{i=1}^n \left[ F \left( x_i, N_{\theta}(x_i), N_{\theta}^{(1)}(x_i), \dots, N_{\theta}^{(k)}(x_i) \right) \right]^2$$
+$$L_{IC}(\theta) = \left[ N_{\theta}(x_0) - u_0 \right]^2 + \sum_{j=1}^{k-1} \left[ N_{\theta}^{(j)}(x_0) - u_j \right]^2$$
+
+$L_{ODE}$ measure using mean square deviation from ODE
+
+
 
 
 IDEA: sample eine menge von punkten in interval indem wir IVP lösen wollen; replace die unbekannte funktion und deren ableitungen in ODE durch N(x) und ihre ableitungen; passe die Parameter von N(x) so an dass F(x, N(x),...) = 0 ist; das ist gleichbedeutend zu
