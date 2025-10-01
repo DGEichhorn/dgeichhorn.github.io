@@ -25,7 +25,7 @@
     "href": "blog/index.html",
     "title": "Blog",
     "section": "",
-    "text": "Post description for first post\n\n\n\n\n\n\nMay 22, 2021\n\n\nAlicia\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n  \n\n\n\n\n\n\n\n\nIn this post, I implement from scratch two different approaches for learning a ranking from data on the results of pairwise comparisons.\n\n\n\n\n\n\nMay 22, 2021\n\n\nAlicia\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPost description\n\n\n\n\n\n\nMay 22, 2021\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPost description\n\n\n\n\n\n\nMay 22, 2021\n\n\nAuthor\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\nPost description for second post\n\n\n\n\n\n\nMay 23, 2021\n\n\nAlicia\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\nNo matching items"
+    "text": "Post description for first post\n\n\n\n\n\n\nMay 22, 2021\n\n\nAlicia\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n  \n\n\n\n\n\n\n\n\nIn this post, I implement from scratch two different approaches for learning a ranking from data on the results of pairwise comparisons.\n\n\n\n\n\n\nMay 22, 2021\n\n\nAlicia\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImplementing from scratch a neural network based approach for approximating the solutions of ordinary differential equations.\n\n\n\n\n\n\nMay 22, 2021\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPost description\n\n\n\n\n\n\nMay 22, 2021\n\n\nAuthor\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\nPost description for second post\n\n\n\n\n\n\nMay 23, 2021\n\n\nAlicia\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\nNo matching items"
   },
   {
     "objectID": "blog/LearningToRank/LearningToRank.html",
@@ -67,7 +67,7 @@
     "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html",
     "title": "Post titel: ODE via NN",
     "section": "",
-    "text": "% Back up ODE: torch.mean( (dy_dx - (x+y)/x)2 ) + (y[0] + 0.1)2"
+    "text": "The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, can be used to numerically approximate the solutions of (ordinary) differential equations. Before implementing it from scratch in Python, I will first describe the general idea."
   },
   {
     "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#define-custom-loss-function",
@@ -116,7 +116,7 @@
     "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#set-seed-for-reproducibility-1",
     "title": "Post titel: ODE via NN",
     "section": "set seed for reproducibility",
-    "text": "set seed for reproducibility\n\nseed = 42\ntorch.manual_seed(seed)\n\n<torch._C.Generator at 0x191deb92cd0>"
+    "text": "set seed for reproducibility\n\nseed = 42\ntorch.manual_seed(seed)\n\n<torch._C.Generator at 0x1a5ef7c6cd0>"
   },
   {
     "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#construct-model-loss-and-optimizer-1",

@@ -1,15 +1,16 @@
 ---
 title: "Post titel: ODE via NN"
-description: "Post description"
+description: "Implementing from scratch a neural network based approach for approximating the solutions of ordinary differential equations."
 #author: "Author"
 date: "5/22/2021"
 #image: "cover.jpg"
 categories:
   - Deep Learning
   - Python
+  - Differential Equations
 ---
 
-% Back up ODE: torch.mean( (dy_dx - (x+y)/x)**2 ) + (y[0] + 0.1)**2
+<!--% Back up ODE: torch.mean( (dy_dx - (x+y)/x)**2 ) + (y[0] + 0.1)**2
 
 # To Dos:
 - ACHTUNG: evtl noch randomness in NN training (diese ausmerzen) UND ODER EINEN ANDEREN SEED VERWENDEN
@@ -17,8 +18,34 @@ categories:
   - construct model, criterion and loss
   - training
   - visualization with analyticaly solution
+-->
 
-The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, more specifically multilayer perceptrons, can be used to numerically approximate the solutions of differential equations. What makes them suitable for this task is not only that they are highly flexible in approximating arbitrary functions but that they are differentiable. 
+# Introduction
+
+The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, can be used to numerically approximate the solutions of (ordinary) differential equations. Before implementing it from scratch in Python, I will first describe the general idea.
+
+# General Idea
+
+Let's first introduce some notation: $u(x)$ denotes an unknown function, $u: I \subseteq \mathbb{R} \to \mathbb{R}$, of the independent variable $x$. The $j$-th derivative of $u$ evaluated at $x$ is written as:
+$$u^{(j)}(x)=\frac{d^j \, u}{d \, x^j}(x), \; j \in \mathbb{N}.$$
+An ordinary differential equation (ODE) of order $k$ is an equation of the following form:
+$$F \left( x, u(x), u^{(1)}(x), \dots, u^{(k)}(x) \right) = 0,$$
+where $F$ is a given function, $F: I \times  \mathbb{R}^{k+1} \to \mathbb{R}$. So solving an ODE amounts to finding a function $u$ which satisfies the relationship specified by $F$ between $u$ and its first $k$ derivatives, as well as $x$.
+
+
+
+initial value condition
+
+
+
+
+vollkommen anders als in einem supervised setting wo wir für jeden x auf y wert haben; hier können wir für gegebenes x nur sagen wie sich die ableitungen von y nach x bei x zueinander verhalten
+
+# Implementation
+
+more specifically multilayer perceptrons,
+
+What makes them suitable for this task is not only that they are highly flexible in approximating arbitrary functions but that they are differentiable. 
 
 As long as they only use differentiable activation function they themselves as a composition of differentiable functions are differentiable
 

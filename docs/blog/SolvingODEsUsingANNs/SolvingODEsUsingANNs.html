@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="dcterms.date" content="2021-05-22">
-<meta name="description" content="Post description">
+<meta name="description" content="Implementing from scratch a neural network based approach for approximating the solutions of ordinary differential equations.">
 
 <title>Dominik G. Eichhorn - Post titel: ODE via NN</title>
 <style>
@@ -119,6 +119,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -174,7 +175,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#to-dos" id="toc-to-dos" class="nav-link active" data-scroll-target="#to-dos">To Dos:</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#general-idea" id="toc-general-idea" class="nav-link" data-scroll-target="#general-idea">General Idea</a></li>
+  <li><a href="#implementation" id="toc-implementation" class="nav-link" data-scroll-target="#implementation">Implementation</a></li>
   <li><a href="#load-packages" id="toc-load-packages" class="nav-link" data-scroll-target="#load-packages">Load Packages</a></li>
   <li><a href="#set-seed-for-reproducibility" id="toc-set-seed-for-reproducibility" class="nav-link" data-scroll-target="#set-seed-for-reproducibility">set seed for reproducibility</a></li>
   <li><a href="#define-neural-network" id="toc-define-neural-network" class="nav-link" data-scroll-target="#define-neural-network">Define Neural Network</a></li>
@@ -206,12 +209,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1 class="title">Post titel: ODE via NN</h1>
   <div class="quarto-categories">
     <div class="quarto-category">Deep Learning</div>
+    <div class="quarto-category">Python</div>
+    <div class="quarto-category">Differential Equations</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    Post description
+    Implementing from scratch a neural network based approach for approximating the solutions of ordinary differential equations.
   </div>
 </div>
 
@@ -231,19 +236,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<p>% Back up ODE: torch.mean( (dy_dx - (x+y)/x)<strong>2 ) + (y[0] + 0.1)</strong>2</p>
-<section id="to-dos" class="level1">
-<h1>To Dos:</h1>
-<ul>
-<li>ACHTUNG: evtl noch randomness in NN training (diese ausmerzen) UND ODER EINEN ANDEREN SEED VERWENDEN</li>
-<li>nach zweiter LossODE: HIDE code show plots
-<ul>
-<li>construct model, criterion and loss</li>
-<li>training</li>
-<li>visualization with analyticaly solution</li>
-</ul></li>
-</ul>
-<p>The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, more specifically multilayer perceptrons, can be used to numerically approximate the solutions of differential equations. What makes them suitable for this task is not only that they are highly flexible in approximating arbitrary functions but that they are differentiable.</p>
+<!--% Back up ODE: torch.mean( (dy_dx - (x+y)/x)**2 ) + (y[0] + 0.1)**2
+
+# To Dos:
+- ACHTUNG: evtl noch randomness in NN training (diese ausmerzen) UND ODER EINEN ANDEREN SEED VERWENDEN
+- nach zweiter LossODE: HIDE code show plots
+  - construct model, criterion and loss
+  - training
+  - visualization with analyticaly solution
+-->
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, can be used to numerically approximate the solutions of (ordinary) differential equations. Before implementing it from scratch in Python, I will first describe the general idea.</p>
+</section>
+<section id="general-idea" class="level1">
+<h1>General Idea</h1>
+<p>Let’s first introduce some notation: <span class="math inline">\(u(x)\)</span> denotes an unknown function, <span class="math inline">\(u: I \subseteq \mathbb{R} \to \mathbb{R}\)</span>, of the independent variable <span class="math inline">\(x\)</span>. The <span class="math inline">\(j\)</span>-th derivative of <span class="math inline">\(u\)</span> evaluated at <span class="math inline">\(x\)</span> is written as:</p>
+<p><span class="math display">\[u^{(j)}(x)=\frac{d^j \, u}{d \, x^j}(x), \; j \in \mathbb{N}.\]</span></p>
+<p>An ordinary differential equation (ODE) of order <span class="math inline">\(k\)</span> is an equation of the following form:</p>
+<p><span class="math display">\[F \left( x, u(x), u^{(1)}(x), \dots, u^{(k)}(x) \right) = 0,\]</span></p>
+<p>where <span class="math inline">\(F\)</span> is a given function, <span class="math inline">\(F: I \times \mathbb{R}^{k+1} \to \mathbb{R}\)</span>. So solving an ODE amounts to finding a function <span class="math inline">\(u\)</span> which satisfies the relationship specified by <span class="math inline">\(F\)</span> between <span class="math inline">\(u\)</span> and its first <span class="math inline">\(k\)</span> derivatives, as well as <span class="math inline">\(x\)</span>.</p>
+<p>initial value condition</p>
+<p>vollkommen anders als in einem supervised setting wo wir für jeden x auf y wert haben; hier können wir für gegebenes x nur sagen wie sich die ableitungen von y nach x bei x zueinander verhalten</p>
+</section>
+<section id="implementation" class="level1">
+<h1>Implementation</h1>
+<p>more specifically multilayer perceptrons,</p>
+<p>What makes them suitable for this task is not only that they are highly flexible in approximating arbitrary functions but that they are differentiable.</p>
 <p>As long as they only use differentiable activation function they themselves as a composition of differentiable functions are differentiable</p>
 <p>the latter sets them apart from other highly flexible function approximators such as random forests or boosted trees</p>
 <p>werden zunächst die allgemeine idee grob umreißen und dann für zwei spezielle odes from scratch coden wie man mit NN diese numerisch lösen kann</p>
@@ -265,8 +284,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
-<pre><code>&lt;torch._C.Generator at 0x191deb92cd0&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>&lt;torch._C.Generator at 0x1a5ef7c6cd0&gt;</code></pre>
 </div>
 </div>
 </section>
@@ -438,8 +457,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
-<pre><code>&lt;torch._C.Generator at 0x191deb92cd0&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>&lt;torch._C.Generator at 0x1a5ef7c6cd0&gt;</code></pre>
 </div>
 </div>
 </section>
