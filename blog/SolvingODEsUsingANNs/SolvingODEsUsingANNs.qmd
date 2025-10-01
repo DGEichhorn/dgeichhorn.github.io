@@ -30,15 +30,13 @@ Let's first introduce some notation: $u(x)$ denotes an unknown function, $u: I \
 $$u^{(j)}(x)=\frac{d^j \, u}{d \, x^j}(x), \; j \in \mathbb{N}.$$
 An ordinary differential equation (ODE) of order $k$ is an equation of the following form:
 $$F \left( x, u(x), u^{(1)}(x), \dots, u^{(k)}(x) \right) = 0,$$
-where $F$ is a given function, $F: I \times  \mathbb{R}^{k+1} \to \mathbb{R}$. So solving an ODE amounts to finding a function $u$ which satisfies the relationship specified by $F$ between $u$ and its first $k$ derivatives, as well as $x$. Under certain assumptions, for such an ODE a unique solution is guaranteed to exist for given initial conditions. These initial conditions specify the value of the unknown function and its first $k-1$ derivatives at a certain initial point $x_0 \in I$, i.e. something like
+where $F$ is a given function, $F: I \times  \mathbb{R}^{k+1} \to \mathbb{R}$. So solving an ODE amounts to finding a function $u$ which satisfies the relationship specified by $F$ between $u$ and its first $k$ derivatives, as well as $x$. Under certain assumptions (see Picard-Lindelöf theorem), for such an ODE a unique solution is guaranteed to exist for given initial conditions. These initial conditions specify the value of the unknown function and its first $k-1$ derivatives at a certain initial point $x_0 \in I$, i.e. something like
 $$u(x_0)=u_0, \; u^{(1)}(x_0)=u_1, \; \dots, \; u^{(k-1)}(x_0)=u_{k-1}.$$
-
-
-
-existence analytical
+While some ODEs can be solved analytically, in most cases the solution needs must be approximated numerically. For this purpose, neural networks can be utilized, although the setting differs largely from the typical supervised learning setting.
+<!--A classical numerical procedure for finding approximate solutions is the Runge-Kutta method.-->
 
 # General Idea
- 
+
 
 $N_{\theta}(x)$ feed forward multilayer perceptron, i.e. maps I to R; wenn nur differentiable activation functions dann das ganze diffbar; und value der ableitung at any given point x can be computed using backpropagation; darin unterscheidet es sich von anderen ML modellen
 

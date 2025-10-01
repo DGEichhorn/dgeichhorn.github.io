@@ -256,9 +256,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><span class="math display">\[u^{(j)}(x)=\frac{d^j \, u}{d \, x^j}(x), \; j \in \mathbb{N}.\]</span></p>
 <p>An ordinary differential equation (ODE) of order <span class="math inline">\(k\)</span> is an equation of the following form:</p>
 <p><span class="math display">\[F \left( x, u(x), u^{(1)}(x), \dots, u^{(k)}(x) \right) = 0,\]</span></p>
-<p>where <span class="math inline">\(F\)</span> is a given function, <span class="math inline">\(F: I \times \mathbb{R}^{k+1} \to \mathbb{R}\)</span>. So solving an ODE amounts to finding a function <span class="math inline">\(u\)</span> which satisfies the relationship specified by <span class="math inline">\(F\)</span> between <span class="math inline">\(u\)</span> and its first <span class="math inline">\(k\)</span> derivatives, as well as <span class="math inline">\(x\)</span>. Under certain assumptions, for such an ODE a unique solution is guaranteed to exist for given initial conditions. These initial conditions specify the value of the unknown function and its first <span class="math inline">\(k-1\)</span> derivatives at a certain initial point <span class="math inline">\(x_0 \in I\)</span>, i.e.&nbsp;something like</p>
+<p>where <span class="math inline">\(F\)</span> is a given function, <span class="math inline">\(F: I \times \mathbb{R}^{k+1} \to \mathbb{R}\)</span>. So solving an ODE amounts to finding a function <span class="math inline">\(u\)</span> which satisfies the relationship specified by <span class="math inline">\(F\)</span> between <span class="math inline">\(u\)</span> and its first <span class="math inline">\(k\)</span> derivatives, as well as <span class="math inline">\(x\)</span>. Under certain assumptions (see Picard-Lindelöf theorem), for such an ODE a unique solution is guaranteed to exist for given initial conditions. These initial conditions specify the value of the unknown function and its first <span class="math inline">\(k-1\)</span> derivatives at a certain initial point <span class="math inline">\(x_0 \in I\)</span>, i.e.&nbsp;something like</p>
 <p><span class="math display">\[u(x_0)=u_0, \; u^{(1)}(x_0)=u_1, \; \dots, \; u^{(k-1)}(x_0)=u_{k-1}.\]</span></p>
-<p>existence analytical</p>
+<p>While some ODEs can be solved analytically, in most cases the solution needs must be approximated numerically. For this purpose, neural networks can be utilized, although the setting differs largely from the typical supervised learning setting. <!--A classical numerical procedure for finding approximate solutions is the Runge-Kutta method.--></p>
 </section>
 <section id="general-idea" class="level1">
 <h1>General Idea</h1>
@@ -293,8 +293,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="30">
-<pre><code>&lt;torch._C.Generator at 0x2757fec8cd0&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>&lt;torch._C.Generator at 0x29e61f27cd0&gt;</code></pre>
 </div>
 </div>
 </section>
@@ -466,8 +466,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="38">
-<pre><code>&lt;torch._C.Generator at 0x2757fec8cd0&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>&lt;torch._C.Generator at 0x29e61f27cd0&gt;</code></pre>
 </div>
 </div>
 </section>
