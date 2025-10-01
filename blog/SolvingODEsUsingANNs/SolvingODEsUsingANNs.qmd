@@ -30,8 +30,8 @@ Let's first introduce some notation: $u(x)$ denotes an unknown function, $u: I \
 $$u^{(j)}(x)=\frac{d^j \, u}{d \, x^j}(x), \; j \in \mathbb{N}.$$
 An ordinary differential equation (ODE) of order $k$ is an equation of the following form:
 $$F \left( x, u(x), u^{(1)}(x), \dots, u^{(k)}(x) \right) = 0,$$
-where $F$ is a given function, $F: I \times  \mathbb{R}^{k+1} \to \mathbb{R}$. So solving an ODE amounts to finding a function $u$ which satisfies the relationship specified by $F$ between $u$ and its first $k$ derivatives, as well as $x$. Under certain assumptions, for such an ODE a unique solution is guaranteed to exist for given initial conditions. These initial conditions specify the value of the unknown function and its first $k-1$ derivatives at a certain initial point $x_0$, i.e. something like
-$$u(x_0)=u_0, u^{(1)}(x_0)=u_1, \dots, u^{(k-1)}(x_0)=u_{k-1}.$$
+where $F$ is a given function, $F: I \times  \mathbb{R}^{k+1} \to \mathbb{R}$. So solving an ODE amounts to finding a function $u$ which satisfies the relationship specified by $F$ between $u$ and its first $k$ derivatives, as well as $x$. Under certain assumptions, for such an ODE a unique solution is guaranteed to exist for given initial conditions. These initial conditions specify the value of the unknown function and its first $k-1$ derivatives at a certain initial point $x_0 \in I$, i.e. something like
+$$u(x_0)=u_0, \; u^{(1)}(x_0)=u_1, \; \dots, \; u^{(k-1)}(x_0)=u_{k-1}.$$
 
 
 
@@ -50,7 +50,6 @@ replace u(x) by N(x)
 
 vollkommen anders als in einem supervised setting wo wir für jeden x auf y wert haben; hier können wir für gegebenes x nur sagen wie sich die ableitungen von y nach x bei x zueinander verhalten
 
-# Implementation
 
 more specifically multilayer perceptrons,
 
@@ -61,6 +60,10 @@ As long as they only use differentiable activation function they themselves as a
 the latter sets them apart from other highly flexible function approximators such as random forests or boosted trees
 
 
+
+# Implementation
+
+WICHTIG: für die beiden unten behandelten ODEs gibt es bekannte analytical solutions WICHTIG DAMIT WIR DIE TRUE ANALYTICAL SOLUTION MIT DEM VOM NN ERLERNTEN VERGLEICHEN KÖNNEN
 
 werden zunächst die allgemeine idee grob umreißen und dann für zwei spezielle odes from scratch coden wie man mit NN diese numerisch lösen kann
 
