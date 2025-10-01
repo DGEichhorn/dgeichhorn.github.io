@@ -22,21 +22,30 @@ categories:
 
 # Introduction
 
-The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, can be used to numerically approximate the solutions of (ordinary) differential equations. Before implementing it from scratch in Python, I will first describe the general idea.
+The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, can be used to numerically approximate the solutions of (ordinary) differential equations. Before implementing it from scratch in Python, I will first describe the setting and the general idea.
 
-# General Idea
+# Setting
 
 Let's first introduce some notation: $u(x)$ denotes an unknown function, $u: I \subseteq \mathbb{R} \to \mathbb{R}$, of the independent variable $x$. The $j$-th derivative of $u$ evaluated at $x$ is written as:
 $$u^{(j)}(x)=\frac{d^j \, u}{d \, x^j}(x), \; j \in \mathbb{N}.$$
 An ordinary differential equation (ODE) of order $k$ is an equation of the following form:
 $$F \left( x, u(x), u^{(1)}(x), \dots, u^{(k)}(x) \right) = 0,$$
-where $F$ is a given function, $F: I \times  \mathbb{R}^{k+1} \to \mathbb{R}$. So solving an ODE amounts to finding a function $u$ which satisfies the relationship specified by $F$ between $u$ and its first $k$ derivatives, as well as $x$.
+where $F$ is a given function, $F: I \times  \mathbb{R}^{k+1} \to \mathbb{R}$. So solving an ODE amounts to finding a function $u$ which satisfies the relationship specified by $F$ between $u$ and its first $k$ derivatives, as well as $x$. Under certain assumptions, for such an ODE a unique solution is guaranteed to exist for given initial conditions. These initial conditions specify the value of the unknown function and its first $k-1$ derivatives at a certain initial point $x_0$, i.e. something like
+$$u(x_0)=u_0, u^{(1)}(x_0)=u_1, \dots, u^{(k-1)}(x_0)=u_{k-1}.$$
 
 
 
-initial value condition
+existence analytical
+
+# General Idea
+ 
+
+$N_{\theta}(x)$ feed forward multilayer perceptron, i.e. maps I to R; wenn nur differentiable activation functions dann das ganze diffbar; und value der ableitung at any given point x can be computed using backpropagation; darin unterscheidet es sich von anderen ML modellen
+
+IDEA: sample eine menge von punkten in interval indem wir IVP lösen wollen; replace die unbekannte funktion und deren ableitungen in ODE durch N(x) und ihre ableitungen; passe die Parameter von N(x) so an dass F(x, N(x),...) = 0 ist; das ist gleichbedeutend zu
 
 
+replace u(x) by N(x)
 
 
 vollkommen anders als in einem supervised setting wo wir für jeden x auf y wert haben; hier können wir für gegebenes x nur sagen wie sich die ableitungen von y nach x bei x zueinander verhalten

@@ -67,7 +67,7 @@
     "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html",
     "title": "Post titel: ODE via NN",
     "section": "",
-    "text": "The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, can be used to numerically approximate the solutions of (ordinary) differential equations. Before implementing it from scratch in Python, I will first describe the general idea."
+    "text": "The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, can be used to numerically approximate the solutions of (ordinary) differential equations. Before implementing it from scratch in Python, I will first describe the setting and the general idea."
   },
   {
     "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#define-custom-loss-function",
@@ -116,7 +116,7 @@
     "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#set-seed-for-reproducibility-1",
     "title": "Post titel: ODE via NN",
     "section": "set seed for reproducibility",
-    "text": "set seed for reproducibility\n\nseed = 42\ntorch.manual_seed(seed)\n\n<torch._C.Generator at 0x1a5ef7c6cd0>"
+    "text": "set seed for reproducibility\n\nseed = 42\ntorch.manual_seed(seed)\n\n<torch._C.Generator at 0x2757fec8cd0>"
   },
   {
     "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#construct-model-loss-and-optimizer-1",

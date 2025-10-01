@@ -176,6 +176,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#setting" id="toc-setting" class="nav-link" data-scroll-target="#setting">Setting</a></li>
   <li><a href="#general-idea" id="toc-general-idea" class="nav-link" data-scroll-target="#general-idea">General Idea</a></li>
   <li><a href="#implementation" id="toc-implementation" class="nav-link" data-scroll-target="#implementation">Implementation</a></li>
   <li><a href="#load-packages" id="toc-load-packages" class="nav-link" data-scroll-target="#load-packages">Load Packages</a></li>
@@ -247,16 +248,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 -->
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, can be used to numerically approximate the solutions of (ordinary) differential equations. Before implementing it from scratch in Python, I will first describe the general idea.</p>
+<p>The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, can be used to numerically approximate the solutions of (ordinary) differential equations. Before implementing it from scratch in Python, I will first describe the setting and the general idea.</p>
 </section>
-<section id="general-idea" class="level1">
-<h1>General Idea</h1>
+<section id="setting" class="level1">
+<h1>Setting</h1>
 <p>Let’s first introduce some notation: <span class="math inline">\(u(x)\)</span> denotes an unknown function, <span class="math inline">\(u: I \subseteq \mathbb{R} \to \mathbb{R}\)</span>, of the independent variable <span class="math inline">\(x\)</span>. The <span class="math inline">\(j\)</span>-th derivative of <span class="math inline">\(u\)</span> evaluated at <span class="math inline">\(x\)</span> is written as:</p>
 <p><span class="math display">\[u^{(j)}(x)=\frac{d^j \, u}{d \, x^j}(x), \; j \in \mathbb{N}.\]</span></p>
 <p>An ordinary differential equation (ODE) of order <span class="math inline">\(k\)</span> is an equation of the following form:</p>
 <p><span class="math display">\[F \left( x, u(x), u^{(1)}(x), \dots, u^{(k)}(x) \right) = 0,\]</span></p>
-<p>where <span class="math inline">\(F\)</span> is a given function, <span class="math inline">\(F: I \times \mathbb{R}^{k+1} \to \mathbb{R}\)</span>. So solving an ODE amounts to finding a function <span class="math inline">\(u\)</span> which satisfies the relationship specified by <span class="math inline">\(F\)</span> between <span class="math inline">\(u\)</span> and its first <span class="math inline">\(k\)</span> derivatives, as well as <span class="math inline">\(x\)</span>.</p>
-<p>initial value condition</p>
+<p>where <span class="math inline">\(F\)</span> is a given function, <span class="math inline">\(F: I \times \mathbb{R}^{k+1} \to \mathbb{R}\)</span>. So solving an ODE amounts to finding a function <span class="math inline">\(u\)</span> which satisfies the relationship specified by <span class="math inline">\(F\)</span> between <span class="math inline">\(u\)</span> and its first <span class="math inline">\(k\)</span> derivatives, as well as <span class="math inline">\(x\)</span>. Under certain assumptions, for such an ODE a unique solution is guaranteed to exist for given initial conditions. These initial conditions specify the value of the unknown function and its first <span class="math inline">\(k-1\)</span> derivatives at a certain initial point <span class="math inline">\(x_0\)</span>, i.e.&nbsp;something like</p>
+<p><span class="math display">\[u(x_0)=u_0, u^{(1)}(x_0)=u_1, \dots, u^{(k-1)}(x_0)=u_{k-1}.\]</span></p>
+<p>existence analytical</p>
+</section>
+<section id="general-idea" class="level1">
+<h1>General Idea</h1>
+<p><span class="math inline">\(N_{\theta}(x)\)</span> feed forward multilayer perceptron, i.e.&nbsp;maps I to R; wenn nur differentiable activation functions dann das ganze diffbar; und value der ableitung at any given point x can be computed using backpropagation; darin unterscheidet es sich von anderen ML modellen</p>
+<p>IDEA: sample eine menge von punkten in interval indem wir IVP lösen wollen; replace die unbekannte funktion und deren ableitungen in ODE durch N(x) und ihre ableitungen; passe die Parameter von N(x) so an dass F(x, N(x),…) = 0 ist; das ist gleichbedeutend zu</p>
+<p>replace u(x) by N(x)</p>
 <p>vollkommen anders als in einem supervised setting wo wir für jeden x auf y wert haben; hier können wir für gegebenes x nur sagen wie sich die ableitungen von y nach x bei x zueinander verhalten</p>
 </section>
 <section id="implementation" class="level1">
@@ -285,7 +293,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="16">
-<pre><code>&lt;torch._C.Generator at 0x1a5ef7c6cd0&gt;</code></pre>
+<pre><code>&lt;torch._C.Generator at 0x2757fec8cd0&gt;</code></pre>
 </div>
 </div>
 </section>
@@ -458,7 +466,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="24">
-<pre><code>&lt;torch._C.Generator at 0x1a5ef7c6cd0&gt;</code></pre>
+<pre><code>&lt;torch._C.Generator at 0x2757fec8cd0&gt;</code></pre>
 </div>
 </div>
 </section>
