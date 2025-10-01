@@ -269,13 +269,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><span class="math display">\[N_{\theta^\star}(x_0) \approx u_0, \; N_{\theta^\star}^{(1)}(x_0) \approx u_1, \; \dots, \; N_{\theta^\star}^{(k-1)}(x_0) \approx u_{k-1}.\]</span></p>
 <p>with</p>
 <p><span class="math display">\[N_{\theta^\star}^{(j)}(x) = \frac{d^j \, N_{\theta^\star}}{d \, x^j}(x), \; j \in \mathbb{N}.\]</span></p>
-<p>This can be achieved by minimizing a special loss function <span class="math inline">\(L_{total}\)</span> over a set of <span class="math inline">\(n \in \mathbb{N}\)</span> sample points from <span class="math inline">\(I\)</span>, <span class="math inline">\(x_i \in I, i=1,\dots, n\)</span>. The special loss function <span class="math inline">\(L_{total}\)</span> depending on <span class="math inline">\(\theta\)</span> consists of two parts:</p>
-<p><span class="math display">\[L_{total}(\theta) = L_{ODE}(\theta) + L_{IC}(\theta).\]</span></p>
-<p><span class="math display">\[L_{ODE}(\theta) = \frac{1}{n} \sum_{i=1}^n \left[ F \left( x_i, N_{\theta}(x_i), N_{\theta}^{(1)}(x_i), \dots, N_{\theta}^{(k)}(x_i) \right) \right]^2\]</span></p>
-<p><span class="math display">\[L_{IC}(\theta) = \left[ N_{\theta}(x_0) - u_0 \right]^2 + \sum_{j=1}^{k-1} \left[ N_{\theta}^{(j)}(x_0) - u_j \right]^2\]</span></p>
-<p><span class="math inline">\(L_{ODE}\)</span> measure using mean square deviation from ODE</p>
-<p>IDEA: sample eine menge von punkten in interval indem wir IVP lösen wollen; replace die unbekannte funktion und deren ableitungen in ODE durch N(x) und ihre ableitungen; passe die Parameter von N(x) so an dass F(x, N(x),…) = 0 ist; das ist gleichbedeutend zu</p>
-<p>replace u(x) by N(x)</p>
+<p>This can be achieved by minimizing a special loss function <span class="math inline">\(L_{total}\)</span> over a set of <span class="math inline">\(n \in \mathbb{N}\)</span> sample points, <span class="math inline">\(x_i \in I, i=1,\dots, n\)</span>. The special loss function <span class="math inline">\(L_{total}\)</span> depending on <span class="math inline">\(\theta\)</span> consists of two parts:</p>
+<p><span class="math display">\[L_{total}(\theta) = L_{ODE}(\theta) + L_{IC}(\theta),\]</span></p>
+<p><span class="math display">\[L_{ODE}(\theta) = \frac{1}{n} \sum_{i=1}^n \left[ F \left( x_i, N_{\theta}(x_i), N_{\theta}^{(1)}(x_i), \dots, N_{\theta}^{(k)}(x_i) \right) \right]^2,\]</span></p>
+<p><span class="math display">\[L_{IC}(\theta) = \left[ N_{\theta}(x_0) - u_0 \right]^2 + \sum_{j=1}^{k-1} \left[ N_{\theta}^{(j)}(x_0) - u_j \right]^2.\]</span></p>
+<p><span class="math inline">\(L_{ODE}\)</span> measures how far <span class="math inline">\(N_{\theta}\)</span> is from satisfying the differential equation using mean squared error. <span class="math inline">\(L_{IC}\)</span> measures how far <span class="math inline">\(N_{\theta}\)</span> is from satisfying the initial conditions in terms of squared error.</p>
+<p>also nochmal</p>
+<p><span class="math display">\[\theta^\star = \underset{\theta}{\text{arg min}} \; L_{total}(\theta)\]</span></p>
+<p>wie kriegt man das, mittels standard optimizer wie z.B. Adam</p>
+<p>somit ist die numerical approximation der lösung des ivp, i.e.&nbsp;der unknown function u gegeben durch N theta star</p>
 </section>
 <section id="implementation" class="level1">
 <h1>Implementation</h1>
@@ -300,7 +302,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
-<pre><code>&lt;torch._C.Generator at 0x190701f3c10&gt;</code></pre>
+<pre><code>&lt;torch._C.Generator at 0x19ab3639cd0&gt;</code></pre>
 </div>
 </div>
 </section>
@@ -473,7 +475,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
-<pre><code>&lt;torch._C.Generator at 0x190701f3c10&gt;</code></pre>
+<pre><code>&lt;torch._C.Generator at 0x19ab3639cd0&gt;</code></pre>
 </div>
 </div>
 </section>

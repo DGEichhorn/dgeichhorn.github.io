@@ -48,23 +48,21 @@ and
 $$N_{\theta^\star}(x_0) \approx u_0, \; N_{\theta^\star}^{(1)}(x_0) \approx u_1, \; \dots, \; N_{\theta^\star}^{(k-1)}(x_0) \approx u_{k-1}.$$
 with 
 $$N_{\theta^\star}^{(j)}(x) = \frac{d^j \, N_{\theta^\star}}{d \, x^j}(x), \; j \in \mathbb{N}.$$
-This can be achieved by minimizing a special loss function $L_{total}$ over a set of $n \in \mathbb{N}$ sample points from $I$, $x_i \in I, i=1,\dots, n$. The special loss function $L_{total}$ depending on $\theta$ consists of two parts:
-$$L_{total}(\theta) = L_{ODE}(\theta) + L_{IC}(\theta).$$
-$$L_{ODE}(\theta) = \frac{1}{n} \sum_{i=1}^n \left[ F \left( x_i, N_{\theta}(x_i), N_{\theta}^{(1)}(x_i), \dots, N_{\theta}^{(k)}(x_i) \right) \right]^2$$
-$$L_{IC}(\theta) = \left[ N_{\theta}(x_0) - u_0 \right]^2 + \sum_{j=1}^{k-1} \left[ N_{\theta}^{(j)}(x_0) - u_j \right]^2$$
 
-$L_{ODE}$ measure using mean square deviation from ODE
-
-
-
-
-IDEA: sample eine menge von punkten in interval indem wir IVP lösen wollen; replace die unbekannte funktion und deren ableitungen in ODE durch N(x) und ihre ableitungen; passe die Parameter von N(x) so an dass F(x, N(x),...) = 0 ist; das ist gleichbedeutend zu
+This can be achieved by minimizing a special loss function $L_{total}$ over a set of $n \in \mathbb{N}$ sample points, $x_i \in I, i=1,\dots, n$. The special loss function $L_{total}$ depending on $\theta$ consists of two parts:
+$$L_{total}(\theta) = L_{ODE}(\theta) + L_{IC}(\theta),$$
+$$L_{ODE}(\theta) = \frac{1}{n} \sum_{i=1}^n \left[ F \left( x_i, N_{\theta}(x_i), N_{\theta}^{(1)}(x_i), \dots, N_{\theta}^{(k)}(x_i) \right) \right]^2,$$
+$$L_{IC}(\theta) = \left[ N_{\theta}(x_0) - u_0 \right]^2 + \sum_{j=1}^{k-1} \left[ N_{\theta}^{(j)}(x_0) - u_j \right]^2.$$
+$L_{ODE}$ measures how far $N_{\theta}$ is from satisfying the differential equation using mean squared error.
+$L_{IC}$ measures how far $N_{\theta}$ is from satisfying the initial conditions in terms of squared error.
 
 
-replace u(x) by N(x)
+also nochmal
+$$\theta^\star = \underset{\theta}{\text{arg min}} \; L_{total}(\theta)$$
+wie kriegt man das, mittels standard optimizer wie z.B. Adam
 
-
-
+somit ist die numerical approximation der lösung des ivp, i.e. der unknown function u gegeben durch
+N theta star
 
 
 # Implementation
