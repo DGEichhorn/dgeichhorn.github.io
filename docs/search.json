@@ -116,7 +116,7 @@
     "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#set-seed-for-reproducibility-1",
     "title": "Post titel: ODE via NN",
     "section": "set seed for reproducibility",
-    "text": "set seed for reproducibility\n\nseed = 42\ntorch.manual_seed(seed)\n\n<torch._C.Generator at 0x19ab3639cd0>"
+    "text": "set seed for reproducibility\n\nseed = 42\ntorch.manual_seed(seed)\n\n<torch._C.Generator at 0x1526a662cb0>"
   },
   {
     "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#construct-model-loss-and-optimizer-1",
@@ -145,5 +145,61 @@
     "title": "Projects",
     "section": "",
     "text": "blabla\nblubblub"
+  },
+  {
+    "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#load-packages",
+    "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#load-packages",
+    "title": "Post titel: ODE via NN",
+    "section": "Load Packages",
+    "text": "Load Packages\n\n# for constructing, learning, using NNs\nimport torch\nimport torch.nn as nn \nimport torch.optim as optim\n\n# for visualization\nimport matplotlib.pyplot as plt"
+  },
+  {
+    "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#set-seed-for-reproducibility",
+    "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#set-seed-for-reproducibility",
+    "title": "Post titel: ODE via NN",
+    "section": "Set Seed for Reproducibility",
+    "text": "Set Seed for Reproducibility\n\nseed = 42\ntorch.manual_seed(seed)\n\n<torch._C.Generator at 0x23cea2a2610>"
+  },
+  {
+    "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#set-seeds-for-reproducibility",
+    "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#set-seeds-for-reproducibility",
+    "title": "Post titel: ODE via NN",
+    "section": "Set Seeds for Reproducibility",
+    "text": "Set Seeds for Reproducibility\n\nseed = 42\ntorch.manual_seed(seed)\n\n<torch._C.Generator at 0x22e69ed2cd0>"
+  },
+  {
+    "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#define-neural-network",
+    "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#define-neural-network",
+    "title": "Post titel: ODE via NN",
+    "section": "Define Neural Network",
+    "text": "Define Neural Network\nNext, I define the neural network used for the approximation. It is a feed forward multilayer perceptron with one hidden layer that applies a \\(sigmoid\\) activation function between two fully connected linear layers.\n\nclass N(nn.Module):\n  def __init__(self, input_size, hidden_size, output_size):\n    super(N, self).__init__()\n    self.net = nn.Sequential(\n      nn.Linear(input_size, hidden_size),\n      nn.Sigmoid(),\n      nn.Linear(hidden_size, output_size)\n      )\n    \n  def forward(self, x):\n    return self.net(x)"
+  },
+  {
+    "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#first-ode",
+    "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#first-ode",
+    "title": "Post titel: ODE via NN",
+    "section": "First ODE",
+    "text": "First ODE\nThe first example is an IVP consisting of a second order ODE given by:\n\\[ 4 u(x) + u^{(1)}(x) + u^{(2)}(x) = 0 \\]\nand initial conditions\n\\[ u(0) = 0.5, \\; u^{(1)}(0)=2 .\\]\n\nDefine the Custom Loss Function\nThe custom loss function corresponding to the above IVP is computed as:\n\nclass Loss_IVP1(nn.Module):\n  def __init__(self):\n    super(Loss_IVP1, self).__init__()\n  \n  def forward(self, model, x):\n    x = x.clone().detach().requires_grad_(True)\n    u = model(x)\n    \n    # compute first derivative\n    du_dx = torch.autograd.grad(\n      outputs=u,\n      inputs=x,\n      grad_outputs=torch.ones_like(u),\n      create_graph=True\n      )[0]\n    \n    # compute second derivative\n    d2u_dx2 = torch.autograd.grad(\n      outputs=du_dx,\n      inputs=x,\n      grad_outputs=torch.ones_like(du_dx),\n      create_graph=True)[0]\n    \n    # compute loss function\n    loss_ODE = torch.mean((4*u + du_dx + d2u_dx2)**2)\n    loss_IC = (u[0] - 0.5)**2 + (du_dx[0] - 2)**2\n    loss_total = loss_ODE + loss_IC\n    \n    return loss_total\n\n\n\nConstruct Model, Loss and Optimizer\nNext, I instantiate the neural network, the loss function to be minimized and the optimizer (here, I use Adam).\n\nmodel = N(input_size=1, hidden_size=10, output_size=1)\ncriterion = Loss_IVP1()\noptimizer = optim.Adam(model.parameters(), lr=1e-3)\n\n\n\nSet x-values\nI decided to approximate the solution of the IVP on the interval \\(I=[0,5]\\). I choose \\(n=100\\) sample points evenly spread accross \\(I\\).\n\nx = torch.linspace(0, 5, 100)[:, None]\n\n\n\nTrain the Neural Network\nNow that all necessary components are set up, training can start.\n\nnum_epochs = 10\nsteps_per_epoch = 3000\n\nfor epoch in range(num_epochs):\n  for step in range(steps_per_epoch):\n    loss = criterion(model, x)\n    \n    optimizer.zero_grad()\n    loss.backward()\n    optimizer.step()\n    \n  print(f\"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}\")\n\nEpoch [1/10], Loss: 0.1181\n\n\nEpoch [2/10], Loss: 0.0307\n\n\nEpoch [3/10], Loss: 0.0052\n\n\nEpoch [4/10], Loss: 0.0032\n\n\nEpoch [5/10], Loss: 0.0008\n\n\nEpoch [6/10], Loss: 0.0002\n\n\nEpoch [7/10], Loss: 0.0001\n\n\nEpoch [8/10], Loss: 0.0000\n\n\nEpoch [9/10], Loss: 0.0000\n\n\nEpoch [10/10], Loss: 0.0000\n\n\n\n\nVisualize the Approximate and the Analytical Solution\nOnce training is done, the learned, approximate solution can be compared to the analytical solution, which is known for this IVP. The analytical solution is given by:\n\\[ e^{-0.5x} \\times \\left[ 0.5 \\times \\cos\\left(\\frac{\\sqrt{15}}{2} x \\right) + \\frac{3 \\sqrt{15}}{10} \\times \\sin \\left( \\frac{\\sqrt{15}}{2} x \\right) \\right] \\]\n\n\nShow code\nx = torch.linspace(0, 15, 1000)[:, None]\nwith torch.no_grad():\n  u = model(x)\n\nplt.figure(figsize=(6, 5))\nplt.plot(x, u, color=\"C3\", label=\"Neural Network\")\nplt.plot(x, torch.exp(-0.5*x)*(0.5*torch.cos(x*(15)**0.5/2)+3*((15)**0.5/10)*torch.sin(x*(15)**0.5/2)), color=\"C0\", label=\"Analytical\", linestyle=\"dotted\")\nplt.title(\"Solution of the ODE\")\nplt.xlabel(\"x\")\nplt.ylabel(\"u\")\nplt.legend()\nplt.grid()\nplt.show()\n\n\n\n\n\nThe above plot shows the approximate as well as the analytical solution. Apparently, on the chosen interval \\(I=[0,5]\\) the approximate solution matches the analytical solution. Outside of \\(I\\), the approximate solution deviates from the analytical one."
+  },
+  {
+    "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#second-ode",
+    "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#second-ode",
+    "title": "Post titel: ODE via NN",
+    "section": "Second ODE",
+    "text": "Second ODE\n\nDefine Custom Loss Function\n\nclass Loss_IVP2(nn.Module):\n  def __init__(self):\n    super(Loss_IVP2, self).__init__()\n  \n  def forward(self, model, x):\n    x = x.clone().detach().requires_grad_(True)\n    u = model(x)\n    \n    du_dx = torch.autograd.grad(\n      outputs=u,\n      inputs=x,\n      grad_outputs=torch.ones_like(u),\n      create_graph=True\n      )[0]\n    \n    loss_DE = torch.mean((du_dx - 2*x*(2-u))**2)\n    loss_initial = (u[0] + 1)**2\n    loss_total = loss_DE + loss_initial\n    \n    return loss_total\n\n\n\nset seed for reproducibility\n\nseed = 42\ntorch.manual_seed(seed)\n\n<torch._C.Generator at 0x284c73ae5f0>\n\n\n\n\nConstruct model, loss and optimizer\n\nmodel = N(input_size=1, hidden_size=10, output_size=1)\ncriterion = Loss_IVP2()\noptimizer = optim.Adam(model.parameters(), lr=1e-3)\n\n\n\nSet x-values\n\nx = torch.linspace(0, 5, 100)[:, None]\n\n\n\nTraining\n\nseed = 42\ntorch.manual_seed(seed)\n\nnum_epochs = 10\nsteps_per_epoch = 3000\n\nfor epoch in range(num_epochs):\n  for step in range(steps_per_epoch):\n    loss = criterion(model, x)\n    \n    optimizer.zero_grad()\n    loss.backward()\n    optimizer.step()\n    \n  print(f\"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}\")\n\nEpoch [1/10], Loss: 0.3274\n\n\nEpoch [2/10], Loss: 0.0380\n\n\nEpoch [3/10], Loss: 0.0141\n\n\nEpoch [4/10], Loss: 0.0080\n\n\nEpoch [5/10], Loss: 0.0025\n\n\nEpoch [6/10], Loss: 0.0003\n\n\nEpoch [7/10], Loss: 0.0000\n\n\nEpoch [8/10], Loss: 0.0000\n\n\nEpoch [9/10], Loss: 0.0000\n\n\nEpoch [10/10], Loss: 0.0000\n\n\n\n\nVisualize learned and analytical solution\n\n\nShow code\nx = torch.linspace(-5, 5, 1000)[:, None]\nwith torch.no_grad():\n  u = model(x)\n\nplt.figure(figsize=(6, 5))\nplt.plot(x, u, color=\"C3\", label=\"Neural Network\")\nplt.plot(x, 2 - 3*torch.exp(-x**2), color=\"C0\" , label=\"Analytical\", linestyle=\"dotted\")\nplt.title(\"Solution of the ODE\")\nplt.xlabel(\"x\")\nplt.ylabel(\"u\")\nplt.legend()\nplt.grid()\nplt.show()"
+  },
+  {
+    "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#load-packages-and-set-seed",
+    "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#load-packages-and-set-seed",
+    "title": "Post titel: ODE via NN",
+    "section": "Load Packages and Set Seed",
+    "text": "Load Packages and Set Seed\nFirst, I import the necessary packages, in particular torch for constructing neural networks, and set a seed for the random number generator to ensure reproducibility.\n\n# for constructing, learning, using NNs\nimport torch\nimport torch.nn as nn \nimport torch.optim as optim\n\n# for visualization\nimport matplotlib.pyplot as plt\n\n# set seed for reproducibility\nseed = 42\ntorch.manual_seed(seed)\n\n<torch._C.Generator at 0x21829efe610>"
+  },
+  {
+    "objectID": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#import-libraries-and-set-seed",
+    "href": "blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html#import-libraries-and-set-seed",
+    "title": "Post titel: ODE via NN",
+    "section": "Import Libraries and Set Seed",
+    "text": "Import Libraries and Set Seed\nFirst, I import the necessary libraries, in particular torch for constructing neural networks, and set a seed for the random number generator to ensure reproducibility.\n\n# for constructing, learning, using NNs\nimport torch\nimport torch.nn as nn \nimport torch.optim as optim\n\n# for visualization\nimport matplotlib.pyplot as plt\n\nseed = 42\ntorch.manual_seed(seed)\n\n<torch._C.Generator at 0x284c73ae5f0>"
   }
 ]

@@ -10,15 +10,6 @@ categories:
   - Differential Equations
 ---
 
-<!--% Back up ODE: torch.mean( (dy_dx - (x+y)/x)**2 ) + (y[0] + 0.1)**2
-
-# To Dos:
-- ACHTUNG: evtl noch randomness in NN training (diese ausmerzen) UND ODER EINEN ANDEREN SEED VERWENDEN
-- nach zweiter LossODE: HIDE code show plots
-  - construct model, criterion and loss
-  - training
-  - visualization with analyticaly solution
--->
 
 # Introduction
 
@@ -49,29 +40,27 @@ $$N_{\theta^\star}(x_0) \approx u_0, \; N_{\theta^\star}^{(1)}(x_0) \approx u_1,
 with 
 $$N_{\theta^\star}^{(j)}(x) = \frac{d^j \, N_{\theta^\star}}{d \, x^j}(x), \; j \in \mathbb{N}.$$
 
-This can be achieved by minimizing a special loss function $L_{total}$ over a set of $n \in \mathbb{N}$ sample points, $x_i \in I, i=1,\dots, n$. The special loss function $L_{total}$ depending on $\theta$ consists of two parts:
+This can be achieved by minimizing a custom loss function $L_{total}$ given a set of $n \in \mathbb{N}$ sample points, $x_i \in I, i=1,\dots, n$.
+$$\theta^\star = \underset{\theta}{\text{arg min}} \; L_{total}(\theta)$$
+The custom loss function $L_{total}$ depending on $\theta$ consists of two parts:
 $$L_{total}(\theta) = L_{ODE}(\theta) + L_{IC}(\theta),$$
 $$L_{ODE}(\theta) = \frac{1}{n} \sum_{i=1}^n \left[ F \left( x_i, N_{\theta}(x_i), N_{\theta}^{(1)}(x_i), \dots, N_{\theta}^{(k)}(x_i) \right) \right]^2,$$
 $$L_{IC}(\theta) = \left[ N_{\theta}(x_0) - u_0 \right]^2 + \sum_{j=1}^{k-1} \left[ N_{\theta}^{(j)}(x_0) - u_j \right]^2.$$
 $L_{ODE}$ measures how far $N_{\theta}$ is from satisfying the differential equation using mean squared error.
 $L_{IC}$ measures how far $N_{\theta}$ is from satisfying the initial conditions in terms of squared error.
+Note that the exact form of $L_{ODE}$ and $L_{IC}$ (and $L_{ODE}$) depends on the particular IVP under consideration. 
+Technically, $L_{total}(\theta)$ can be minimized using standard gradient based methods such as gradient descent or Adam.
 
-
-also nochmal
-$$\theta^\star = \underset{\theta}{\text{arg min}} \; L_{total}(\theta)$$
-wie kriegt man das, mittels standard optimizer wie z.B. Adam
-
-somit ist die numerical approximation der lösung des ivp, i.e. der unknown function u gegeben durch
-N theta star
+Eventually, the approximate solution to the IVP is given by $N_{\theta^\star}(x)$.
 
 
 # Implementation
 
-WICHTIG: für die beiden unten behandelten ODEs gibt es bekannte analytical solutions WICHTIG DAMIT WIR DIE TRUE ANALYTICAL SOLUTION MIT DEM VOM NN ERLERNTEN VERGLEICHEN KÖNNEN
+Having described the general approach for solving ODEs using neural networks, in this section, I will implement it from scratch in Python and apply it to two different exemplary ODEs. These two ODEs have analytical solutions. This allows to assess the quality of the approximate solution by comparing it to the analytical one.
 
-werden zunächst die allgemeine idee grob umreißen und dann für zwei spezielle odes from scratch coden wie man mit NN diese numerisch lösen kann
+## Import Libraries and Set Seed
 
-# Load Packages
+First, I import the necessary libraries, in particular torch for constructing neural networks, and set a seed for the random number generator to ensure reproducibility.
 
 ```{python}
 # for constructing, learning, using NNs
@@ -81,21 +70,19 @@ import torch.optim as optim
 
 # for visualization
 import matplotlib.pyplot as plt
-```
 
-# set seed for reproducibility
-
-```{python}
 seed = 42
 torch.manual_seed(seed)
 ```
 
-# Define Neural Network
+## Define Neural Network
+
+Next, I define the neural network used for the approximation. It is a feed forward multilayer perceptron with one hidden layer that applies a $sigmoid$ activation function between two fully connected linear layers.
 
 ```{python}
-class Network(nn.Module):
+class N(nn.Module):
   def __init__(self, input_size, hidden_size, output_size):
-    super(Network, self).__init__()
+    super(N, self).__init__()
     self.net = nn.Sequential(
       nn.Linear(input_size, hidden_size),
       nn.Sigmoid(),
@@ -107,57 +94,71 @@ class Network(nn.Module):
 
 ```
 
-# First ODE
+## First ODE
 
-## Define Custom Loss Function
+The first example is an IVP consisting of a second order ODE given by:
+$$ 4 u(x) + u^{(1)}(x) + u^{(2)}(x) = 0 $$
+and initial conditions
+$$ u(0) = 0.5, \; u^{(1)}(0)=2 .$$
+
+### Define the Custom Loss Function
+
+The custom loss function corresponding to the above IVP is computed as:
 
 ```{python}
-class LossODE(nn.Module):
+class Loss_IVP1(nn.Module):
   def __init__(self):
-    super(LossODE, self).__init__()
+    super(Loss_IVP1, self).__init__()
   
   def forward(self, model, x):
     x = x.clone().detach().requires_grad_(True)
-    y = model(x)
+    u = model(x)
     
-    dy_dx = torch.autograd.grad(
-      outputs=y,
+    # compute first derivative
+    du_dx = torch.autograd.grad(
+      outputs=u,
       inputs=x,
-      grad_outputs=torch.ones_like(y),
+      grad_outputs=torch.ones_like(u),
       create_graph=True
       )[0]
     
-    d2y_dx2 = torch.autograd.grad(
-      outputs=dy_dx,
+    # compute second derivative
+    d2u_dx2 = torch.autograd.grad(
+      outputs=du_dx,
       inputs=x,
-      grad_outputs=torch.ones_like(dy_dx),
+      grad_outputs=torch.ones_like(du_dx),
       create_graph=True)[0]
     
-    loss_DE = torch.mean((d2y_dx2 + 1*dy_dx + 4*y)**2)
-    loss_initial = (y[0] - 0.5)**2 + (dy_dx[0] - 2)**2
-    loss_total = loss_DE + loss_initial
+    # compute loss function
+    loss_ODE = torch.mean((4*u + du_dx + d2u_dx2)**2)
+    loss_IC = (u[0] - 0.5)**2 + (du_dx[0] - 2)**2
+    loss_total = loss_ODE + loss_IC
     
     return loss_total
 
 ```
 
-## Construct model, loss and optimizer
+### Construct Model, Loss and Optimizer
+
+Next, I instantiate the neural network, the loss function to be minimized and the optimizer (here, I use Adam).
 
 ```{python}
-model = Network(input_size=1, hidden_size=10, output_size=1)
-criterion = LossODE()
+model = N(input_size=1, hidden_size=10, output_size=1)
+criterion = Loss_IVP1()
 optimizer = optim.Adam(model.parameters(), lr=1e-3)
 ```
 
-## Set x-values
+### Set x-values
+
+I decided to approximate the solution of the IVP on the interval $I=[0,5]$. I choose $n=100$ sample points evenly spread accross $I$.
 
 ```{python}
 x = torch.linspace(0, 5, 100)[:, None]
 ```
 
-## Training
+### Train the Neural Network
 
-WICHTIG: Kommentar auch in ANN für ODEs bzgl. epochs & PRINT REPLACE ÜBERNEHMEN
+Now that all necessary components are set up, training can start.
 
 ```{python}
 num_epochs = 10
@@ -174,7 +175,11 @@ for epoch in range(num_epochs):
   print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
 
 ```
-## Visualize learned and analytical solution
+
+### Visualize the Approximate and the Analytical Solution
+
+Once training is done, the learned, approximate solution can be compared to the analytical solution, which is known for this IVP. The analytical solution is given by:
+$$ e^{-0.5x} \times \left[ 0.5 \times \cos\left(\frac{\sqrt{15}}{2} x \right) + \frac{3 \sqrt{15}}{10} \times \sin \left( \frac{\sqrt{15}}{2} x \right) \right] $$
 
 ```{python}
 #| code-fold: true
@@ -182,48 +187,50 @@ for epoch in range(num_epochs):
 
 x = torch.linspace(0, 15, 1000)[:, None]
 with torch.no_grad():
-  y = model(x)
+  u = model(x)
 
 plt.figure(figsize=(6, 5))
-plt.plot(x, y, color="C3", label="Neural Network")
+plt.plot(x, u, color="C3", label="Neural Network")
 plt.plot(x, torch.exp(-0.5*x)*(0.5*torch.cos(x*(15)**0.5/2)+3*((15)**0.5/10)*torch.sin(x*(15)**0.5/2)), color="C0", label="Analytical", linestyle="dotted")
 plt.title("Solution of the ODE")
 plt.xlabel("x")
-plt.ylabel("y")
+plt.ylabel("u")
 plt.legend()
 plt.grid()
 plt.show()
 ```
 
-# Second ODE
+The above plot shows the approximate as well as the analytical solution. Apparently, on the chosen interval $I=[0,5]$ the approximate solution matches the analytical solution. Outside of $I$, the approximate solution deviates from the analytical one.
 
-## Define Custom Loss Function
+## Second ODE
+
+### Define Custom Loss Function
 
 ```{python}
-class LossODE(nn.Module):
+class Loss_IVP2(nn.Module):
   def __init__(self):
-    super(LossODE, self).__init__()
+    super(Loss_IVP2, self).__init__()
   
   def forward(self, model, x):
     x = x.clone().detach().requires_grad_(True)
-    y = model(x)
+    u = model(x)
     
-    dy_dx = torch.autograd.grad(
-      outputs=y,
+    du_dx = torch.autograd.grad(
+      outputs=u,
       inputs=x,
-      grad_outputs=torch.ones_like(y),
+      grad_outputs=torch.ones_like(u),
       create_graph=True
       )[0]
     
-    loss_DE = torch.mean((dy_dx - 2*x*(2-y))**2)
-    loss_initial = (y[0] + 1)**2
+    loss_DE = torch.mean((du_dx - 2*x*(2-u))**2)
+    loss_initial = (u[0] + 1)**2
     loss_total = loss_DE + loss_initial
     
     return loss_total
 
 ```
 
-## set seed for reproducibility
+### set seed for reproducibility
 
 ```{python}
 seed = 42
@@ -231,21 +238,21 @@ torch.manual_seed(seed)
 ```
 
 
-## Construct model, loss and optimizer
+### Construct model, loss and optimizer
 
 ```{python}
-model = Network(input_size=1, hidden_size=10, output_size=1)
-criterion = LossODE()
+model = N(input_size=1, hidden_size=10, output_size=1)
+criterion = Loss_IVP2()
 optimizer = optim.Adam(model.parameters(), lr=1e-3)
 ```
 
-## Set x-values
+### Set x-values
 
 ```{python}
 x = torch.linspace(0, 5, 100)[:, None]
 ```
 
-## Training
+### Training
 
 ```{python}
 seed = 42
@@ -265,7 +272,7 @@ for epoch in range(num_epochs):
   print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
 
 ```
-# Visualize learned and analytical solution
+### Visualize learned and analytical solution
 
 ```{python, fig.align=center}
 #| code-fold: true
@@ -273,14 +280,14 @@ for epoch in range(num_epochs):
 
 x = torch.linspace(-5, 5, 1000)[:, None]
 with torch.no_grad():
-  y = model(x)
+  u = model(x)
 
 plt.figure(figsize=(6, 5))
-plt.plot(x, y, color="C3", label="Neural Network")
+plt.plot(x, u, color="C3", label="Neural Network")
 plt.plot(x, 2 - 3*torch.exp(-x**2), color="C0" , label="Analytical", linestyle="dotted")
 plt.title("Solution of the ODE")
 plt.xlabel("x")
-plt.ylabel("y")
+plt.ylabel("u")
 plt.legend()
 plt.grid()
 plt.show()
