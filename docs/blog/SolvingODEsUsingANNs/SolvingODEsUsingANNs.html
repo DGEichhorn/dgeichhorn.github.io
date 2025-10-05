@@ -198,6 +198,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#visualization-1" id="toc-visualization-1" class="nav-link" data-scroll-target="#visualization-1">Visualization</a></li>
   </ul></li>
   </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -344,8 +345,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="18">
-<pre><code>&lt;torch._C.Generator at 0x21e8b8fe650&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>&lt;torch._C.Generator at 0x251967ee650&gt;</code></pre>
 </div>
 </div>
 <p>I instantiate the neural network, the loss function to be minimized and the optimizer (here, I use Adam).</p>
@@ -478,8 +479,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="24">
-<pre><code>&lt;torch._C.Generator at 0x21e8b8fe650&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>&lt;torch._C.Generator at 0x251967ee650&gt;</code></pre>
 </div>
 </div>
 <p>The neural network, the loss function to be minimized and the optimizer are instantiated.</p>
@@ -498,6 +499,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="training-1" class="level3">
 <h3 class="anchored" data-anchor-id="training-1">Training</h3>
+<p>The setup is finished and the training can begin.</p>
 <div class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">3000</span></span>
@@ -546,7 +548,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="visualization-1" class="level3">
 <h3 class="anchored" data-anchor-id="visualization-1">Visualization</h3>
 <p>For this IVP, the analytical solution is given by:</p>
-<p><span class="math display">\[ u(x) = 2 - 3 \, e^{-x^2} \]</span></p>
+<p><span class="math display">\[ u(x) = 2 - 3 \, e^{-x^2}. \]</span></p>
 <div class="cell" data-execution_count="14">
 <details>
 <summary>Show code</summary>
@@ -568,10 +570,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="SolvingODEsUsingANNs_files/figure-html/cell-15-output-1.png" width="526" height="449"></p>
 </div>
 </div>
-
-
+<p>Also for the second exemplary IVP, on the interval <span class="math inline">\(I=[0,5]\)</span> the approximate solution closely aligns with the analytical solution, whereas outside of it both deviate.</p>
 </section>
 </section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>The examples presented above demonstrate that neural networks are a powerful tool for numerically approximating the solutions of ODEs.</p>
+
+
 </section>
 
 </main> <!-- /main -->

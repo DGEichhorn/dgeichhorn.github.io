@@ -1,7 +1,6 @@
 ---
 title: "Post titel: ODE via NN"
 description: "Implementing from scratch a neural network based approach for approximating the solutions of ordinary differential equations."
-#author: "Author"
 date: "5/22/2021"
 #image: "cover.jpg"
 categories:
@@ -266,6 +265,8 @@ x = torch.linspace(0, 5, 100)[:, None]
 
 ### Training
 
+The setup is finished and the training can begin.
+
 ```{python}
 num_epochs = 10
 steps_per_epoch = 3000
@@ -285,7 +286,7 @@ for epoch in range(num_epochs):
 ### Visualization
 
 For this IVP, the analytical solution is given by:
-$$ u(x) = 2 - 3 \, e^{-x^2} $$
+$$ u(x) = 2 - 3 \, e^{-x^2}. $$
 
 ```{python, fig.align=center}
 #| code-fold: true
@@ -306,3 +307,8 @@ plt.grid()
 plt.show()
 ```
 
+Also for the second exemplary IVP, on the interval $I=[0,5]$ the approximate solution closely aligns with the analytical solution, whereas outside of it both deviate.
+
+# Conclusion
+
+The examples presented above demonstrate that neural networks are a powerful tool for numerically approximating the solutions of ODEs.
