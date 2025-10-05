@@ -1,5 +1,5 @@
 ---
-title: "Post titel: PDE via NN"
+title: "Neural Networks for Probability Density Estimation"
 description: "Post description"
 author: "Author"
 date: "5/22/2021"
@@ -9,10 +9,9 @@ categories:
   - Technology
 ---
 
-To Dos: 
-- sodala
-- Favicon: https://favicon.io/favicon-generator/ "DGE" Rounded Dangrek Regular 400 Normal 70; Farbe abstimmen mit der farbe meiner Website; Schriftart evtl auch anpassen
-- evtl
+# Introduction
+
+
 
 # Load Packages
 

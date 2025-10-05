@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2021-05-22">
 <meta name="description" content="Post description">
 
-<title>Dominik G. Eichhorn - Post titel: PDE via NN</title>
+<title>Dominik G. Eichhorn - Neural Networks for Probability Density Estimation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -175,7 +175,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#load-packages" id="toc-load-packages" class="nav-link active" data-scroll-target="#load-packages">Load Packages</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#load-packages" id="toc-load-packages" class="nav-link" data-scroll-target="#load-packages">Load Packages</a></li>
   <li><a href="#set-seed-for-reproducibility-of-data-generation-and-neural-network-training" id="toc-set-seed-for-reproducibility-of-data-generation-and-neural-network-training" class="nav-link" data-scroll-target="#set-seed-for-reproducibility-of-data-generation-and-neural-network-training">Set Seed for reproducibility of data generation and neural network training</a></li>
   <li><a href="#data-generation" id="toc-data-generation" class="nav-link" data-scroll-target="#data-generation">Data Generation</a></li>
   <li><a href="#visualization-of-the-analytic-pdf" id="toc-visualization-of-the-analytic-pdf" class="nav-link" data-scroll-target="#visualization-of-the-analytic-pdf">Visualization of the analytic PDF</a></li>
@@ -200,7 +201,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Post titel: PDE via NN</h1>
+<h1 class="title">Neural Networks for Probability Density Estimation</h1>
   <div class="quarto-categories">
     <div class="quarto-category">Science</div>
     <div class="quarto-category">Technology</div>
@@ -235,7 +236,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<p>To Dos: - sodala - Favicon: https://favicon.io/favicon-generator/ “DGE” Rounded Dangrek Regular 400 Normal 70; Farbe abstimmen mit der farbe meiner Website; Schriftart evtl auch anpassen - evtl</p>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+</section>
 <section id="load-packages" class="level1">
 <h1>Load Packages</h1>
 <div class="cell" data-execution_count="1">
@@ -261,7 +264,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>np.random.seed(seed)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
-<pre><code>&lt;torch._C.Generator at 0x1fb7c9ba7f0&gt;</code></pre>
+<pre><code>&lt;torch._C.Generator at 0x221ffd567d0&gt;</code></pre>
 </div>
 </div>
 </section>

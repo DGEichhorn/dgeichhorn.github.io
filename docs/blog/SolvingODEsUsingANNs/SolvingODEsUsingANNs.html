@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="dcterms.date" content="2021-05-22">
-<meta name="description" content="Implementing from scratch a neural network based approach for approximating the solutions of ordinary differential equations.">
+<meta name="description" content="Implementing from scratch a neural network based approach for approximating numerically the solutions of ordinary differential equations.">
 
-<title>Dominik G. Eichhorn - Post titel: ODE via NN</title>
+<title>Dominik G. Eichhorn - Using Neural Networks to Solve Ordinary Differential Equations</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -80,6 +80,25 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 
@@ -207,7 +226,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Post titel: ODE via NN</h1>
+<h1 class="title">Using Neural Networks to Solve Ordinary Differential Equations</h1>
   <div class="quarto-categories">
     <div class="quarto-category">Deep Learning</div>
     <div class="quarto-category">Python</div>
@@ -217,7 +236,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div>
   <div class="description">
-    Implementing from scratch a neural network based approach for approximating the solutions of ordinary differential equations.
+    Implementing from scratch a neural network based approach for approximating numerically the solutions of ordinary differential equations.
   </div>
 </div>
 
@@ -239,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, can be used to numerically approximate the solutions of (ordinary) differential equations. Before implementing it from scratch in Python, I will first describe the setting and the general approach.</p>
+<p>The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, can be used to numerically approximate the solutions of (ordinary) differential equations <span class="citation" data-cites="magdon1998neural">(<a href="#ref-magdon1998neural" role="doc-biblioref">Magdon-Ismail and Atiya 1998</a>)</span> . Before implementing it from scratch in Python, I will first describe the setting and the general approach.</p>
 </section>
 <section id="setting" class="level1">
 <h1>Setting</h1>
@@ -345,8 +364,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="17">
-<pre><code>&lt;torch._C.Generator at 0x251967ee650&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="46">
+<pre><code>&lt;torch._C.Generator at 0x1f9fd8e2650&gt;</code></pre>
 </div>
 </div>
 <p>I instantiate the neural network, the loss function to be minimized and the optimizer (here, I use Adam).</p>
@@ -479,8 +498,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="23">
-<pre><code>&lt;torch._C.Generator at 0x251967ee650&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="52">
+<pre><code>&lt;torch._C.Generator at 0x1f9fd8e2650&gt;</code></pre>
 </div>
 </div>
 <p>The neural network, the loss function to be minimized and the optimizer are instantiated.</p>
@@ -579,9 +598,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The examples presented above demonstrate that neural networks are a powerful tool for numerically approximating the solutions of ODEs.</p>
 
 
+
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-magdon1998neural" class="csl-entry" role="doc-biblioentry">
+Magdon-Ismail, Malik, and Amir Atiya. 1998. <span>“Neural Networks for Density Estimation.”</span> <em>Advances in Neural Information Processing Systems</em> 11.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

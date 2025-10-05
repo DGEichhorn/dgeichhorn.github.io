@@ -1,18 +1,20 @@
 ---
-title: "Post titel: ODE via NN"
-description: "Implementing from scratch a neural network based approach for approximating the solutions of ordinary differential equations."
+title: "Using Neural Networks to Solve Ordinary Differential Equations"
+description: "Implementing from scratch a neural network based approach for approximating numerically the solutions of ordinary differential equations."
 date: "5/22/2021"
 #image: "cover.jpg"
 categories:
   - Deep Learning
   - Python
   - Differential Equations
+bibliography: references.bib
+nocite: '@*'
 ---
 
 
 # Introduction
 
-The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, can be used to numerically approximate the solutions of (ordinary) differential equations. Before implementing it from scratch in Python, I will first describe the setting and the general approach.
+The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, can be used to numerically approximate the solutions of (ordinary) differential equations [@blechschmidt2021three] . Before implementing it from scratch in Python, I will first describe the setting and the general approach.
 
 # Setting
 
@@ -311,4 +313,4 @@ Also for the second exemplary IVP, on the interval $I=[0,5]$ the approximate sol
 
 # Conclusion
 
-The examples presented above demonstrate that neural networks are a powerful tool for numerically approximating the solutions of ODEs.
+The examples presented above demonstrate that neural networks are a powerful tool for numerically approximating the solutions of ODEs. This approach can also be extended for solving partial differential equations.
