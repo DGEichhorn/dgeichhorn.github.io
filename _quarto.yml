@@ -17,9 +17,9 @@ website:
       - text: CV
         menu:
           - text: EN
-            href: inputs/resume.pdf
+            href: inputs/CV_DominikEichhorn.pdf
           - text: DE
-            href: inputs/resume.pdf
+            href: inputs/Lebenslauf_DominikEichhorn.pdf
       - text: Coding/Projects
         href: blog/index.qmd
 

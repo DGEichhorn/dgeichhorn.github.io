@@ -11,49 +11,23 @@ bibliography: references.bib
 nocite: '@*'
 ---
 
-
 # Introduction
 
-The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I read of a lesser known but mathematically very interesting application of neural networks. In fact, neural networks, can be used to numerically approximate the solutions of (ordinary) differential equations [@blechschmidt2021three] . Before implementing it from scratch in Python, I will first describe the setting and the general approach.
+In supervised learning settings, neural networks are employed to estimate conditional expectations or conditional probabilities. Some while ago, I read of a completely different application of neural networks. In fact, neural networks, can be used to numerically approximate the solutions of (ordinary) differential equations [@blechschmidt2021three]. Before implementing it from scratch in Python, I will first describe the setting and the general approach.
 
 # Setting
 
-Let's first introduce some notation: $u(x)$ denotes an unknown function, $u: I \subseteq \mathbb{R} \to \mathbb{R}$, of the independent variable $x$. The $j$-th derivative of $u$ evaluated at $x$ is written as:
-$$u^{(j)}(x)=\frac{d^j \, u}{d \, x^j}(x), \; j \in \mathbb{N}.$$
-An ordinary differential equation (ODE) of order $k$ is an equation of the following form:
-$$F \left( x, u(x), u^{(1)}(x), \dots, u^{(k)}(x) \right) = 0, \; \forall x \in I,$$
-where $F$ is a given function, $F: I \times  \mathbb{R}^{k+1} \to \mathbb{R}$. So solving an ODE means finding a function $u$ which satisfies the relationship specified by $F$ between $u$ and its first $k$ derivatives, as well as $x$. Under certain assumptions (see Picard-Lindelöf theorem), for such an ODE a unique solution is guaranteed to exist for given initial conditions. These initial conditions specify the value of the unknown function and its first $k-1$ derivatives at a certain initial point $x_0 \in I$, i.e. something like
-$$u(x_0)=u_0, \; u^{(1)}(x_0)=u_1, \; \dots, \; u^{(k-1)}(x_0)=u_{k-1}.$$
-An ODE together with initial conditions is called an initial value problem (IVP). While some IVPs can be solved analytically, in most cases the solution needs must be approximated numerically. 
-For this purpose, neural networks can be utilized, although the setting differs greatly from the typical supervised learning setting.
-<!--A classical numerical procedure for finding approximate solutions is the Runge-Kutta method.-->
+Let's first introduce some notation: $u(x)$ denotes an unknown function, $u: I \subseteq \mathbb{R} \to \mathbb{R}$, of the independent variable $x$. The $j$-th derivative of $u$ evaluated at $x$ is written as: $$u^{(j)}(x)=\frac{d^j \, u}{d \, x^j}(x), \; j \in \mathbb{N}.$$ An ordinary differential equation (ODE) of order $k$ is an equation of the following form: $$F \left( x, u(x), u^{(1)}(x), \dots, u^{(k)}(x) \right) = 0, \; \forall x \in I,$$ where $F$ is a given function, $F: I \times \mathbb{R}^{k+1} \to \mathbb{R}$. So solving an ODE means finding a function $u$ which satisfies the relationship specified by $F$ between $u$ and its first $k$ derivatives, as well as $x$. Under certain assumptions (see Picard-Lindelöf theorem), for such an ODE a unique solution is guaranteed to exist for given initial conditions. These initial conditions specify the value of the unknown function and its first $k-1$ derivatives at a certain initial point $x_0 \in I$, i.e. something like $$u(x_0)=u_0, \; u^{(1)}(x_0)=u_1, \; \dots, \; u^{(k-1)}(x_0)=u_{k-1}.$$ An ODE together with initial conditions is called an initial value problem (IVP). While some IVPs can be solved analytically, in most cases the solution needs must be approximated numerically. For this purpose, neural networks can be utilized, although the setting differs greatly from the typical supervised learning setting. <!--A classical numerical procedure for finding approximate solutions is the Runge-Kutta method.-->
 
 # General Approach
 
-Let $N_{\theta}(x)$ denote a feed forward multilayer perceptron parametrized by $\theta$ (i.e. a vector containing all weights and biases), $N_{\theta}: I \to \mathbb{R}$. If the activation functions employed by $N_{\theta}$ are (infinitely) differentiable, $N_{\theta}$ is -- as a composition of (infinitely) differentiable functions -- itself (infinitely) differentiable. Examples of (infinitely) differentiable activation functions are $tanh$ and $sigmoid$. Their infinite differentiability is the crucial property that makes feed forward multilayer perceptrons unlike other highly flexible function approximators particularly well suited for representing solutions to IVPs.
-<!--Infinite differentiability sets feed forward multilayer perceptrons apart from other highly flexible function approximator such as random forests and makes them suitable for the task of solving ODEs.-->
-At any given $x$, the value of the derivatives can be computed using backpropagation.
+Let $N_{\theta}(x)$ denote a feed forward multilayer perceptron parametrized by $\theta$ (i.e. a vector containing all weights and biases), $N_{\theta}: I \to \mathbb{R}$. If the activation functions employed by $N_{\theta}$ are (infinitely) differentiable, $N_{\theta}$ is -- as a composition of (infinitely) differentiable functions -- itself (infinitely) differentiable. Examples of (infinitely) differentiable activation functions are $tanh$ and $sigmoid$. Their infinite differentiability is the crucial property that makes feed forward multilayer perceptrons unlike other highly flexible function approximators particularly well suited for representing solutions to IVPs. <!--Infinite differentiability sets feed forward multilayer perceptrons apart from other highly flexible function approximator such as random forests and makes them suitable for the task of solving ODEs.--> At any given $x$, the value of the derivatives can be computed using backpropagation.
 
-Finding a numerical approximation to the solution of an IVP using neural networks boils down to finding the parameter vector $\theta^\star$ for which the ODE and the initial conditions are (approximately) satisfied, i.e. for which
-$$F \left( x, N_{\theta^\star}(x), N_{\theta^\star}^{(1)}(x), \dots, N_{\theta^\star}^{(k)}(x) \right) \approx 0, \; \forall x \in I, $$
-and 
-$$N_{\theta^\star}(x_0) \approx u_0, \; N_{\theta^\star}^{(1)}(x_0) \approx u_1, \; \dots, \; N_{\theta^\star}^{(k-1)}(x_0) \approx u_{k-1}.$$
-with 
-$$N_{\theta^\star}^{(j)}(x) = \frac{d^j \, N_{\theta^\star}}{d \, x^j}(x), \; j \in \mathbb{N}.$$
+Finding a numerical approximation to the solution of an IVP using neural networks boils down to finding the parameter vector $\theta^\star$ for which the ODE and the initial conditions are (approximately) satisfied, i.e. for which $$F \left( x, N_{\theta^\star}(x), N_{\theta^\star}^{(1)}(x), \dots, N_{\theta^\star}^{(k)}(x) \right) \approx 0, \; \forall x \in I, $$ and $$N_{\theta^\star}(x_0) \approx u_0, \; N_{\theta^\star}^{(1)}(x_0) \approx u_1, \; \dots, \; N_{\theta^\star}^{(k-1)}(x_0) \approx u_{k-1}.$$ with $$N_{\theta^\star}^{(j)}(x) = \frac{d^j \, N_{\theta^\star}}{d \, x^j}(x), \; j \in \mathbb{N}.$$
 
-This can be achieved by minimizing a custom loss function $L_{total}$ given a set of $n \in \mathbb{N}$ sample points, $x_i \in I, i=1,\dots, n$.
-$$\theta^\star = \underset{\theta}{\text{arg min}} \; L_{total}(\theta)$$
-The custom loss function $L_{total}$ depending on $\theta$ consists of two parts:
-$$L_{total}(\theta) = L_{ODE}(\theta) + L_{IC}(\theta),$$
-$$L_{ODE}(\theta) = \frac{1}{n} \sum_{i=1}^n \left[ F \left( x_i, N_{\theta}(x_i), N_{\theta}^{(1)}(x_i), \dots, N_{\theta}^{(k)}(x_i) \right) \right]^2,$$
-$$L_{IC}(\theta) = \left[ N_{\theta}(x_0) - u_0 \right]^2 + \sum_{j=1}^{k-1} \left[ N_{\theta}^{(j)}(x_0) - u_j \right]^2.$$
-$L_{ODE}$ measures how far $N_{\theta}$ is from satisfying the differential equation using mean squared error.
-$L_{IC}$ measures how far $N_{\theta}$ is from satisfying the initial conditions in terms of squared error.
-Note that the exact form of $L_{ODE}$ and $L_{IC}$ (and $L_{ODE}$) depends on the particular IVP under consideration. 
-Technically, $L_{total}(\theta)$ can be minimized using standard gradient based methods such as gradient descent or Adam.
+This can be achieved by minimizing a custom loss function $L_{total}$ given a set of $n \in \mathbb{N}$ sample points, $x_i \in I, i=1,\dots, n$. $$\theta^\star = \underset{\theta}{\text{arg min}} \; L_{total}(\theta)$$ The custom loss function $L_{total}$ depending on $\theta$ consists of two parts: $$L_{total}(\theta) = L_{ODE}(\theta) + L_{IC}(\theta),$$ $$L_{ODE}(\theta) = \frac{1}{n} \sum_{i=1}^n \left[ F \left( x_i, N_{\theta}(x_i), N_{\theta}^{(1)}(x_i), \dots, N_{\theta}^{(k)}(x_i) \right) \right]^2,$$ $$L_{IC}(\theta) = \left[ N_{\theta}(x_0) - u_0 \right]^2 + \sum_{j=1}^{k-1} \left[ N_{\theta}^{(j)}(x_0) - u_j \right]^2.$$ $L_{ODE}$ measures how far $N_{\theta}$ is from satisfying the differential equation using mean squared error. $L_{IC}$ measures how far $N_{\theta}$ is from satisfying the initial conditions in terms of squared error. Note that the exact form of $L_{ODE}$ and $L_{IC}$ (and $L_{ODE}$) depends on the particular IVP under consideration. Technically, $L_{total}(\theta)$ can be minimized using standard gradient based methods such as gradient descent or Adam.
 
 Eventually, the approximate solution to the IVP is given by $N_{\theta^\star}(x)$.
-
 
 # Implementation
 
@@ -90,10 +64,7 @@ class N(nn.Module):
 
 ## First ODE
 
-The first example is an IVP consisting of a second order ODE given by:
-$$ 4 u(x) + u^{(1)}(x) + u^{(2)}(x) = 0 $$
-and initial conditions
-$$ u(0) = 0.5, \; u^{(1)}(0)=2 .$$
+The first example is an IVP consisting of a second order ODE given by: $$ 4 u(x) + u^{(1)}(x) + u^{(2)}(x) = 0 $$ and initial conditions $$ u(0) = 0.5, \; u^{(1)}(0)=2 .$$
 
 ### Define Custom Loss Function
 
@@ -179,8 +150,7 @@ for epoch in range(num_epochs):
 
 ### Visualization
 
-Once training is done, the learned, approximate solution can be compared to the analytical solution, which is known for this IVP. The analytical solution is given by:
-$$ u(x) = e^{-0.5x} \times \left[ 0.5 \times \cos\left(\frac{\sqrt{15}}{2} x \right) + \frac{3 \sqrt{15}}{10} \times \sin \left( \frac{\sqrt{15}}{2} x \right) \right] $$
+Once training is done, the learned, approximate solution can be compared to the analytical solution, which is known for this IVP. The analytical solution is given by: $$ u(x) = e^{-0.5x} \times \left[ 0.5 \times \cos\left(\frac{\sqrt{15}}{2} x \right) + \frac{3 \sqrt{15}}{10} \times \sin \left( \frac{\sqrt{15}}{2} x \right) \right] $$
 
 ```{python}
 #| code-fold: true
@@ -205,10 +175,7 @@ The above plot shows the approximate as well as the analytical solution. Apparen
 
 ## Second ODE
 
-The second example is an IVP that consists of the following first ODE
-$$ u^{(1)}(x) - 2x (2-u) = 0 $$
-and the initial condition
-$$ u(0) = -1 .$$
+The second example is an IVP that consists of the following first ODE $$ u^{(1)}(x) - 2x (2-u) = 0 $$ and the initial condition $$ u(0) = -1 .$$
 
 ### Define Custom Loss Function
 
@@ -287,8 +254,7 @@ for epoch in range(num_epochs):
 
 ### Visualization
 
-For this IVP, the analytical solution is given by:
-$$ u(x) = 2 - 3 \, e^{-x^2}. $$
+For this IVP, the analytical solution is given by: $$ u(x) = 2 - 3 \, e^{-x^2}. $$
 
 ```{python, fig.align=center}
 #| code-fold: true

@@ -5,15 +5,48 @@ author: "Author"
 date: "5/22/2021"
 #image: "cover.jpg"
 categories:
-  - Science
-  - Technology
+  - Deep Learning
+  - Python
+  - Probability Density Estimation
 ---
+
+# TO DO: CODE AN BEZEICHNUNGEN IN FORMELN ANPASSEN
 
 # Introduction
 
+The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I came across a paper about a lesser known but mathematically very interesting application of neural networks that was written some years ago. The paper shows how neural networks can be used for estimating the probability density function of a random variable [@magdon1998neural]. Before implementing it from scratch in Python, I will first describe the general approach.
 
+# General Approach
 
-# Load Packages
+Let $X$ be a continuous random variable with unknown probability density function (PDF) $f_X$ and unknown cumulative density function (CDF) $F_X$. Given a set of $n \in \mathbb{N}$ i.i.d. realizations of $X$, $x_i, i=1, \dots, n$, the goal is to estimate $f_X$. In contrast to other approaches, such as Kernel Density Estimators, the approach by @magdon1998neural does not directly estimate the PDF.
+
+The approach by @magdon1998neural relies on the following two useful properties of the **CDF**:
+
+1.  If the CDF is differentiable, the PDF is obtained as the derivative of the CDF, i.e., $f_X(x)=\frac{d \, F_X}{d \, x}(x)$.
+2.  Transforming a random variable by its own CDF yields a new random variable that is uniformly distributed on \$(0,1)\$, i.e., $F_X(X) \sim \mathcal{U}(0,1)$.
+
+Let $N_{\theta}$ denote a feed forward multilayer perceptron parametrized by $\theta$ (i.e. a vector containing all weights and biases), $N_{\theta}: \mathbb{R} \to \mathbb{R}$. $N_{\theta}$ is differentiable, if the activation functions employed by it are differentiable (since it is then a composition of differentiable functions). $tanh$ and $sigmoid$ are examples of differentiable activation functions.
+
+@magdon1998neural proposed to use a neural network, that is differentiable, to approximate the **CDF** and take afterwards the first derivative w.r.t. $x$ to obtain an estimate of the **PDF**. 
+
+Note that a CDF cannot be any arbitrary function. In fact, a CDF must have two further important properties that the neural network approximation to the CDF should also exhibit: First, the CDF maps $\mathbb{R}$ onto the interval $[0,1]$. Second, the CDF is monotonically increasing. By using an activation function in the output layer that maps $\mathbb{R}$ onto the interval $[0,1]$, it can be guaranteed that the neural network approximation to the CDF satisfies the first property. The second property can be enforced by modifying the loss function. The modified loss function also includes a term, $L_{Mon}$, that applies a penalty if the neural network approximation to the CDF is not monotonically increasing in $x$. More specifically, $L_{Mon}$ is given by: $$ L_{Mon}(\theta) = \frac{1}{n_{Mon}} \sum_{k=1}^{n_{Mon}} \max \left( N_{\theta}(x_k^{Mon}) - N_{\theta}(x_k^{Mon} + \Delta), 0 \right)$$ for some small $\Delta > 0$ with $x_k^{Mon}, k=1,\dots, n_{Mon},$ being a set of $n_{Mon} \in \mathbb{N}$ points at which monotonicity is to be enforced.
+
+WICHTIG: das ist eine gute Überleitung um von LossDist zu LossMon zu kommen Before describing the steps of the algorithm, we note that the resulting network has
+to represent a monotonically non decreasing mapping, otherwise it will not representa legitimate distribution function.
+
+So the goal is to find the parameter vector $\theta^\star$ for which $N_{\theta^\star}(x) = F_X(x)$ for all $x \in \mathbb{R}$. However, that is the same as finding the parameter vector $\theta^\star$ for which the transformed random variable $N_{\theta^\star}(X)$ is uniformly distributed on $(0,1)$, since $F_X(X) \sim \mathcal{U}(0,1)$.
+
+This is achieved by the following algorithm:
+
+1.  Let $x_{[1]}, \dots, x_{[n]}$ be the **sorted** i.i.d. realizations of the random variable $X$
+
+SO UND ERST DANN WENN MAN DIE MODIFIZIERTE LOSS FUNCTION VORGESTELLT HAT DEN KONKRETEN ALGO also insbesondere sampling scheme vorstellen
+
+wichtig für further details schaue im paper nach
+
+# Implementation
+
+## Load Packages
 
 ```{python}
 # for sampling
@@ -30,7 +63,7 @@ import torch.nn as nn
 import torch.optim as optim
 ```
 
-# Set Seed for reproducibility of data generation and neural network training
+## Set Seed for reproducibility of data generation and neural network training
 
 ```{python}
 seed = 42
@@ -39,7 +72,7 @@ np.random.seed(seed)
 torch.manual_seed(seed)
 ```
 
-# Data Generation
+## Data Generation
 
 ```{python}
 # construct 2-component Gaussian mixture distribution
@@ -48,7 +81,7 @@ comp2 = stats.Normal(mu=5, sigma=0.5)
 mix = stats.Mixture([comp1, comp2], weights=[0.2, 0.8])
 ```
 
-# Visualization of the analytic PDF
+## Visualization of the analytic PDF
 
 ```{python}
 #| code-fold: true
@@ -64,7 +97,7 @@ plt.ylabel("x")
 plt.show()
 ```
 
-# Define Neural Network
+## Define Neural Network
 
 ```{python}
 class Network(nn.Module):
@@ -82,7 +115,7 @@ class Network(nn.Module):
 
 ```
 
-# Define Custom Loss Function
+## Define Custom Loss Function
 
 ```{python}
 class LossPDE(nn.Module):
@@ -101,7 +134,7 @@ class LossPDE(nn.Module):
 
 ```
 
-# Construct model, loss and optimizer
+## Construct model, loss and optimizer
 
 ```{python}
 model = Network(input_size=1, hidden_size=10, output_size=1)
@@ -109,7 +142,7 @@ criterion = LossPDE()
 optimizer = optim.Adam(model.parameters(), lr=1e-3)
 ```
 
-# Sample data and set monotonicity points
+## Sample data and set monotonicity points
 
 ```{python}
 # sample data, sort it and convert to torch tensor
@@ -125,7 +158,7 @@ mon_points = torch.linspace(x[0,0], x[-1,0], n_mon_points)[:, None]
 delta = 0.1*(max(x)-min(x))/n_mon_points
 ```
 
-# Training
+## Training
 
 wichtiger kommentar: in jedem step wird ganzer datensatz verwendet; epochs dienen nur dazu dass nicht in jedem step fortschritt gedruck wird
 
@@ -155,7 +188,7 @@ for epoch in range(num_epochs):
 
 ```
 
-# plot cdf
+## plot cdf
 
 ```{python}
 #| code-fold: true
@@ -176,7 +209,7 @@ plt.show()
 
 ```
 
-# Function to compute derivative of NN w.r.t. to input x
+## Function to compute derivative of NN w.r.t. to input x
 
 ```{python}
 def ComputePDF(model, x):
@@ -192,7 +225,7 @@ def ComputePDF(model, x):
 
 ```
 
-# Plot PDF
+## Plot PDF
 
 ```{python}
 #| code-fold: true
@@ -213,14 +246,14 @@ plt.show()
 
 ```
 
-# Data Generation
+## Data Generation
 
 ```{python}
 # construct Weibull distribution
 dist = stats.weibull_min(c=1.8)
 ```
 
-# Visualization of the analytic PDF
+## Visualization of the analytic PDF
 
 ```{python}
 #| code-fold: true
@@ -236,7 +269,7 @@ plt.ylabel("x")
 plt.show()
 ```
 
-# Set Seed for reproducibility of data generation and neural network training
+## Set Seed for reproducibility of data generation and neural network training
 
 ```{python}
 #| code-fold: true
@@ -292,7 +325,7 @@ for epoch in range(num_epochs):
 
 ```
 
-# plot cdf
+## plot cdf
 
 ```{python}
 #| code-fold: true
@@ -313,7 +346,7 @@ plt.show()
 
 ```
 
-# Plot PDF
+## Plot PDF
 
 ```{python}
 #| code-fold: true

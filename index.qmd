@@ -1,6 +1,6 @@
 ---
 title: "Hi, I'm Dominik."
-image: inputs/avatar.png
+image: inputs/Bewerbungsfoto_rounded.png
 about:
   template: jolla
   image-shape: round

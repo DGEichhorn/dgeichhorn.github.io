@@ -1,6 +1,6 @@
 ---
 title: "About me"
-image: inputs/mypic_full.png
+image: inputs/Bewerbungsfoto_large.jpg
 about:
   template: broadside
 #  image-width: 3em
