@@ -304,7 +304,7 @@ window.Quarto = {
 <section id="implementation" class="level1">
 <h1>Implementation</h1>
 <p>Having described the general approach for solving ODEs using neural networks, in this section, I will implement it from scratch in Python and apply it to two different exemplary ODEs. These two ODEs have analytical solutions. This allows to assess the quality of the approximate solution by comparing it to the analytical one.</p>
-<div id="286b9634" class="cell" data-execution_count="1">
+<div id="ccbaf1fd" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for constructing, learning, using NNs</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn </span>
@@ -315,8 +315,8 @@ window.Quarto = {
 </div>
 <section id="define-neural-network" class="level2">
 <h2 class="anchored" data-anchor-id="define-neural-network">Define Neural Network</h2>
-<p>Next, I define the neural network used for the approximation. It is a feed forward multilayer perceptron with one hidden layer that applies a <span class="math inline">\(sigmoid\)</span> activation function between two fully connected linear layers.</p>
-<div id="41ad4404" class="cell" data-execution_count="2">
+<p>First, I define the neural network used for the approximation. It is a feed forward multilayer perceptron with one hidden layer that applies a <span class="math inline">\(sigmoid\)</span> activation function between two fully connected linear layers.</p>
+<div id="2e52d2a0" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> N(nn.Module):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_size, hidden_size, output_size):</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(N, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -336,7 +336,7 @@ window.Quarto = {
 <section id="define-custom-loss-function" class="level3">
 <h3 class="anchored" data-anchor-id="define-custom-loss-function">Define Custom Loss Function</h3>
 <p>The custom loss function corresponding to the above IVP is computed as:</p>
-<div id="95034662" class="cell" data-execution_count="3">
+<div id="61e449d4" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Loss_IVP1(nn.Module):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(Loss_IVP1, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -371,15 +371,15 @@ window.Quarto = {
 <section id="construct-model-loss-and-optimizer" class="level3">
 <h3 class="anchored" data-anchor-id="construct-model-loss-and-optimizer">Construct Model, Loss and Optimizer</h3>
 <p>To ensure reproducibility of the subsequent steps, it is advisable to set a seed for the internal random number generator.</p>
-<div id="60a6407f" class="cell" data-execution_count="4">
+<div id="c810a458" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>&lt;torch._C.Generator at 0x1fcc766f130&gt;</code></pre>
+<pre><code>&lt;torch._C.Generator at 0x1c336c331b0&gt;</code></pre>
 </div>
 </div>
 <p>I instantiate the neural network, the loss function to be minimized and the optimizer (here, I use Adam).</p>
-<div id="c7d5afac" class="cell" data-execution_count="5">
+<div id="080d5dad" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> N(input_size<span class="op">=</span><span class="dv">1</span>, hidden_size<span class="op">=</span><span class="dv">10</span>, output_size<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> Loss_IVP1()</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -388,14 +388,14 @@ window.Quarto = {
 <section id="set-x-values" class="level3">
 <h3 class="anchored" data-anchor-id="set-x-values">Set x-values</h3>
 <p>I decided to approximate the solution of the IVP on the interval <span class="math inline">\(I=[0,5]\)</span>. I choose <span class="math inline">\(n=100\)</span> sample points evenly spread accross <span class="math inline">\(I\)</span>.</p>
-<div id="9a3e8d67" class="cell" data-execution_count="6">
+<div id="4a3c7115" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="training" class="level3">
 <h3 class="anchored" data-anchor-id="training">Training</h3>
 <p>Now that all necessary components are set up, training can start.</p>
-<div id="bc4f072d" class="cell" data-execution_count="7">
+<div id="743be4d8" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">3000</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -425,7 +425,7 @@ Epoch [10/10], Loss: 0.0000</code></pre>
 <section id="visualization" class="level3">
 <h3 class="anchored" data-anchor-id="visualization">Visualization</h3>
 <p>Once training is done, the learned, approximate solution can be compared to the analytical solution, which is known for this IVP. The analytical solution is given by: <span class="math display">\[ u(x) = e^{-0.5x} \times \left[ 0.5 \times \cos\left(\frac{\sqrt{15}}{2} x \right) + \frac{3 \sqrt{15}}{10} \times \sin \left( \frac{\sqrt{15}}{2} x \right) \right] \]</span></p>
-<div id="5c547616" class="cell" data-execution_count="8">
+<div id="6ce31ae8" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">15</span>, <span class="dv">1000</span>)[:, <span class="va">None</span>]</span>
@@ -459,7 +459,7 @@ Epoch [10/10], Loss: 0.0000</code></pre>
 <section id="define-custom-loss-function-1" class="level3">
 <h3 class="anchored" data-anchor-id="define-custom-loss-function-1">Define Custom Loss Function</h3>
 <p>For this IVP, the custom loss function is computed as:</p>
-<div id="86ed487e" class="cell" data-execution_count="9">
+<div id="ee5cd159" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Loss_IVP2(nn.Module):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(Loss_IVP2, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -487,15 +487,15 @@ Epoch [10/10], Loss: 0.0000</code></pre>
 <section id="construct-model-loss-and-optimizer-1" class="level3">
 <h3 class="anchored" data-anchor-id="construct-model-loss-and-optimizer-1">Construct Model, Loss and Optimizer</h3>
 <p>Again, a seed is set for the internal random number generator.</p>
-<div id="17f3432e" class="cell" data-execution_count="10">
+<div id="ddabff5e" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
-<pre><code>&lt;torch._C.Generator at 0x1fcc766f130&gt;</code></pre>
+<pre><code>&lt;torch._C.Generator at 0x1c336c331b0&gt;</code></pre>
 </div>
 </div>
 <p>The neural network, the loss function to be minimized and the optimizer are instantiated.</p>
-<div id="a1fbecc4" class="cell" data-execution_count="11">
+<div id="d9faa94f" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> N(input_size<span class="op">=</span><span class="dv">1</span>, hidden_size<span class="op">=</span><span class="dv">10</span>, output_size<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> Loss_IVP2()</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -504,14 +504,14 @@ Epoch [10/10], Loss: 0.0000</code></pre>
 <section id="set-x-values-1" class="level3">
 <h3 class="anchored" data-anchor-id="set-x-values-1">Set x-values</h3>
 <p>As previously, the solution of the IVP is approximated on the interval <span class="math inline">\(I=[0,5]\)</span> with <span class="math inline">\(n=100\)</span> sample points evenly spread accross <span class="math inline">\(I\)</span>.</p>
-<div id="d1a7c510" class="cell" data-execution_count="12">
+<div id="1c85a91a" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">100</span>)[:, <span class="va">None</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="training-1" class="level3">
 <h3 class="anchored" data-anchor-id="training-1">Training</h3>
 <p>The setup is finished and the training can begin.</p>
-<div id="995e2511" class="cell" data-execution_count="13">
+<div id="6ffa9a52" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">3000</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -541,7 +541,7 @@ Epoch [10/10], Loss: 0.0000</code></pre>
 <section id="visualization-1" class="level3">
 <h3 class="anchored" data-anchor-id="visualization-1">Visualization</h3>
 <p>For this IVP, the analytical solution is given by: <span class="math display">\[ u(x) = 2 - 3 \, e^{-x^2}. \]</span></p>
-<div id="71208333" class="cell" data-execution_count="14">
+<div id="9fa86757" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">1000</span>)[:, <span class="va">None</span>]</span>

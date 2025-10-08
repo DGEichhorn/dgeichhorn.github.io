@@ -45,7 +45,7 @@ import matplotlib.pyplot as plt
 
 ## Define Neural Network
 
-Next, I define the neural network used for the approximation. It is a feed forward multilayer perceptron with one hidden layer that applies a $sigmoid$ activation function between two fully connected linear layers.
+First, I define the neural network used for the approximation. It is a feed forward multilayer perceptron with one hidden layer that applies a $sigmoid$ activation function between two fully connected linear layers.
 
 ```{python}
 class N(nn.Module):
