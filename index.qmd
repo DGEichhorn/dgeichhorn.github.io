@@ -16,7 +16,7 @@ about:
       href: https://www.linkedin.com/in/dgeichhorn
       icon: linkedin
     - text: CV
-      href: inputs/resume.pdf
+      href: inputs/CV_DominikEichhorn.pdf
 ---
 
 <!--This is a Quarto website.
