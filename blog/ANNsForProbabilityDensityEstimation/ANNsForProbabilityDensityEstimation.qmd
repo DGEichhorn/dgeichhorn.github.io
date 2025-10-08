@@ -9,17 +9,13 @@ categories:
   - Python
   - Probability Density Estimation
 bibliography: references.bib
+nocite: '@*'
 ---
 
-# TO DO: CODE AN BEZEICHNUNGEN IN FORMELN ANPASSEN
-
-# SCHAUEN OB REIHENFOLGE DER CODE BLOCKS v.a. def NN und def loss eine anderes ergebnis liefern
-
-# reihenfolge der code blocks verbessern
 
 # Introduction
 
-The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I came across a paper about a lesser known but mathematically very interesting application of neural networks that was written some years ago. The paper shows how neural networks can be used for estimating the probability density function of a random variable [@magdon1998neural]. Before implementing it from scratch in Python, I will first describe the general approach.
+The impressive capabilitis of neural networks in typical regression and classification tasks are widely known. Recently, I came across a paper about a lesser known but statistically very interesting application of neural networks that was written some years ago. The paper shows how neural networks can be used for estimating the probability density function of a random variable [@magdon1998neural]. Before implementing it from scratch in Python, I will first describe the general approach.
 
 # General Approach
 
@@ -34,9 +30,13 @@ Instead, the approach by @magdon1998neural relies on the following two useful pr
 
 So the goal is to find the parameter vector $\theta^\star$ for which $N_{\theta^\star}(x) = F_X(x)$ for all $x \in \mathbb{R}$. However, that is the same as finding the parameter vector $\theta^\star$ for which the transformed random variable $N_{\theta^\star}(X)$ is uniformly distributed on $(0,1)$, since $F_X(X) \sim \mathcal{U}(0,1)$. This is achieved by the following procedure [@magdon1998neural]: Beforehand, the realizations of the random variable $X$ are sorted in ascending order, i.e. $x_{[1]} \leq \dots \leq x_{[n]}$. These $x_{[i]}, i=1,\dots, n$, serve as inputs. During training, in each iteration step <!--$t \in \mathbb{N}$-->, first, a new set of $n$ samples are drawn i.i.d. from a uniform distribution on $(0,1)$, $u_i \sim \mathcal{U}(0,1)$, and sorted in ascending order, i.e. $u_{[1]} \leq \dots \leq u_{[n]}$. These $u_{[i]}, i=1,\dots, n$, serve as targets only for that iteration step. Second, a gradient descent step is taken to adjust the parameter vector to better map the inputs onto the generated targets. For the purpose of mapping the data to a uniform distribution, the following loss function is a reasonable starting point: $$ L_{Dist}(\theta) = \frac{1}{n} \sum_{i=1}^n \left[ N_{\theta}(x_{[i]}) -  u_{[i]}\right]^2 $$
 
-However, besides from mapping the data to a uniform distribution, there are two further properties, that CDFs exhibit and that the neural network approximation to the CDF must also have to be a legitimate estimate of a CDF. <!--Note that a CDF cannot be any arbitrary function. In fact, a CDF must have two further important properties that the neural network approximation to the CDF should also exhibit: --> First, the CDF maps $\mathbb{R}$ onto the interval $[0,1]$. Second, the CDF is monotonically increasing. By using an activation function in the output layer that maps $\mathbb{R}$ onto the interval $[0,1]$, it can be guaranteed that the neural network approximation to the CDF satisfies the first property. The second property can be enforced by modifying the loss function. The modified loss function $L_{total}$ also includes a term, $L_{Mon}$, that applies a penalty if the neural network approximation to the CDF is not monotonically increasing in $x$. More specifically, $L_{Mon}$ is written as: $$ L_{Mon}(\theta) = \frac{1}{n_{Mon}} \sum_{k=1}^{n_{Mon}} \max \left( N_{\theta}(x_k^{Mon}) - N_{\theta}(x_k^{Mon} + \Delta), 0 \right)$$ for some small $\Delta > 0$ with $x_k^{Mon}, k=1,\dots, n_{Mon},$ being a set of $n_{Mon} \in \mathbb{N}$ points at which monotonicity is to be enforced. 
+However, besides from mapping the data to a uniform distribution, there are two further properties, that CDFs exhibit and that the neural network approximation to the CDF must also have to be a legitimate estimate of a CDF. <!--Note that a CDF cannot be any arbitrary function. In fact, a CDF must have two further important properties that the neural network approximation to the CDF should also exhibit: --> First, the CDF maps $\mathbb{R}$ onto the interval $[0,1]$. Second, the CDF is monotonically increasing. By using an activation function in the output layer that maps $\mathbb{R}$ onto the interval $[0,1]$, it can be guaranteed that the neural network approximation to the CDF satisfies the first property. The second property can be enforced by modifying the loss function. The modified loss function $L_{total}$ also includes a term, $L_{Mon}$, that applies a penalty if the neural network approximation to the CDF is not monotonically increasing in $x$. More specifically, $L_{Mon}$ is written as: 
+$$ L_{Mon}(\theta) = \frac{1}{n_{Mon}} \sum_{k=1}^{n_{Mon}} \max \left( N_{\theta}(x_k^{Mon}) - N_{\theta}(x_k^{Mon} + \Delta), 0 \right)$$
+for some small $\Delta > 0$ with $x_k^{Mon}, k=1,\dots, n_{Mon},$ being a set of $n_{Mon} \in \mathbb{N}$ points at which monotonicity is to be enforced. 
 
-The resulting modified loss function is: $$ L_{total}(\theta) = L_{Dist}(\theta) + \lambda \, L_{Mon}(\theta) $$ where $\lambda \in \mathbb{R}_{>0}$ is a large positive weighting factor for the monotonicity constraint. $\theta^\star$ is then given by:
+The resulting modified loss function is: 
+$$ L_{total}(\theta) = L_{Dist}(\theta) + \lambda_{Mon} \, L_{Mon}(\theta) $$
+where $\lambda_{Mon} \in \mathbb{R}_{>0}$ is a large positive weighting factor for the monotonicity constraint. $\theta^\star$ is then given by:
 $$\theta^\star = \underset{\theta}{\text{arg min}} \; L_{total}(\theta)$$
 Once $\theta^\star$ is computed using standard gradient based methods, the estimated PDF $\hat{f}_X$ is obtained by
 $$ \hat{f}_X(x) = \frac{\partial \, N_{\theta^\star}(x)}{\partial \, x}  $$
@@ -101,33 +101,28 @@ class N(nn.Module):
 
 ## Define Modified Loss Function
 
+Next, I define the modified loss function as described above.
+
 ```{python}
 class Loss(nn.Module):
   def __init__(self):
     super(Loss, self).__init__()
   
   def forward(self, y_pred, y_true, lambda_mon, mon_l, mon_u):
-    loss_prediction = torch.mean((y_pred - y_true)**2)
+    loss_dist = torch.mean((y_pred - y_true)**2)
     
     diff = mon_l - mon_u
-    loss_monotonicity = torch.mean(torch.clamp(diff, min=0))
+    loss_mon = torch.mean(torch.clamp(diff, min=0))
     
-    loss_total = loss_prediction + lambda_mon*loss_monotonicity
+    loss_total = loss_dist + lambda_mon*loss_mon
     
     return loss_total
 
 ```
 
-## Set Seed for reproducibility of data generation and neural network training
+## Gaussian Mixture
 
-```{python}
-seed = 42
-random.seed(seed)
-np.random.seed(seed)
-torch.manual_seed(seed)
-```
-
-## Data Generation
+For the first example, realizations will be drawn from a 2-component Gaussian mixture distribution. So I construct one with mixture weights $\phi_1=0.2$ and $\phi_2=0.8$, expectations $\mu_1=2$ and $\mu_2=5$ and standard deviations $\sigma_1=0.25$ and $ \sigma_2=0.5$.
 
 ```{python}
 # construct 2-component Gaussian mixture distribution
@@ -136,7 +131,7 @@ comp2 = stats.Normal(mu=5, sigma=0.5)
 mix = stats.Mixture([comp1, comp2], weights=[0.2, 0.8])
 ```
 
-## Visualization of the analytic PDF
+The corresponding PDF looks as follows:
 
 ```{python}
 #| code-fold: true
@@ -147,13 +142,26 @@ x = np.linspace(0, 10, 1000)
 plt.figure(figsize=(6,5))
 plt.plot(x, mix.pdf(x), color="C0", linestyle="dotted")
 plt.title("True Probability Density Function")
-plt.xlabel("Density")
-plt.ylabel("x")
+plt.xlabel("x")
+plt.ylabel("Density")
 plt.show()
 ```
 
 
-## Construct model, loss and optimizer
+### Set Seed
+
+In the subsequent steps, the neural network will be initialized and realizations will be sampled from the PDF given above. Both involves randomness. Therefore, to ensure reproducibility of the subsequent steps, one must set a seed for the  random number generators.
+
+```{python}
+seed = 42
+random.seed(seed)
+np.random.seed(seed)
+torch.manual_seed(seed)
+```
+
+### Construct Model, Loss and Optimizer
+
+After that, I instantiate the neural network, the loss function to be minimized and the optimizer (here, I use Adam).
 
 ```{python}
 model = N(input_size=1, hidden_size=10, output_size=1)
@@ -161,7 +169,9 @@ criterion = Loss()
 optimizer = optim.Adam(model.parameters(), lr=1e-3)
 ```
 
-## Sample data and set monotonicity points
+### Sample from PDF
+
+Next, I sample $n=200$ i.i.d. realizations from the 2-component Gaussian mixture distribution. Subsequently, I sort then in ascending order.
 
 ```{python}
 # sample data, sort it and convert to torch tensor
@@ -169,17 +179,25 @@ n = 200
 rng = np.random.default_rng(seed)
 x = mix.sample(n, rng=rng)
 x = torch.from_numpy(np.sort(x)).float().unsqueeze(1)
-
-# set monotonicity points
-lambda_mon = 1e6
-n_mon_points = 1000
-mon_points = torch.linspace(x[0,0], x[-1,0], n_mon_points)[:, None]
-delta = 0.1*(max(x)-min(x))/n_mon_points
 ```
 
-## Training
 
-wichtiger kommentar: in jedem step wird ganzer datensatz verwendet; epochs dienen nur dazu dass nicht in jedem step fortschritt gedruck wird
+### Set Monotonicity Points
+
+Before training can start, I have to specify $\lambda_{Mon}$, $n_{Mon}$, the monotonicity points themselves as well as $\Delta$. I choose to place $n_{Mon}=1000$ monotonicity points equally spaced between the smallest and the largest sampled $X$-values.
+
+```{python}
+# set monotonicity points
+lambda_mon = 1e6
+n_mon = 1000
+mon_points = torch.linspace(x[0,0], x[-1,0], n_mon)[:, None]
+delta = 0.1*(max(x)-min(x))/n_mon
+```
+
+
+### Training
+
+Now, everything is set up and training can start. Observe that, as described in the general approach, in each iteration, a new set of $n$ samples are drawn i.i.d. from $\mathcal{U}(0,1)$ and sorted in ascending order. These serve as targets only for that iteration.
 
 ```{python}
 #| output: false
@@ -207,7 +225,9 @@ for epoch in range(num_epochs):
 
 ```
 
-## plot cdf
+### Plot CDF
+
+Once training has finished, I plot the learned neural network approximation of CDF against the actual CDF of the 2-component Gaussian mixture.
 
 ```{python}
 #| code-fold: true
@@ -228,7 +248,12 @@ plt.show()
 
 ```
 
-## Function to compute derivative of NN w.r.t. to input x
+Obviously, the neural network approximation of the CDF given just a sample of 200 realizations of $X$ is very accurate.
+
+
+### Compute PDF
+
+Given the neural network approximation of the CDF, the following function computes an estimate of the PDF from it.
 
 ```{python}
 def ComputePDF(model, x):
@@ -244,7 +269,9 @@ def ComputePDF(model, x):
 
 ```
 
-## Plot PDF
+### Plot PDF
+
+This plot confirms, that the estimate of the PDF obtained from the neural network approximation to the CDF is quite precise.
 
 ```{python}
 #| code-fold: true
@@ -265,14 +292,16 @@ plt.show()
 
 ```
 
-## Data Generation
+## Weibull Distribution
+
+As second example, I will use a Weibull distribution with $shape=1.8$ (and $scale=1$).
 
 ```{python}
 # construct Weibull distribution
 dist = stats.weibull_min(c=1.8)
 ```
 
-## Visualization of the analytic PDF
+A plot of its PDF shows that it is clearly skewed.
 
 ```{python}
 #| code-fold: true
@@ -283,12 +312,12 @@ x = np.linspace(0, 5, 1000)
 plt.figure(figsize=(6,5))
 plt.plot(x, dist.pdf(x), color="C0", linestyle="dotted")
 plt.title("True Probability Density Function")
-plt.xlabel("Density")
-plt.ylabel("x")
+plt.xlabel("x")
+plt.ylabel("Density")
 plt.show()
 ```
 
-## Set Seed for reproducibility of data generation and neural network training
+The following steps (set seed; construct model, loss and optimizer; sample from PDF; set monontonicity points; training) are analogous to those in the first example. Therefore, I hide that part of the code. If you wish to have a look at it, click on the "Show code" button below.
 
 ```{python}
 #| code-fold: true
@@ -314,9 +343,9 @@ x = torch.from_numpy(np.sort(x)).float().unsqueeze(1)
 
 # set monotonicity points
 lambda_mon = 1e6
-n_mon_points = 1000
-mon_points = torch.linspace(x[0,0], x[-1,0], n_mon_points)[:, None]
-delta = 0.1*(max(x)-min(x))/n_mon_points
+n_mon = 1000
+mon_points = torch.linspace(x[0,0], x[-1,0], n_mon)[:, None]
+delta = 0.1*(max(x)-min(x))/n_mon
 
 
 num_epochs = 100
@@ -344,7 +373,9 @@ for epoch in range(num_epochs):
 
 ```
 
-## plot cdf
+### Plot CDF
+
+Inspecting the below plot of the learned neural network approximation of the CDF and the actual CDF shows again that the neural network was successful in recovering the actual CDF.
 
 ```{python}
 #| code-fold: true
@@ -365,7 +396,10 @@ plt.show()
 
 ```
 
-## Plot PDF
+### Plot PDF
+
+Also when comparing the resulting estimated PDF to the actual one, it seems that neural network approach yields good results.
+
 
 ```{python}
 #| code-fold: true

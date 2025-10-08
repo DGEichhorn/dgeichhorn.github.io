@@ -222,29 +222,28 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#to-do-code-an-bezeichnungen-in-formeln-anpassen" id="toc-to-do-code-an-bezeichnungen-in-formeln-anpassen" class="nav-link active" data-scroll-target="#to-do-code-an-bezeichnungen-in-formeln-anpassen">TO DO: CODE AN BEZEICHNUNGEN IN FORMELN ANPASSEN</a></li>
-  <li><a href="#schauen-ob-reihenfolge-der-code-blocks-v.a.-def-nn-und-def-loss-eine-anderes-ergebnis-liefern" id="toc-schauen-ob-reihenfolge-der-code-blocks-v.a.-def-nn-und-def-loss-eine-anderes-ergebnis-liefern" class="nav-link" data-scroll-target="#schauen-ob-reihenfolge-der-code-blocks-v.a.-def-nn-und-def-loss-eine-anderes-ergebnis-liefern">SCHAUEN OB REIHENFOLGE DER CODE BLOCKS v.a. def NN und def loss eine anderes ergebnis liefern</a></li>
-  <li><a href="#reihenfolge-der-code-blocks-verbessern" id="toc-reihenfolge-der-code-blocks-verbessern" class="nav-link" data-scroll-target="#reihenfolge-der-code-blocks-verbessern">reihenfolge der code blocks verbessern</a></li>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#general-approach" id="toc-general-approach" class="nav-link" data-scroll-target="#general-approach">General Approach</a></li>
   <li><a href="#implementation" id="toc-implementation" class="nav-link" data-scroll-target="#implementation">Implementation</a>
   <ul class="collapse">
   <li><a href="#define-neural-network" id="toc-define-neural-network" class="nav-link" data-scroll-target="#define-neural-network">Define Neural Network</a></li>
-  <li><a href="#define-custom-loss-function" id="toc-define-custom-loss-function" class="nav-link" data-scroll-target="#define-custom-loss-function">Define Custom Loss Function</a></li>
-  <li><a href="#set-seed-for-reproducibility-of-data-generation-and-neural-network-training" id="toc-set-seed-for-reproducibility-of-data-generation-and-neural-network-training" class="nav-link" data-scroll-target="#set-seed-for-reproducibility-of-data-generation-and-neural-network-training">Set Seed for reproducibility of data generation and neural network training</a></li>
-  <li><a href="#data-generation" id="toc-data-generation" class="nav-link" data-scroll-target="#data-generation">Data Generation</a></li>
-  <li><a href="#visualization-of-the-analytic-pdf" id="toc-visualization-of-the-analytic-pdf" class="nav-link" data-scroll-target="#visualization-of-the-analytic-pdf">Visualization of the analytic PDF</a></li>
-  <li><a href="#construct-model-loss-and-optimizer" id="toc-construct-model-loss-and-optimizer" class="nav-link" data-scroll-target="#construct-model-loss-and-optimizer">Construct model, loss and optimizer</a></li>
-  <li><a href="#sample-data-and-set-monotonicity-points" id="toc-sample-data-and-set-monotonicity-points" class="nav-link" data-scroll-target="#sample-data-and-set-monotonicity-points">Sample data and set monotonicity points</a></li>
+  <li><a href="#define-modified-loss-function" id="toc-define-modified-loss-function" class="nav-link" data-scroll-target="#define-modified-loss-function">Define Modified Loss Function</a></li>
+  <li><a href="#gaussian-mixture" id="toc-gaussian-mixture" class="nav-link" data-scroll-target="#gaussian-mixture">Gaussian Mixture</a>
+  <ul class="collapse">
+  <li><a href="#set-seed" id="toc-set-seed" class="nav-link" data-scroll-target="#set-seed">Set Seed</a></li>
+  <li><a href="#construct-model-loss-and-optimizer" id="toc-construct-model-loss-and-optimizer" class="nav-link" data-scroll-target="#construct-model-loss-and-optimizer">Construct Model, Loss and Optimizer</a></li>
+  <li><a href="#sample-from-pdf" id="toc-sample-from-pdf" class="nav-link" data-scroll-target="#sample-from-pdf">Sample from PDF</a></li>
+  <li><a href="#set-monotonicity-points" id="toc-set-monotonicity-points" class="nav-link" data-scroll-target="#set-monotonicity-points">Set Monotonicity Points</a></li>
   <li><a href="#training" id="toc-training" class="nav-link" data-scroll-target="#training">Training</a></li>
-  <li><a href="#plot-cdf" id="toc-plot-cdf" class="nav-link" data-scroll-target="#plot-cdf">plot cdf</a></li>
-  <li><a href="#function-to-compute-derivative-of-nn-w.r.t.-to-input-x" id="toc-function-to-compute-derivative-of-nn-w.r.t.-to-input-x" class="nav-link" data-scroll-target="#function-to-compute-derivative-of-nn-w.r.t.-to-input-x">Function to compute derivative of NN w.r.t. to input x</a></li>
+  <li><a href="#plot-cdf" id="toc-plot-cdf" class="nav-link" data-scroll-target="#plot-cdf">Plot CDF</a></li>
+  <li><a href="#compute-pdf" id="toc-compute-pdf" class="nav-link" data-scroll-target="#compute-pdf">Compute PDF</a></li>
   <li><a href="#plot-pdf" id="toc-plot-pdf" class="nav-link" data-scroll-target="#plot-pdf">Plot PDF</a></li>
-  <li><a href="#data-generation-1" id="toc-data-generation-1" class="nav-link" data-scroll-target="#data-generation-1">Data Generation</a></li>
-  <li><a href="#visualization-of-the-analytic-pdf-1" id="toc-visualization-of-the-analytic-pdf-1" class="nav-link" data-scroll-target="#visualization-of-the-analytic-pdf-1">Visualization of the analytic PDF</a></li>
-  <li><a href="#set-seed-for-reproducibility-of-data-generation-and-neural-network-training-1" id="toc-set-seed-for-reproducibility-of-data-generation-and-neural-network-training-1" class="nav-link" data-scroll-target="#set-seed-for-reproducibility-of-data-generation-and-neural-network-training-1">Set Seed for reproducibility of data generation and neural network training</a></li>
-  <li><a href="#plot-cdf-1" id="toc-plot-cdf-1" class="nav-link" data-scroll-target="#plot-cdf-1">plot cdf</a></li>
+  </ul></li>
+  <li><a href="#weibull-distribution" id="toc-weibull-distribution" class="nav-link" data-scroll-target="#weibull-distribution">Weibull Distribution</a>
+  <ul class="collapse">
+  <li><a href="#plot-cdf-1" id="toc-plot-cdf-1" class="nav-link" data-scroll-target="#plot-cdf-1">Plot CDF</a></li>
   <li><a href="#plot-pdf-1" id="toc-plot-pdf-1" class="nav-link" data-scroll-target="#plot-pdf-1">Plot PDF</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -293,18 +292,9 @@ window.Quarto = {
 </header>
 
 
-<section id="to-do-code-an-bezeichnungen-in-formeln-anpassen" class="level1">
-<h1>TO DO: CODE AN BEZEICHNUNGEN IN FORMELN ANPASSEN</h1>
-</section>
-<section id="schauen-ob-reihenfolge-der-code-blocks-v.a.-def-nn-und-def-loss-eine-anderes-ergebnis-liefern" class="level1">
-<h1>SCHAUEN OB REIHENFOLGE DER CODE BLOCKS v.a. def NN und def loss eine anderes ergebnis liefern</h1>
-</section>
-<section id="reihenfolge-der-code-blocks-verbessern" class="level1">
-<h1>reihenfolge der code blocks verbessern</h1>
-</section>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>The impressive capabilities of neural networks in typical regression and classification tasks are widely known. Recently, I came across a paper about a lesser known but mathematically very interesting application of neural networks that was written some years ago. The paper shows how neural networks can be used for estimating the probability density function of a random variable <span class="citation" data-cites="magdon1998neural">(<a href="#ref-magdon1998neural" role="doc-biblioref">Magdon-Ismail and Atiya 1998</a>)</span>. Before implementing it from scratch in Python, I will first describe the general approach.</p>
+<p>The impressive capabilitis of neural networks in typical regression and classification tasks are widely known. Recently, I came across a paper about a lesser known but statistically very interesting application of neural networks that was written some years ago. The paper shows how neural networks can be used for estimating the probability density function of a random variable <span class="citation" data-cites="magdon1998neural">(<a href="#ref-magdon1998neural" role="doc-biblioref">Magdon-Ismail and Atiya 1998</a>)</span>. Before implementing it from scratch in Python, I will first describe the general approach.</p>
 </section>
 <section id="general-approach" class="level1">
 <h1>General Approach</h1>
@@ -317,15 +307,15 @@ window.Quarto = {
 <p><span class="citation" data-cites="magdon1998neural">Magdon-Ismail and Atiya (<a href="#ref-magdon1998neural" role="doc-biblioref">1998</a>)</span> proposed to use a neural network, which needs to be differentiable, to approximate the <strong>CDF</strong> and take afterwards the first derivative w.r.t. <span class="math inline">\(x\)</span> to obtain an estimate of the <strong>PDF</strong>. Let <span class="math inline">\(N_{\theta}(x)\)</span> denote a feed forward multilayer perceptron parametrized by <span class="math inline">\(\theta\)</span> (i.e.&nbsp;a vector containing all weights and biases), <span class="math inline">\(N_{\theta}: \mathbb{R} \to \mathbb{R}\)</span>. <span class="math inline">\(N_{\theta}\)</span> is differentiable, if the activation functions employed by it are differentiable (since it is then a composition of differentiable functions). <span class="math inline">\(tanh\)</span> and <span class="math inline">\(sigmoid\)</span> are examples of differentiable activation functions.</p>
 <p>So the goal is to find the parameter vector <span class="math inline">\(\theta^\star\)</span> for which <span class="math inline">\(N_{\theta^\star}(x) = F_X(x)\)</span> for all <span class="math inline">\(x \in \mathbb{R}\)</span>. However, that is the same as finding the parameter vector <span class="math inline">\(\theta^\star\)</span> for which the transformed random variable <span class="math inline">\(N_{\theta^\star}(X)\)</span> is uniformly distributed on <span class="math inline">\((0,1)\)</span>, since <span class="math inline">\(F_X(X) \sim \mathcal{U}(0,1)\)</span>. This is achieved by the following procedure <span class="citation" data-cites="magdon1998neural">(<a href="#ref-magdon1998neural" role="doc-biblioref">Magdon-Ismail and Atiya 1998</a>)</span>: Beforehand, the realizations of the random variable <span class="math inline">\(X\)</span> are sorted in ascending order, i.e.&nbsp;<span class="math inline">\(x_{[1]} \leq \dots \leq x_{[n]}\)</span>. These <span class="math inline">\(x_{[i]}, i=1,\dots, n\)</span>, serve as inputs. During training, in each iteration step <!--$t \in \mathbb{N}$-->, first, a new set of <span class="math inline">\(n\)</span> samples are drawn i.i.d. from a uniform distribution on <span class="math inline">\((0,1)\)</span>, <span class="math inline">\(u_i \sim \mathcal{U}(0,1)\)</span>, and sorted in ascending order, i.e.&nbsp;<span class="math inline">\(u_{[1]} \leq \dots \leq u_{[n]}\)</span>. These <span class="math inline">\(u_{[i]}, i=1,\dots, n\)</span>, serve as targets only for that iteration step. Second, a gradient descent step is taken to adjust the parameter vector to better map the inputs onto the generated targets. For the purpose of mapping the data to a uniform distribution, the following loss function is a reasonable starting point: <span class="math display">\[ L_{Dist}(\theta) = \frac{1}{n} \sum_{i=1}^n \left[ N_{\theta}(x_{[i]}) -  u_{[i]}\right]^2 \]</span></p>
 <p>However, besides from mapping the data to a uniform distribution, there are two further properties, that CDFs exhibit and that the neural network approximation to the CDF must also have to be a legitimate estimate of a CDF. <!--Note that a CDF cannot be any arbitrary function. In fact, a CDF must have two further important properties that the neural network approximation to the CDF should also exhibit: --> First, the CDF maps <span class="math inline">\(\mathbb{R}\)</span> onto the interval <span class="math inline">\([0,1]\)</span>. Second, the CDF is monotonically increasing. By using an activation function in the output layer that maps <span class="math inline">\(\mathbb{R}\)</span> onto the interval <span class="math inline">\([0,1]\)</span>, it can be guaranteed that the neural network approximation to the CDF satisfies the first property. The second property can be enforced by modifying the loss function. The modified loss function <span class="math inline">\(L_{total}\)</span> also includes a term, <span class="math inline">\(L_{Mon}\)</span>, that applies a penalty if the neural network approximation to the CDF is not monotonically increasing in <span class="math inline">\(x\)</span>. More specifically, <span class="math inline">\(L_{Mon}\)</span> is written as: <span class="math display">\[ L_{Mon}(\theta) = \frac{1}{n_{Mon}} \sum_{k=1}^{n_{Mon}} \max \left( N_{\theta}(x_k^{Mon}) - N_{\theta}(x_k^{Mon} + \Delta), 0 \right)\]</span> for some small <span class="math inline">\(\Delta &gt; 0\)</span> with <span class="math inline">\(x_k^{Mon}, k=1,\dots, n_{Mon},\)</span> being a set of <span class="math inline">\(n_{Mon} \in \mathbb{N}\)</span> points at which monotonicity is to be enforced.</p>
-<p>The resulting modified loss function is: <span class="math display">\[ L_{total}(\theta) = L_{Dist}(\theta) + \lambda \, L_{Mon}(\theta) \]</span> where <span class="math inline">\(\lambda \in \mathbb{R}_{&gt;0}\)</span> is a large positive weighting factor for the monotonicity constraint. <span class="math inline">\(\theta^\star\)</span> is then given by: <span class="math display">\[\theta^\star = \underset{\theta}{\text{arg min}} \; L_{total}(\theta)\]</span> Once <span class="math inline">\(\theta^\star\)</span> is computed using standard gradient based methods, the estimated PDF <span class="math inline">\(\hat{f}_X\)</span> is obtained by <span class="math display">\[ \hat{f}_X(x) = \frac{\partial \, N_{\theta^\star}(x)}{\partial \, x}  \]</span></p>
+<p>The resulting modified loss function is: <span class="math display">\[ L_{total}(\theta) = L_{Dist}(\theta) + \lambda_{Mon} \, L_{Mon}(\theta) \]</span> where <span class="math inline">\(\lambda_{Mon} \in \mathbb{R}_{&gt;0}\)</span> is a large positive weighting factor for the monotonicity constraint. <span class="math inline">\(\theta^\star\)</span> is then given by: <span class="math display">\[\theta^\star = \underset{\theta}{\text{arg min}} \; L_{total}(\theta)\]</span> Once <span class="math inline">\(\theta^\star\)</span> is computed using standard gradient based methods, the estimated PDF <span class="math inline">\(\hat{f}_X\)</span> is obtained by <span class="math display">\[ \hat{f}_X(x) = \frac{\partial \, N_{\theta^\star}(x)}{\partial \, x}  \]</span></p>
 <p>exploiting the differentiability of <span class="math inline">\(N_{\theta}\)</span> using backpropagation.</p>
 <p>In summary, the procedure for estimating the <strong>PDF</strong> using neural network is given by:</p>
 <ol type="1">
-<li><p>Sort the realizations of the random variable <span class="math inline">\(X\)</span> in ascending order such that <span class="math inline">\(x_{[1]} \leq \dots \leq x_{[n]}\)</span>.</p></li>
+<li><p>Sort the realizations of the random variable <span class="math inline">\(X\)</span> in ascending order, i.e., <span class="math inline">\(x_{[1]} \leq \dots \leq x_{[n]}\)</span>.</p></li>
 <li><p>Initialize the parameter vector <span class="math inline">\(\theta\)</span> randomly.</p></li>
 <li><p>Repeat until convergence:</p>
 <ol type="1">
-<li><p>Draw <span class="math inline">\(n\)</span> i.i.d. realizations from a uniform distribution on <span class="math inline">\((0,1)\)</span>, <span class="math inline">\(u_i \sim \mathcal{U}(0,1)\)</span>, and sort them in ascending order, i.e.&nbsp;<span class="math inline">\(u_{[1]} \leq \dots \leq u_{[n]}\)</span>.</p></li>
+<li><p>Draw <span class="math inline">\(n\)</span> i.i.d. realizations from a uniform distribution on <span class="math inline">\((0,1)\)</span>, <span class="math inline">\(u_i \sim \mathcal{U}(0,1)\)</span>, and sort them in ascending order, i.e., <span class="math inline">\(u_{[1]} \leq \dots \leq u_{[n]}\)</span>.</p></li>
 <li><p>Update the parameter vector: <span class="math display">\[ \theta \gets \theta - \eta \times \frac{\partial \, L_{total}(\theta)}{\partial \, \theta} \]</span></p></li>
 </ol></li>
 <li><p>Determine the estimated PDF as <span class="math display">\[ \hat{f}_X(x) = \frac{\partial \, N_{\theta^\star}(x)}{\partial \, x}  \]</span> using backpropagation.</p></li>
@@ -334,7 +324,7 @@ window.Quarto = {
 <section id="implementation" class="level1">
 <h1>Implementation</h1>
 <p>After detailing the general approach for solving ODEs using neural networks, in this section, I will implement it from scratch in Python and apply it to two different examples.</p>
-<div id="21a13f60" class="cell" data-execution_count="1">
+<div id="e86260f9" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for sampling</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -350,10 +340,11 @@ window.Quarto = {
 </div>
 <section id="define-neural-network" class="level2">
 <h2 class="anchored" data-anchor-id="define-neural-network">Define Neural Network</h2>
-<div id="2699ebe2" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Network(nn.Module):</span>
+<p>At first, I define the neural network used for approximating the CDF. It is a fully connected feed forward neural network with one hidden layer using a <span class="math inline">\(tanh\)</span> activation function and an output layer using a <span class="math inline">\(sigmoid\)</span> activation function. Thereby, the neural network is differentiable and maps <span class="math inline">\(\mathbb{R}\)</span> onto the interval <span class="math inline">\((0,1)\)</span>.</p>
+<div id="19d4c6ad" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> N(nn.Module):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_size, hidden_size, output_size):</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(Network, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(N, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.net <span class="op">=</span> nn.Sequential(</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      nn.Linear(input_size, hidden_size),</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      nn.Tanh(),</span>
@@ -365,338 +356,294 @@ window.Quarto = {
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">self</span>.net(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="define-custom-loss-function" class="level2">
-<h2 class="anchored" data-anchor-id="define-custom-loss-function">Define Custom Loss Function</h2>
-<div id="4d1b51a9" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LossPDE(nn.Module):</span>
+<section id="define-modified-loss-function" class="level2">
+<h2 class="anchored" data-anchor-id="define-modified-loss-function">Define Modified Loss Function</h2>
+<p>Next, I define the modified loss function as described above.</p>
+<div id="b3571561" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Loss(nn.Module):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(LossPDE, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(Loss, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> forward(<span class="va">self</span>, y_pred, y_true, lambda_mon, mon_l, mon_u):</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    loss_prediction <span class="op">=</span> torch.mean((y_pred <span class="op">-</span> y_true)<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    loss_dist <span class="op">=</span> torch.mean((y_pred <span class="op">-</span> y_true)<span class="op">**</span><span class="dv">2</span>)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    diff <span class="op">=</span> mon_l <span class="op">-</span> mon_u</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    loss_monotonicity <span class="op">=</span> torch.mean(torch.clamp(diff, <span class="bu">min</span><span class="op">=</span><span class="dv">0</span>))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    loss_mon <span class="op">=</span> torch.mean(torch.clamp(diff, <span class="bu">min</span><span class="op">=</span><span class="dv">0</span>))</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    loss_total <span class="op">=</span> loss_prediction <span class="op">+</span> lambda_mon<span class="op">*</span>loss_monotonicity</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    loss_total <span class="op">=</span> loss_dist <span class="op">+</span> lambda_mon<span class="op">*</span>loss_mon</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss_total</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="set-seed-for-reproducibility-of-data-generation-and-neural-network-training" class="level2">
-<h2 class="anchored" data-anchor-id="set-seed-for-reproducibility-of-data-generation-and-neural-network-training">Set Seed for reproducibility of data generation and neural network training</h2>
-<div id="4ccaf6bc" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>random.seed(seed)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>np.random.seed(seed)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>&lt;torch._C.Generator at 0x1ea0809e7d0&gt;</code></pre>
+<section id="gaussian-mixture" class="level2">
+<h2 class="anchored" data-anchor-id="gaussian-mixture">Gaussian Mixture</h2>
+<p>For the first example, realizations will be drawn from a 2-component Gaussian mixture distribution. So I construct one with mixture weights <span class="math inline">\(\phi_1=0.2\)</span> and <span class="math inline">\(\phi_2=0.8\)</span>, expectations <span class="math inline">\(\mu_1=2\)</span> and <span class="math inline">\(\mu_2=5\)</span> and standard deviations <span class="math inline">\(\sigma_1=0.25\)</span> and $ _2=0.5$.</p>
+<div id="e0604093" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct 2-component Gaussian mixture distribution</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>comp1 <span class="op">=</span> stats.Normal(mu<span class="op">=</span><span class="dv">2</span>, sigma<span class="op">=</span><span class="fl">0.25</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>comp2 <span class="op">=</span> stats.Normal(mu<span class="op">=</span><span class="dv">5</span>, sigma<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>mix <span class="op">=</span> stats.Mixture([comp1, comp2], weights<span class="op">=</span>[<span class="fl">0.2</span>, <span class="fl">0.8</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</div>
-</section>
-<section id="data-generation" class="level2">
-<h2 class="anchored" data-anchor-id="data-generation">Data Generation</h2>
-<div id="8c73dfa3" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct 2-component Gaussian mixture distribution</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>comp1 <span class="op">=</span> stats.Normal(mu<span class="op">=</span><span class="dv">2</span>, sigma<span class="op">=</span><span class="fl">0.25</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>comp2 <span class="op">=</span> stats.Normal(mu<span class="op">=</span><span class="dv">5</span>, sigma<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>mix <span class="op">=</span> stats.Mixture([comp1, comp2], weights<span class="op">=</span>[<span class="fl">0.2</span>, <span class="fl">0.8</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="visualization-of-the-analytic-pdf" class="level2">
-<h2 class="anchored" data-anchor-id="visualization-of-the-analytic-pdf">Visualization of the analytic PDF</h2>
-<div id="79f08571" class="cell" data-execution_count="6">
+<p>The corresponding PDF looks as follows:</p>
+<div id="e6169026" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">1000</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">5</span>))</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>plt.plot(x, mix.pdf(x), color<span class="op">=</span><span class="st">"C0"</span>, linestyle<span class="op">=</span><span class="st">"dotted"</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"True Probability Density Function"</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Density"</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"x"</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">1000</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">5</span>))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>plt.plot(x, mix.pdf(x), color<span class="op">=</span><span class="st">"C0"</span>, linestyle<span class="op">=</span><span class="st">"dotted"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"True Probability Density Function"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-7-output-1.png" width="514" height="449" class="figure-img"></p>
+<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-6-output-1.png" width="514" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<!-- ## Define Neural Network -->
-<!-- ```{python} -->
-<!-- class Network(nn.Module): -->
-<!--   def __init__(self, input_size, hidden_size, output_size): -->
-<!--     super(Network, self).__init__() -->
-<!--     self.net = nn.Sequential( -->
-<!--       nn.Linear(input_size, hidden_size), -->
-<!--       nn.Tanh(), -->
-<!--       nn.Linear(hidden_size, output_size), -->
-<!--       nn.Sigmoid() -->
-<!--       ) -->
-<!--   def forward(self, x): -->
-<!--     return self.net(x) -->
-<!-- ``` -->
-<!-- ## Define Custom Loss Function -->
-<!-- ```{python} -->
-<!-- class LossPDE(nn.Module): -->
-<!--   def __init__(self): -->
-<!--     super(LossPDE, self).__init__() -->
-<!--   def forward(self, y_pred, y_true, lambda_mon, mon_l, mon_u): -->
-<!--     loss_prediction = torch.mean((y_pred - y_true)**2) -->
-<!--     diff = mon_l - mon_u -->
-<!--     loss_monotonicity = torch.mean(torch.clamp(diff, min=0)) -->
-<!--     loss_total = loss_prediction + lambda_mon*loss_monotonicity -->
-<!--     return loss_total -->
-<!-- ``` -->
+<section id="set-seed" class="level3">
+<h3 class="anchored" data-anchor-id="set-seed">Set Seed</h3>
+<p>In the subsequent steps, the neural network will be initialized and realizations will be sampled from the PDF given above. Both involves randomness. Therefore, to ensure reproducibility of the subsequent steps, one must set a seed for the random number generators.</p>
+<div id="fd79f536" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>random.seed(seed)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>np.random.seed(seed)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>&lt;torch._C.Generator at 0x25937c3e7b0&gt;</code></pre>
+</div>
+</div>
 </section>
-<section id="construct-model-loss-and-optimizer" class="level2">
-<h2 class="anchored" data-anchor-id="construct-model-loss-and-optimizer">Construct model, loss and optimizer</h2>
-<div id="8a345e4f" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Network(input_size<span class="op">=</span><span class="dv">1</span>, hidden_size<span class="op">=</span><span class="dv">10</span>, output_size<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> LossPDE()</span>
+<section id="construct-model-loss-and-optimizer" class="level3">
+<h3 class="anchored" data-anchor-id="construct-model-loss-and-optimizer">Construct Model, Loss and Optimizer</h3>
+<p>After that, I instantiate the neural network, the loss function to be minimized and the optimizer (here, I use Adam).</p>
+<div id="6e348c06" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> N(input_size<span class="op">=</span><span class="dv">1</span>, hidden_size<span class="op">=</span><span class="dv">10</span>, output_size<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> Loss()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="sample-data-and-set-monotonicity-points" class="level2">
-<h2 class="anchored" data-anchor-id="sample-data-and-set-monotonicity-points">Sample data and set monotonicity points</h2>
-<div id="e1fdd894" class="cell" data-execution_count="8">
+<section id="sample-from-pdf" class="level3">
+<h3 class="anchored" data-anchor-id="sample-from-pdf">Sample from PDF</h3>
+<p>Next, I sample <span class="math inline">\(n=200\)</span> i.i.d. realizations from the 2-component Gaussian mixture distribution. Subsequently, I sort then in ascending order.</p>
+<div id="1d0882b7" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sample data, sort it and convert to torch tensor</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">200</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(seed)</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> mix.sample(n, rng<span class="op">=</span>rng)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.from_numpy(np.sort(x)).<span class="bu">float</span>().unsqueeze(<span class="dv">1</span>)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># set monotonicity points</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>lambda_mon <span class="op">=</span> <span class="fl">1e6</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>n_mon_points <span class="op">=</span> <span class="dv">1000</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>mon_points <span class="op">=</span> torch.linspace(x[<span class="dv">0</span>,<span class="dv">0</span>], x[<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>], n_mon_points)[:, <span class="va">None</span>]</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>delta <span class="op">=</span> <span class="fl">0.1</span><span class="op">*</span>(<span class="bu">max</span>(x)<span class="op">-</span><span class="bu">min</span>(x))<span class="op">/</span>n_mon_points</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.from_numpy(np.sort(x)).<span class="bu">float</span>().unsqueeze(<span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="training" class="level2">
-<h2 class="anchored" data-anchor-id="training">Training</h2>
-<p>wichtiger kommentar: in jedem step wird ganzer datensatz verwendet; epochs dienen nur dazu dass nicht in jedem step fortschritt gedruck wird</p>
-<div id="8cb20bc2" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">100</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">2500</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(num_epochs):</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(steps_per_epoch):</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    preds <span class="op">=</span> model(x)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> np.random.uniform(<span class="dv">0</span>, <span class="dv">1</span>, n)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> torch.from_numpy(np.sort(u)).<span class="bu">float</span>().unsqueeze(<span class="dv">1</span>)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    mon_l <span class="op">=</span> model(mon_points)</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    mon_u <span class="op">=</span> model(mon_points <span class="op">+</span> delta)</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(preds, u, lambda_mon, mon_l, mon_u)</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Epoch [</span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>num_epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>, end<span class="op">=</span><span class="st">"</span><span class="ch">\r</span><span class="st">"</span>, flush<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="set-monotonicity-points" class="level3">
+<h3 class="anchored" data-anchor-id="set-monotonicity-points">Set Monotonicity Points</h3>
+<p>Before training can start, I have to specify <span class="math inline">\(\lambda_{Mon}\)</span>, <span class="math inline">\(n_{Mon}\)</span>, the monotonicity points themselves as well as <span class="math inline">\(\Delta\)</span>. I choose to place <span class="math inline">\(n_{Mon}=1000\)</span> monotonicity points equally spaced between the smallest and the largest sampled <span class="math inline">\(X\)</span>-values.</p>
+<div id="d2ab9b1a" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set monotonicity points</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>lambda_mon <span class="op">=</span> <span class="fl">1e6</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>n_mon <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>mon_points <span class="op">=</span> torch.linspace(x[<span class="dv">0</span>,<span class="dv">0</span>], x[<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>], n_mon)[:, <span class="va">None</span>]</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>delta <span class="op">=</span> <span class="fl">0.1</span><span class="op">*</span>(<span class="bu">max</span>(x)<span class="op">-</span><span class="bu">min</span>(x))<span class="op">/</span>n_mon</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="plot-cdf" class="level2">
-<h2 class="anchored" data-anchor-id="plot-cdf">plot cdf</h2>
-<div id="46601b4e" class="cell" data-execution_count="10">
+<section id="training" class="level3">
+<h3 class="anchored" data-anchor-id="training">Training</h3>
+<p>Now, everything is set up and training can start. Observe that, as described in the general approach, in each iteration, a new set of <span class="math inline">\(n\)</span> samples are drawn i.i.d. from <span class="math inline">\(\mathcal{U}(0,1)\)</span> and sorted in ascending order. These serve as targets only for that iteration.</p>
+<div id="258297e1" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">2500</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(num_epochs):</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(steps_per_epoch):</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    preds <span class="op">=</span> model(x)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> np.random.uniform(<span class="dv">0</span>, <span class="dv">1</span>, n)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> torch.from_numpy(np.sort(u)).<span class="bu">float</span>().unsqueeze(<span class="dv">1</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    mon_l <span class="op">=</span> model(mon_points)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    mon_u <span class="op">=</span> model(mon_points <span class="op">+</span> delta)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(preds, u, lambda_mon, mon_l, mon_u)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Epoch [</span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>num_epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>, end<span class="op">=</span><span class="st">"</span><span class="ch">\r</span><span class="st">"</span>, flush<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="plot-cdf" class="level3">
+<h3 class="anchored" data-anchor-id="plot-cdf">Plot CDF</h3>
+<p>Once training has finished, I plot the learned neural network approximation of CDF against the actual CDF of the 2-component Gaussian mixture.</p>
+<div id="f5a11333" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">1000</span>).unsqueeze(<span class="dv">1</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    cdf_est <span class="op">=</span> model(xx)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">5</span>))</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>plt.plot(xx.numpy(), cdf_est.numpy(), color<span class="op">=</span><span class="st">"C3"</span>, label<span class="op">=</span><span class="st">"Estimated CDF"</span>)</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>plt.plot(xx.numpy(), mix.cdf(xx), color<span class="op">=</span><span class="st">"C0"</span>, label<span class="op">=</span><span class="st">"True CDF"</span>, linestyle<span class="op">=</span><span class="st">"dotted"</span>)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Cumulative Density Function (CDF)"</span>)</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Cumulative Density"</span>)</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">1000</span>).unsqueeze(<span class="dv">1</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    cdf_est <span class="op">=</span> model(xx)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">5</span>))</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>plt.plot(xx.numpy(), cdf_est.numpy(), color<span class="op">=</span><span class="st">"C3"</span>, label<span class="op">=</span><span class="st">"Estimated CDF"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>plt.plot(xx.numpy(), mix.cdf(xx), color<span class="op">=</span><span class="st">"C0"</span>, label<span class="op">=</span><span class="st">"True CDF"</span>, linestyle<span class="op">=</span><span class="st">"dotted"</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Cumulative Density Function (CDF)"</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Cumulative Density"</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-11-output-1.png" width="514" height="449" class="figure-img"></p>
+<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-12-output-1.png" width="514" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Obviously, the neural network approximation of the CDF given just a sample of 200 realizations of <span class="math inline">\(X\)</span> is very accurate.</p>
+</section>
+<section id="compute-pdf" class="level3">
+<h3 class="anchored" data-anchor-id="compute-pdf">Compute PDF</h3>
+<p>Given the neural network approximation of the CDF, the following function computes an estimate of the PDF from it.</p>
+<div id="23e38441" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ComputePDF(model, x):</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  x <span class="op">=</span> x.requires_grad_(<span class="va">True</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  cdf <span class="op">=</span> model(x)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  grad_outputs <span class="op">=</span> torch.ones_like(cdf)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  pdf <span class="op">=</span> torch.autograd.grad(</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    outputs<span class="op">=</span>cdf,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    inputs<span class="op">=</span>x,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    grad_outputs<span class="op">=</span>grad_outputs</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    )[<span class="dv">0</span>]</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> pdf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="plot-pdf" class="level3">
+<h3 class="anchored" data-anchor-id="plot-pdf">Plot PDF</h3>
+<p>This plot confirms, that the estimate of the PDF obtained from the neural network approximation to the CDF is quite precise.</p>
+<div id="efb93808" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pdf_est <span class="op">=</span> ComputePDF(model, xx).detach()</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>xx_np <span class="op">=</span> xx.detach().numpy()</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">5</span>))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>plt.plot(xx_np, pdf_est.numpy(), color<span class="op">=</span><span class="st">"C3"</span>, label<span class="op">=</span><span class="st">"Estimated PDF"</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>plt.plot(xx_np, mix.pdf(xx_np), color<span class="op">=</span><span class="st">"C0"</span>, label<span class="op">=</span><span class="st">"True PDF"</span>, linestyle<span class="op">=</span><span class="st">"dotted"</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Probability Density Function (PDF)"</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-14-output-1.png" width="514" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="function-to-compute-derivative-of-nn-w.r.t.-to-input-x" class="level2">
-<h2 class="anchored" data-anchor-id="function-to-compute-derivative-of-nn-w.r.t.-to-input-x">Function to compute derivative of NN w.r.t. to input x</h2>
-<div id="30ff6161" class="cell" data-execution_count="11">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ComputePDF(model, x):</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  x <span class="op">=</span> x.requires_grad_(<span class="va">True</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  cdf <span class="op">=</span> model(x)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  grad_outputs <span class="op">=</span> torch.ones_like(cdf)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  pdf <span class="op">=</span> torch.autograd.grad(</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    outputs<span class="op">=</span>cdf,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    inputs<span class="op">=</span>x,</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    grad_outputs<span class="op">=</span>grad_outputs</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    )[<span class="dv">0</span>]</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> pdf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 </section>
-<section id="plot-pdf" class="level2">
-<h2 class="anchored" data-anchor-id="plot-pdf">Plot PDF</h2>
-<div id="f52e90cf" class="cell" data-execution_count="12">
+<section id="weibull-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="weibull-distribution">Weibull Distribution</h2>
+<p>As second example, I will use a Weibull distribution with <span class="math inline">\(shape=1.8\)</span> (and <span class="math inline">\(scale=1\)</span>).</p>
+<div id="b2a5f86c" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct Weibull distribution</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dist <span class="op">=</span> stats.weibull_min(c<span class="op">=</span><span class="fl">1.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>A plot of its PDF shows that it is clearly skewed.</p>
+<div id="8fbdb7fd" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>pdf_est <span class="op">=</span> ComputePDF(model, xx).detach()</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>xx_np <span class="op">=</span> xx.detach().numpy()</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">5</span>))</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>plt.plot(xx_np, pdf_est.numpy(), color<span class="op">=</span><span class="st">"C3"</span>, label<span class="op">=</span><span class="st">"Estimated PDF"</span>)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>plt.plot(xx_np, mix.pdf(xx_np), color<span class="op">=</span><span class="st">"C0"</span>, label<span class="op">=</span><span class="st">"True PDF"</span>, linestyle<span class="op">=</span><span class="st">"dotted"</span>)</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Probability Density Function (PDF)"</span>)</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">1000</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">5</span>))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>plt.plot(x, dist.pdf(x), color<span class="op">=</span><span class="st">"C0"</span>, linestyle<span class="op">=</span><span class="st">"dotted"</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"True Probability Density Function"</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-13-output-1.png" width="514" height="449" class="figure-img"></p>
+<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-16-output-1.png" width="514" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="data-generation-1" class="level2">
-<h2 class="anchored" data-anchor-id="data-generation-1">Data Generation</h2>
-<div id="f903ffcf" class="cell" data-execution_count="13">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct Weibull distribution</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>dist <span class="op">=</span> stats.weibull_min(c<span class="op">=</span><span class="fl">1.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="visualization-of-the-analytic-pdf-1" class="level2">
-<h2 class="anchored" data-anchor-id="visualization-of-the-analytic-pdf-1">Visualization of the analytic PDF</h2>
-<div id="d8adb5f7" class="cell" data-execution_count="14">
+<p>The following steps (set seed; construct model, loss and optimizer; sample from PDF; set monontonicity points; training) are analogous to those in the first example. Therefore, I hide that part of the code. If you wish to have a look at it, click on the “Show code” button below.</p>
+<div id="aeada549" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">1000</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">5</span>))</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>plt.plot(x, dist.pdf(x), color<span class="op">=</span><span class="st">"C0"</span>, linestyle<span class="op">=</span><span class="st">"dotted"</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"True Probability Density Function"</span>)</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Density"</span>)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"x"</span>)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-15-output-1.png" width="514" height="449" class="figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="set-seed-for-reproducibility-of-data-generation-and-neural-network-training-1" class="level2">
-<h2 class="anchored" data-anchor-id="set-seed-for-reproducibility-of-data-generation-and-neural-network-training-1">Set Seed for reproducibility of data generation and neural network training</h2>
-<div id="141ca91f" class="cell" data-execution_count="15">
-<details class="code-fold">
-<summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>random.seed(seed)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>np.random.seed(seed)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># construct model, loss and optimizer</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Network(input_size<span class="op">=</span><span class="dv">1</span>, hidden_size<span class="op">=</span><span class="dv">10</span>, output_size<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> LossPDE()</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co"># sample data, sort it and convert to torch tensor</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">200</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(seed)</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> dist.rvs(n, random_state<span class="op">=</span>rng)</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.from_numpy(np.sort(x)).<span class="bu">float</span>().unsqueeze(<span class="dv">1</span>)</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co"># set monotonicity points</span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>lambda_mon <span class="op">=</span> <span class="fl">1e6</span></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>n_mon_points <span class="op">=</span> <span class="dv">1000</span></span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>mon_points <span class="op">=</span> torch.linspace(x[<span class="dv">0</span>,<span class="dv">0</span>], x[<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>], n_mon_points)[:, <span class="va">None</span>]</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>delta <span class="op">=</span> <span class="fl">0.1</span><span class="op">*</span>(<span class="bu">max</span>(x)<span class="op">-</span><span class="bu">min</span>(x))<span class="op">/</span>n_mon_points</span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">100</span></span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">2500</span></span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a><span class="co"># training</span></span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(num_epochs):</span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(steps_per_epoch):</span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    preds <span class="op">=</span> model(x)</span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> np.random.uniform(<span class="dv">0</span>, <span class="dv">1</span>, n)</span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> torch.from_numpy(np.sort(u)).<span class="bu">float</span>().unsqueeze(<span class="dv">1</span>)</span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>    mon_l <span class="op">=</span> model(mon_points)</span>
-<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>    mon_u <span class="op">=</span> model(mon_points <span class="op">+</span> delta)</span>
-<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(preds, u, lambda_mon, mon_l, mon_u)</span>
-<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
-<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
-<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
-<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Epoch [</span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>num_epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>, end<span class="op">=</span><span class="st">"</span><span class="ch">\r</span><span class="st">"</span>, flush<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>random.seed(seed)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>np.random.seed(seed)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># construct model, loss and optimizer</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> N(input_size<span class="op">=</span><span class="dv">1</span>, hidden_size<span class="op">=</span><span class="dv">10</span>, output_size<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> Loss()</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co"># sample data, sort it and convert to torch tensor</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">200</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(seed)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> dist.rvs(n, random_state<span class="op">=</span>rng)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.from_numpy(np.sort(x)).<span class="bu">float</span>().unsqueeze(<span class="dv">1</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="co"># set monotonicity points</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>lambda_mon <span class="op">=</span> <span class="fl">1e6</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>n_mon <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>mon_points <span class="op">=</span> torch.linspace(x[<span class="dv">0</span>,<span class="dv">0</span>], x[<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>], n_mon)[:, <span class="va">None</span>]</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>delta <span class="op">=</span> <span class="fl">0.1</span><span class="op">*</span>(<span class="bu">max</span>(x)<span class="op">-</span><span class="bu">min</span>(x))<span class="op">/</span>n_mon</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">2500</span></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a><span class="co"># training</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(num_epochs):</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(steps_per_epoch):</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>    preds <span class="op">=</span> model(x)</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> np.random.uniform(<span class="dv">0</span>, <span class="dv">1</span>, n)</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> torch.from_numpy(np.sort(u)).<span class="bu">float</span>().unsqueeze(<span class="dv">1</span>)</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>    mon_l <span class="op">=</span> model(mon_points)</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>    mon_u <span class="op">=</span> model(mon_points <span class="op">+</span> delta)</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(preds, u, lambda_mon, mon_l, mon_u)</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f"Epoch [</span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>num_epochs<span class="sc">}</span><span class="ss">], Loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>, end<span class="op">=</span><span class="st">"</span><span class="ch">\r</span><span class="st">"</span>, flush<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-</section>
-<section id="plot-cdf-1" class="level2">
-<h2 class="anchored" data-anchor-id="plot-cdf-1">plot cdf</h2>
-<div id="a723a7b4" class="cell" data-execution_count="16">
+<section id="plot-cdf-1" class="level3">
+<h3 class="anchored" data-anchor-id="plot-cdf-1">Plot CDF</h3>
+<p>Inspecting the below plot of the learned neural network approximation of the CDF and the actual CDF shows again that the neural network was successful in recovering the actual CDF.</p>
+<div id="c8263c1b" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">1000</span>).unsqueeze(<span class="dv">1</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    cdf_est <span class="op">=</span> model(xx)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">5</span>))</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>plt.plot(xx.numpy(), cdf_est.numpy(), color<span class="op">=</span><span class="st">"C3"</span>, label<span class="op">=</span><span class="st">"Estimated CDF"</span>)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>plt.plot(xx.numpy(), dist.cdf(xx), color<span class="op">=</span><span class="st">"C0"</span>, label<span class="op">=</span><span class="st">"True CDF"</span>, linestyle<span class="op">=</span><span class="st">"dotted"</span>)</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Cumulative Density Function (CDF)"</span>)</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Cumulative Density"</span>)</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-17-output-1.png" width="514" height="449" class="figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="plot-pdf-1" class="level2">
-<h2 class="anchored" data-anchor-id="plot-pdf-1">Plot PDF</h2>
-<div id="1f2d01ea" class="cell" data-execution_count="17">
-<details class="code-fold">
-<summary>Show code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>pdf_est <span class="op">=</span> ComputePDF(model, xx).detach()</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>xx_np <span class="op">=</span> xx.detach().numpy()</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">1000</span>).unsqueeze(<span class="dv">1</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    cdf_est <span class="op">=</span> model(xx)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">5</span>))</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>plt.plot(xx_np, pdf_est.numpy(), color<span class="op">=</span><span class="st">"C3"</span>, label<span class="op">=</span><span class="st">"Estimated PDF"</span>)</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>plt.plot(xx_np, dist.pdf(xx_np), color<span class="op">=</span><span class="st">"C0"</span>, label<span class="op">=</span><span class="st">"True PDF"</span>, linestyle<span class="op">=</span><span class="st">"dotted"</span>)</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Probability Density Function (PDF)"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>plt.plot(xx.numpy(), cdf_est.numpy(), color<span class="op">=</span><span class="st">"C3"</span>, label<span class="op">=</span><span class="st">"Estimated CDF"</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>plt.plot(xx.numpy(), dist.cdf(xx), color<span class="op">=</span><span class="st">"C0"</span>, label<span class="op">=</span><span class="st">"True CDF"</span>, linestyle<span class="op">=</span><span class="st">"dotted"</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Cumulative Density Function (CDF)"</span>)</span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Cumulative Density"</span>)</span>
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
 <span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -708,15 +655,47 @@ window.Quarto = {
 </div>
 </div>
 </div>
+</section>
+<section id="plot-pdf-1" class="level3">
+<h3 class="anchored" data-anchor-id="plot-pdf-1">Plot PDF</h3>
+<p>Also when comparing the resulting estimated PDF to the actual one, it seems that neural network approach yields good results.</p>
+<div id="02a69656" class="cell" data-execution_count="18">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>pdf_est <span class="op">=</span> ComputePDF(model, xx).detach()</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>xx_np <span class="op">=</span> xx.detach().numpy()</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">5</span>))</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>plt.plot(xx_np, pdf_est.numpy(), color<span class="op">=</span><span class="st">"C3"</span>, label<span class="op">=</span><span class="st">"Estimated PDF"</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>plt.plot(xx_np, dist.pdf(xx_np), color<span class="op">=</span><span class="st">"C0"</span>, label<span class="op">=</span><span class="st">"True PDF"</span>, linestyle<span class="op">=</span><span class="st">"dotted"</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Probability Density Function (PDF)"</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Density"</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ANNsForProbabilityDensityEstimation_files/figure-html/cell-19-output-1.png" width="514" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
 
+</section>
 </section>
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-magdon1998neural" class="csl-entry" role="listitem">
 Magdon-Ismail, Malik, and Amir Atiya. 1998. <span>“Neural Networks for Density Estimation.”</span> <em>Advances in Neural Information Processing Systems</em> 11.
+</div>
+<div id="ref-papa2021pytorch" class="csl-entry" role="listitem">
+Papa, Joe. 2021. <em>PyTorch Pocket Reference</em>. " O’Reilly Media, Inc.".
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
