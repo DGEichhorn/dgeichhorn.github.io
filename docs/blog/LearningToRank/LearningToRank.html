@@ -202,9 +202,21 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#to-do" id="toc-to-do" class="nav-link active" data-scroll-target="#to-do">TO DO</a></li>
-  <li><a href="#get-pairwise-comparison-data" id="toc-get-pairwise-comparison-data" class="nav-link" data-scroll-target="#get-pairwise-comparison-data">Get pairwise comparison data</a></li>
-  <li><a href="#construct-win-matrix-from-pairwise-comparisons-data" id="toc-construct-win-matrix-from-pairwise-comparisons-data" class="nav-link" data-scroll-target="#construct-win-matrix-from-pairwise-comparisons-data">Construct Win Matrix from pairwise comparisons data</a></li>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation">Motivation</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  <li><a href="#pagerank" id="toc-pagerank" class="nav-link" data-scroll-target="#pagerank">PageRank</a>
+  <ul class="collapse">
+  <li><a href="#approach" id="toc-approach" class="nav-link" data-scroll-target="#approach">Approach</a></li>
+  <li><a href="#implementation" id="toc-implementation" class="nav-link" data-scroll-target="#implementation">Implementation</a></li>
+  </ul></li>
+  <li><a href="#bradley-terry-model" id="toc-bradley-terry-model" class="nav-link" data-scroll-target="#bradley-terry-model">Bradley-Terry Model</a>
+  <ul class="collapse">
+  <li><a href="#approach-1" id="toc-approach-1" class="nav-link" data-scroll-target="#approach-1">Approach</a></li>
+  <li><a href="#implementation-1" id="toc-implementation-1" class="nav-link" data-scroll-target="#implementation-1">Implementation</a></li>
+  </ul></li>
+  <li><a href="#comparison" id="toc-comparison" class="nav-link" data-scroll-target="#comparison">Comparison</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#to-do" id="toc-to-do" class="nav-link" data-scroll-target="#to-do">TO DO</a></li>
   <li><a href="#define-function-for-mle-estimation-of-bradley-terry-model" id="toc-define-function-for-mle-estimation-of-bradley-terry-model" class="nav-link" data-scroll-target="#define-function-for-mle-estimation-of-bradley-terry-model">Define function for mle estimation of Bradley Terry Model</a></li>
   <li><a href="#plot-ranking-results" id="toc-plot-ranking-results" class="nav-link" data-scroll-target="#plot-ranking-results">Plot ranking results</a></li>
   <li><a href="#compare-my-results-to-results-of-r-package-bradley-terry" id="toc-compare-my-results-to-results-of-r-package-bradley-terry" class="nav-link" data-scroll-target="#compare-my-results-to-results-of-r-package-bradley-terry">compare my results to results of R Package Bradley Terry</a></li>
@@ -220,8 +232,9 @@ window.Quarto = {
 <div class="quarto-title">
 <h1 class="title">Learning to Rank</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Science</div>
-    <div class="quarto-category">Technology</div>
+    <div class="quarto-category">Ranking</div>
+    <div class="quarto-category">Optimization</div>
+    <div class="quarto-category">Maximum Likelihood</div>
   </div>
   </div>
 
@@ -256,21 +269,20 @@ window.Quarto = {
 </header>
 
 
-<section id="to-do" class="level1">
-<h1>TO DO</h1>
-<ol type="1">
-<li>2mal metric für vergleich meine lösung vs.&nbsp;package</li>
-<li>plots zum vergleich der beiden rankings (u.a. plot(log(bt_mle), r))</li>
-</ol>
-<p>I am trying to implement various ranking approaches.</p>
+<section id="motivation" class="level1">
+<h1>Motivation</h1>
+<p>Probably everyone is familiar with those tables in sports that rank teams, usually according to the number of games won. This seems to be a valide approach for tournaments where every team plays against every other team the same number of times. Such tournaments are called robin-round tournaments and examples include the Premier League as well as the Fußball and the Handball Bundesliga. Robin-round tournaments are a special type of complete comparisons.</p>
+<p>However, there are also tournaments in which not every team plays against every other team, i.e.&nbsp;incomplete comparisons. Examples include the NFL in American Football or knock-out tournaments such as playoffs or cups. In such tournaments, some teams might face on average stronger opponents than other teams. Therefore, the number of wins may not reflect the true strength of a team and should not be used to rank teams. Instead, it becomes important, how strong the opponents were, against which a team won or lost.</p>
+<p>So I was wondering, what approaches there are for learning a ranking from data on the outcome of incomplete pairwise comparisons. Note that this problem does not just arise in sports but in a variety of other domains. For instance, in preference modelling, multiple individuals must choose between different pairs of items. Based on the outcomes, one tries to rank all of the items. Nevertheless, I will stick to the application in sports.</p>
+<p>I found among others two interesting approaches: the PageRank algorithm and the Bradley-Terry model. I will implement both from scratch in R after having shortly described them. Furthermore, I will compare the results of my own implementation to the ones returned by dedicated libraries. For illustration, I will use data on the outcome of every NFL game played during the 2024-2025 regular season.</p>
 </section>
-<section id="get-pairwise-comparison-data" class="level1">
-<h1>Get pairwise comparison data</h1>
-<p>get American Football data from <a href="https://www.pro-football-reference.com/years/2024/games.htm" class="uri">https://www.pro-football-reference.com/years/2024/games.htm</a>; OLD NHL: <a href="https://www.hockey-reference.com/leagues/NHL_2025_games.html#games" class="uri">https://www.hockey-reference.com/leagues/NHL_2025_games.html#games</a></p>
+<section id="data" class="level1">
+<h1>Data</h1>
+<p>Before diving into the two approaches, I scrape and prepare the data on the outcome of every NFL game played during the 2024-2025 regular season. The data is available at: <a href="https://www.pro-football-reference.com/years/2024/games.htm" class="uri">https://www.pro-football-reference.com/years/2024/games.htm</a>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)        <span class="co"># for web page scraping</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)        <span class="co"># for data manipulations</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)      <span class="co"># for visualization</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)        <span class="co"># web page scraping</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)        <span class="co"># data manipulations</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://www.pro-football-reference.com/years/2024/games.htm#games"</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>page <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url)</span>
@@ -280,88 +292,144 @@ window.Quarto = {
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">html_table</span>(<span class="at">header=</span><span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>games <span class="ot">&lt;-</span> games[, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">7</span>)]</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(games) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Week"</span>, <span class="st">"Winner"</span>, <span class="st">"Loser"</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># keep only games during regular season (i.e. int-valued week)</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>games <span class="ot">&lt;-</span> games <span class="sc">%&gt;%</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"^[0-9]+$"</span>, Week)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Winner, Loser)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>teams <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(<span class="fu">c</span>(games<span class="sc">$</span>Winner, games<span class="sc">$</span>Loser)))</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>n_teams <span class="ot">&lt;-</span> <span class="fu">length</span>(teams)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># drop irrelevant cols</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>games <span class="ot">&lt;-</span> games[, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">7</span>)]</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(games) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Week"</span>, <span class="st">"Winner"</span>, <span class="st">"Loser"</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># keep only games during regular season (i.e. int-valued week)</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>games <span class="ot">&lt;-</span> games <span class="sc">%&gt;%</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"^[0-9]+$"</span>, Week)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Winner, Loser)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>teams <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(<span class="fu">c</span>(games<span class="sc">$</span>Winner, games<span class="sc">$</span>Loser)))</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>n_teams <span class="ot">&lt;-</span> <span class="fu">length</span>(teams)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(games)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Winner             Loser
+1  Kansas City Chiefs  Baltimore Ravens
+2 Philadelphia Eagles Green Bay Packers
+3 Pittsburgh Steelers   Atlanta Falcons
+4       Buffalo Bills Arizona Cardinals
+5  New Orleans Saints Carolina Panthers
+6       Chicago Bears  Tennessee Titans</code></pre>
+</div>
+</div>
+<p>For both approaches, it is more useful to aggregate the outcomes of the games in a win matrix. The win matrix is given by: <span class="math display">\[W=[w_{ij}]_{i=1,\dots,\, n, j=1, \dots, n}\]</span> where <span class="math inline">\(w_{ij}\)</span> is the number of times team <span class="math inline">\(i\)</span> has won against team <span class="math inline">\(j\)</span>. In total there are <span class="math inline">\(n=32\)</span> teams in the NFL. The win matrix is computed as follows:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize win matrix with zeros</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rep</span>(<span class="dv">0</span>, n_teams<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> n_teams,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    teams, <span class="co"># row names</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    teams  <span class="co"># col names</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># fill win matrix</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># iterate over all games</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (g <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(games)[<span class="dv">1</span>]) {</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  W[games[g, <span class="st">"Winner"</span>], games[g, <span class="st">"Loser"</span>]] <span class="ot">&lt;-</span> </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    W[games[g, <span class="st">"Winner"</span>], games[g, <span class="st">"Loser"</span>]] <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="construct-win-matrix-from-pairwise-comparisons-data" class="level1">
-<h1>Construct Win Matrix from pairwise comparisons data</h1>
-<p>adjacency matrix <span class="math inline">\(W=[w_{ij}]_{i=1,\dots,n,\, j=1,\dots, n}\)</span> i.e.&nbsp;i-th row says how often team i won against every other team</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># initialize win matrix with zeros</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rep</span>(<span class="dv">0</span>, n_teams<span class="sc">^</span><span class="dv">2</span>),</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> n_teams,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    teams, <span class="co"># row names</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    teams  <span class="co"># col names</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># fill win matrix</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># iterate over all games</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (g <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(games)[<span class="dv">1</span>]) {</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  W[games[g, <span class="st">"Winner"</span>], games[g, <span class="st">"Loser"</span>]] <span class="ot">&lt;-</span> </span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    W[games[g, <span class="st">"Winner"</span>], games[g, <span class="st">"Loser"</span>]] <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<section id="pagerank" class="level1">
+<h1>PageRank</h1>
+<section id="approach" class="level2">
+<h2 class="anchored" data-anchor-id="approach">Approach</h2>
+</section>
+<section id="implementation" class="level2">
+<h2 class="anchored" data-anchor-id="implementation">Implementation</h2>
+</section>
+</section>
+<section id="bradley-terry-model" class="level1">
+<h1>Bradley-Terry Model</h1>
+<p>Under the Bradley-Terry model, the probability that in a direct comparison team <span class="math inline">\(i\)</span> would beat team <span class="math inline">\(j\)</span> is given by: <span class="math display">\[ P(\text{"i beats j"}) = \frac{\theta_i}{\theta_i + \theta_j}\]</span> for <span class="math inline">\(i,j = 1, \dots, n, i \neq j\)</span>. <span class="math inline">\(\theta_i\)</span> can be thought of as measuring the strength of team <span class="math inline">\(i\)</span>. Ceteris paribus, the greater <span class="math inline">\(\theta_i\)</span>, the greater the probability that team <span class="math inline">\(i\)</span> wins against any other team.</p>
+<p>Given theta i for all teams, the teams can be ranked from strongest to weakest by sorting them according to theta in descending order.</p>
+<p>zuerst muss man jedoch basierend auf historical comparison data die thetas schätzen mittels maximum likelihood estimation</p>
+<p>die wahrscheinlichkeit dass</p>
+<p>Under independence the likelihood function (i.e.&nbsp;the probability of the observed data under theta or theta vector) is <span class="math display">\[ \prod_{i=1}^n \prod_{j=1,\\j \neq i}^n \left(\frac{\theta_i}{\theta_i + \theta_j}\right)^{w_{ij}} \]</span> can equivalently be written as (alles ohne <span class="math inline">\(j\neq i\)</span>) when setting <span class="math inline">\(w_{ii}=0\)</span></p>
+<p>AB HIER KÖNNTE ICH MIR DANN SPAREN DAS <span class="math inline">\(j\neq i\)</span> ANDAUERND RUMZUSCHLEIFEN</p>
+<p>mle estimate is then arg max likelihood</p>
+<p>taking the log: wieso zulässig soll ich das rein tun oder gefahr eigenplagiat?</p>
+<p>maximize log likelihood</p>
+<p>Log likelihood <span class="math display">\[ \sum_{i=1}^n \sum_{j=1, \\ j \neq i}^n w_{ij} \left[\ln (\theta_i) - \ln (\theta_i + \theta_j)\right] = \sum_{i=1}^n \sum_{j=1, \\ j \neq i}^n w_{ij} \ln (\theta_i) - \sum_{i=1}^n \sum_{j=1, \\ j \neq i}^n w_{ij} \ln (\theta_i + \theta_j)\]</span> Ableiten nach THETAi und null setzen liefert score equation <span class="math display">\[ \frac{\partial }{\partial \, \theta_i} = \sum_{j=1, \\ j \neq i}^n w_{ij} \left[\frac{1}{\theta_i} - \frac{1}{\theta_i + \theta_j}\right] = \sum_{j=1, \\ j \neq i}^n w_{ij} \frac{1}{\theta_i} - \sum_{j=1, \\ j \neq i}^n w_{ij} \frac{1}{\theta_i + \theta_j} = 0 \]</span></p>
+<p>IMPORTANT: not necessary that they have played against each other in the past; I THINK THIS IS ALSO TRUE FOR PAGERANK</p>
+<section id="approach-1" class="level2">
+<h2 class="anchored" data-anchor-id="approach-1">Approach</h2>
+</section>
+<section id="implementation-1" class="level2">
+<h2 class="anchored" data-anchor-id="implementation-1">Implementation</h2>
+</section>
+</section>
+<section id="comparison" class="level1">
+<h1>Comparison</h1>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+</section>
+<section id="to-do" class="level1">
+<h1>TO DO</h1>
+<ol type="1">
+<li>2mal metric für vergleich meine lösung vs.&nbsp;package</li>
+<li>plots zum vergleich der beiden rankings (u.a. plot(log(bt_mle), r))</li>
+</ol>
+<p>I am trying to implement various ranking approaches.</p>
 </section>
 <section id="define-function-for-mle-estimation-of-bradley-terry-model" class="level1">
 <h1>Define function for mle estimation of Bradley Terry Model</h1>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>bradleyterry_mle <span class="ot">&lt;-</span> <span class="cf">function</span>(W, <span class="at">n_iter=</span><span class="dv">1000</span>){</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">dim</span>(W)[<span class="dv">1</span>]</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  theta.old <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, p)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(theta.old) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(W)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  theta.new <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(theta.new) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(W)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter) {</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) {</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      theta.new[i] <span class="ot">&lt;-</span> </span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sum</span>(W[i,])<span class="sc">/</span>(<span class="fu">sum</span>((W[i,] <span class="sc">+</span> W[,i])<span class="sc">/</span>(theta.old[i]<span class="sc">+</span>theta.old)))</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># divide by geomtric mean</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    theta.new <span class="ot">&lt;-</span> theta.new<span class="sc">/</span><span class="fu">prod</span>(theta.new)<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span>p)</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    theta.old <span class="ot">&lt;-</span> theta.new</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(theta.new)</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>bradleyterry_mle <span class="ot">&lt;-</span> <span class="cf">function</span>(W, <span class="at">n_iter=</span><span class="dv">1000</span>){</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">dim</span>(W)[<span class="dv">1</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  theta.old <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, p)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(theta.old) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(W)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  theta.new <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(theta.new) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(W)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_iter) {</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) {</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      theta.new[i] <span class="ot">&lt;-</span> </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sum</span>(W[i,])<span class="sc">/</span>(<span class="fu">sum</span>((W[i,] <span class="sc">+</span> W[,i])<span class="sc">/</span>(theta.old[i]<span class="sc">+</span>theta.old)))</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># divide by geomtric mean</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    theta.new <span class="ot">&lt;-</span> theta.new<span class="sc">/</span><span class="fu">prod</span>(theta.new)<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span>p)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    theta.old <span class="ot">&lt;-</span> theta.new</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(theta.new)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>apply mle estimation function to W matrix</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>bt_mle <span class="ot">&lt;-</span> <span class="fu">bradleyterry_mle</span>(W)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>bt_mle <span class="ot">&lt;-</span> <span class="fu">bradleyterry_mle</span>(W)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="plot-ranking-results" class="level1">
 <h1>Plot ranking results</h1>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">team =</span> <span class="fu">names</span>(bt_mle),</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">score =</span> <span class="fu">as.numeric</span>(bt_mle)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="fu">reorder</span>(team, score), <span class="at">y=</span>score)) <span class="sc">+</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill=</span><span class="st">"steelblue"</span>) <span class="sc">+</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"TITEL"</span>,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"y ACHSE"</span>,</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"x ACHSE"</span>) <span class="sc">+</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)      <span class="co"># for visualization</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Paket 'ggplot2' wurde unter R Version 4.2.3 erstellt</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">team =</span> <span class="fu">names</span>(bt_mle),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">score =</span> <span class="fu">as.numeric</span>(bt_mle)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="fu">reorder</span>(team, score), <span class="at">y=</span>score)) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill=</span><span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"TITEL"</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"y ACHSE"</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"x ACHSE"</span>) <span class="sc">+</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -374,12 +442,12 @@ window.Quarto = {
 <section id="compare-my-results-to-results-of-r-package-bradley-terry" class="level1">
 <h1>compare my results to results of R Package Bradley Terry</h1>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># evtl nicht die ganze library laden sondern nur BradleyTerry2:: an den notwendigen Stellen nutzen</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BradleyTerry2)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>b<span class="ot">&lt;-</span><span class="fu">countsToBinomial</span>(W)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>package_model <span class="ot">&lt;-</span> <span class="fu">BTm</span>(<span class="fu">cbind</span>(win1, win2), player1, player2, <span class="at">data=</span>b)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">BTabilities</span>(package_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># evtl nicht die ganze library laden sondern nur BradleyTerry2:: an den notwendigen Stellen nutzen</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BradleyTerry2)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>b<span class="ot">&lt;-</span><span class="fu">countsToBinomial</span>(W)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>package_model <span class="ot">&lt;-</span> <span class="fu">BTm</span>(<span class="fu">cbind</span>(win1, win2), player1, player2, <span class="at">data=</span>b)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">BTabilities</span>(package_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                         ability      s.e.
 Arizona Cardinals      0.0000000 0.0000000
@@ -415,8 +483,8 @@ Tampa Bay Buccaneers   0.4422769 0.8533135
 Tennessee Titans      -2.1339592 0.9368089
 Washington Commanders  0.7176168 0.8500985</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Converting my values into BTm ability values</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(bt_mle<span class="sc">/</span>bt_mle[<span class="dv">1</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Converting my values into BTm ability values</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(bt_mle<span class="sc">/</span>bt_mle[<span class="dv">1</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    Arizona Cardinals       Atlanta Falcons      Baltimore Ravens 
             0.0000000            -0.1045449             1.1418104 
@@ -441,9 +509,9 @@ Washington Commanders  0.7176168 0.8500985</code></pre>
      Tennessee Titans Washington Commanders 
            -2.1339592             0.7176168 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Converting BTm values to my values</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>BTabilities <span class="ot">&lt;-</span> <span class="fu">BTabilities</span>(package_model)[,<span class="dv">1</span>]</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(BTabilities)<span class="sc">*</span>bt_mle[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Converting BTm values to my values</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>BTabilities <span class="ot">&lt;-</span> <span class="fu">BTabilities</span>(package_model)[,<span class="dv">1</span>]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(BTabilities)<span class="sc">*</span>bt_mle[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    Arizona Cardinals       Atlanta Falcons      Baltimore Ravens 
             1.0972960             0.9883723             3.4372074 
@@ -473,26 +541,26 @@ Washington Commanders  0.7176168 0.8500985</code></pre>
 <section id="google-page-rank-from-scratch" class="level1">
 <h1>Google Page Rank from scratch</h1>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> n_teams</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fl">0.85</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span>p, p)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># W_ij: number of times team j lost against team i</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#W</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co"># c_j: number of times team j lost (=colSums of W)</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">colSums</span>(W)</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>d)<span class="sc">*</span><span class="fu">rep</span>(<span class="dv">1</span>,p) <span class="sc">%*%</span> <span class="fu">t</span>(<span class="fu">rep</span>(<span class="dv">1</span>,p))<span class="sc">/</span>p <span class="sc">+</span> d<span class="sc">*</span>W<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span>c) </span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> A<span class="sc">%*%</span>r</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(r)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> n_teams</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fl">0.85</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span>p, p)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># W_ij: number of times team j lost against team i</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">#W</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># c_j: number of times team j lost (=colSums of W)</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">colSums</span>(W)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">-</span>d)<span class="sc">*</span><span class="fu">rep</span>(<span class="dv">1</span>,p) <span class="sc">%*%</span> <span class="fu">t</span>(<span class="fu">rep</span>(<span class="dv">1</span>,p))<span class="sc">/</span>p <span class="sc">+</span> d<span class="sc">*</span>W<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span>c) </span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> A<span class="sc">%*%</span>r</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(r)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                             [,1]
 Arizona Cardinals     0.023078736
@@ -534,7 +602,7 @@ Washington Commanders 0.035147688</code></pre>
 <h1>compare my results to R Package results</h1>
 <p>wichtig: evtl. igraph:: verwenden anstatt gesamte library zu laden um klarer zu machen wo genau wir eigentlich was aus dieser library verwende</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Paket 'igraph' wurde unter R Version 4.2.3 erstellt</code></pre>
 </div>
@@ -557,8 +625,8 @@ Attache Paket: 'igraph'</code></pre>
 
     union</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>graphObj <span class="ot">&lt;-</span> <span class="fu">graph_from_adjacency_matrix</span>(<span class="fu">t</span>(W), <span class="at">weighted =</span> <span class="cn">TRUE</span>, <span class="at">mode =</span> <span class="st">"directed"</span>)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>(prVec <span class="ot">&lt;-</span> <span class="fu">page_rank</span>(graphObj)<span class="sc">$</span>vector)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>graphObj <span class="ot">&lt;-</span> <span class="fu">graph_from_adjacency_matrix</span>(<span class="fu">t</span>(W), <span class="at">weighted =</span> <span class="cn">TRUE</span>, <span class="at">mode =</span> <span class="st">"directed"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>(prVec <span class="ot">&lt;-</span> <span class="fu">page_rank</span>(graphObj)<span class="sc">$</span>vector)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    Arizona Cardinals       Atlanta Falcons      Baltimore Ravens 
           0.023078736           0.038286369           0.061258396 

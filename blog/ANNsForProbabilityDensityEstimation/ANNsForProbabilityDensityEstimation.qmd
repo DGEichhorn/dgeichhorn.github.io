@@ -24,19 +24,19 @@ Let $X$ be a continuous random variable with unknown probability density functio
 Instead, the approach by @magdon1998neural relies on the following two useful properties of the **CDF**:
 
 1.  If the CDF is differentiable, the PDF is obtained as the derivative of the CDF, i.e., $f_X(x)=\frac{d \, F_X}{d \, x}(x)$.
-2.  Transforming a random variable by its own CDF yields a new random variable that is uniformly distributed on \$(0,1)\$, i.e., $F_X(X) \sim \mathcal{U}(0,1)$.
+2.  Transforming a random variable by its own CDF yields a new random variable that is uniformly distributed on $(0,1)$, i.e., $F_X(X) \sim \mathcal{U}(0,1)$.
 
 @magdon1998neural proposed to use a neural network, which needs to be differentiable, to approximate the **CDF** and take afterwards the first derivative w.r.t. $x$ to obtain an estimate of the **PDF**. Let $N_{\theta}(x)$ denote a feed forward multilayer perceptron parametrized by $\theta$ (i.e. a vector containing all weights and biases), $N_{\theta}: \mathbb{R} \to \mathbb{R}$. $N_{\theta}$ is differentiable, if the activation functions employed by it are differentiable (since it is then a composition of differentiable functions). $tanh$ and $sigmoid$ are examples of differentiable activation functions.
 
-So the goal is to find the parameter vector $\theta^\star$ for which $N_{\theta^\star}(x) = F_X(x)$ for all $x \in \mathbb{R}$. However, that is the same as finding the parameter vector $\theta^\star$ for which the transformed random variable $N_{\theta^\star}(X)$ is uniformly distributed on $(0,1)$, since $F_X(X) \sim \mathcal{U}(0,1)$. This is achieved by the following procedure [@magdon1998neural]: Beforehand, the realizations of the random variable $X$ are sorted in ascending order, i.e. $x_{[1]} \leq \dots \leq x_{[n]}$. These $x_{[i]}, i=1,\dots, n$, serve as inputs. During training, in each iteration step <!--$t \in \mathbb{N}$-->, first, a new set of $n$ samples are drawn i.i.d. from a uniform distribution on $(0,1)$, $u_i \sim \mathcal{U}(0,1)$, and sorted in ascending order, i.e. $u_{[1]} \leq \dots \leq u_{[n]}$. These $u_{[i]}, i=1,\dots, n$, serve as targets only for that iteration step. Second, a gradient descent step is taken to adjust the parameter vector to better map the inputs onto the generated targets. For the purpose of mapping the data to a uniform distribution, the following loss function is a reasonable starting point: $$ L_{Dist}(\theta) = \frac{1}{n} \sum_{i=1}^n \left[ N_{\theta}(x_{[i]}) -  u_{[i]}\right]^2 $$
+So the goal is to find the parameter vector $\theta^\star$ for which $N_{\theta^\star}(x) = F_X(x)$ for all $x \in \mathbb{R}$. However, that is the same as finding the parameter vector $\theta^\star$ for which the transformed random variable $N_{\theta^\star}(X)$ is uniformly distributed on $(0,1)$, since $F_X(X) \sim \mathcal{U}(0,1)$. This is achieved by the following procedure [@magdon1998neural]: Beforehand, the realizations of the random variable $X$ are sorted in ascending order, i.e. $x_{[1]} \leq \dots \leq x_{[n]}$. These $x_{[i]}, i=1,\dots, n$, serve as inputs. During training, in each iteration step <!--$t \in \mathbb{N}$-->, first, a new set of $n$ samples are drawn i.i.d. from a uniform distribution on $(0,1)$, $u_i \sim \mathcal{U}(0,1)$, and sorted in ascending order, i.e. $u_{[1]} \leq \dots \leq u_{[n]}$. These $u_{[i]}, i=1,\dots, n$, serve as targets only for that iteration step. Second, a gradient descent step is taken to adjust the parameter vector to better map the inputs onto the generated targets. For the purpose of mapping the data to a uniform distribution, the following loss function is a reasonable starting point: $$ L_{dist}(\theta) = \frac{1}{n} \sum_{i=1}^n \left[ N_{\theta}(x_{[i]}) -  u_{[i]}\right]^2 $$
 
-However, besides from mapping the data to a uniform distribution, there are two further properties, that CDFs exhibit and that the neural network approximation to the CDF must also have to be a legitimate estimate of a CDF. <!--Note that a CDF cannot be any arbitrary function. In fact, a CDF must have two further important properties that the neural network approximation to the CDF should also exhibit: --> First, the CDF maps $\mathbb{R}$ onto the interval $[0,1]$. Second, the CDF is monotonically increasing. By using an activation function in the output layer that maps $\mathbb{R}$ onto the interval $[0,1]$, it can be guaranteed that the neural network approximation to the CDF satisfies the first property. The second property can be enforced by modifying the loss function. The modified loss function $L_{total}$ also includes a term, $L_{Mon}$, that applies a penalty if the neural network approximation to the CDF is not monotonically increasing in $x$. More specifically, $L_{Mon}$ is written as: 
-$$ L_{Mon}(\theta) = \frac{1}{n_{Mon}} \sum_{k=1}^{n_{Mon}} \max \left( N_{\theta}(x_k^{Mon}) - N_{\theta}(x_k^{Mon} + \Delta), 0 \right)$$
-for some small $\Delta > 0$ with $x_k^{Mon}, k=1,\dots, n_{Mon},$ being a set of $n_{Mon} \in \mathbb{N}$ points at which monotonicity is to be enforced. 
+However, besides from mapping the data to a uniform distribution, there are two further properties, that CDFs exhibit and that the neural network approximation to the CDF must also have to be a legitimate estimate of a CDF. <!--Note that a CDF cannot be any arbitrary function. In fact, a CDF must have two further important properties that the neural network approximation to the CDF should also exhibit: --> First, the CDF maps $\mathbb{R}$ onto the interval $[0,1]$. Second, the CDF is monotonically increasing. By using an activation function in the output layer that maps $\mathbb{R}$ onto the interval $[0,1]$, it can be guaranteed that the neural network approximation to the CDF satisfies the first property. The second property can be enforced by modifying the loss function. The modified loss function $L_{total}$ also includes a term, $L_{mon}$, that applies a penalty if the neural network approximation to the CDF is not monotonically increasing in $x$. More specifically, $L_{mon}$ is written as: 
+$$ L_{mon}(\theta) = \frac{1}{n_{mon}} \sum_{k=1}^{n_{mon}} \max \left( N_{\theta}(x_k^{mon}) - N_{\theta}(x_k^{mon} + \Delta), 0 \right)$$
+for some small $\Delta > 0$ with $x_k^{mon}, k=1,\dots, n_{mon},$ being a set of $n_{mon} \in \mathbb{N}$ points at which monotonicity is to be enforced. 
 
 The resulting modified loss function is: 
-$$ L_{total}(\theta) = L_{Dist}(\theta) + \lambda_{Mon} \, L_{Mon}(\theta) $$
-where $\lambda_{Mon} \in \mathbb{R}_{>0}$ is a large positive weighting factor for the monotonicity constraint. $\theta^\star$ is then given by:
+$$ L_{total}(\theta) = L_{dist}(\theta) + \lambda_{mon} \, L_{mon}(\theta) $$
+where $\lambda_{mon} \in \mathbb{R}_{>0}$ is a large positive weighting factor for the monotonicity constraint. $\theta^\star$ is then given by:
 $$\theta^\star = \underset{\theta}{\text{arg min}} \; L_{total}(\theta)$$
 Once $\theta^\star$ is computed using standard gradient based methods, the estimated PDF $\hat{f}_X$ is obtained by
 $$ \hat{f}_X(x) = \frac{\partial \, N_{\theta^\star}(x)}{\partial \, x}  $$
@@ -122,7 +122,7 @@ class Loss(nn.Module):
 
 ## Gaussian Mixture
 
-For the first example, realizations will be drawn from a 2-component Gaussian mixture distribution. So I construct one with mixture weights $\phi_1=0.2$ and $\phi_2=0.8$, expectations $\mu_1=2$ and $\mu_2=5$ and standard deviations $\sigma_1=0.25$ and $ \sigma_2=0.5$.
+For the first example, realizations will be drawn from a 2-component Gaussian mixture distribution. So I construct one with mixture weights $\phi_1=0.2$ and $\phi_2=0.8$, expectations $\mu_1=2$ and $\mu_2=5$ and standard deviations $\sigma_1=0.25$ and $\sigma_2=0.5$.
 
 ```{python}
 # construct 2-component Gaussian mixture distribution
@@ -184,7 +184,7 @@ x = torch.from_numpy(np.sort(x)).float().unsqueeze(1)
 
 ### Set Monotonicity Points
 
-Before training can start, I have to specify $\lambda_{Mon}$, $n_{Mon}$, the monotonicity points themselves as well as $\Delta$. I choose to place $n_{Mon}=1000$ monotonicity points equally spaced between the smallest and the largest sampled $X$-values.
+Before training can start, I have to specify $\lambda_{mon}$, $n_{mon}$, the monotonicity points themselves as well as $\Delta$. I choose to place $n_{mon}=1000$ monotonicity points equally spaced between the smallest and the largest sampled $X$-values.
 
 ```{python}
 # set monotonicity points

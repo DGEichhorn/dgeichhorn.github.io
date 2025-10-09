@@ -5,29 +5,32 @@ author: "Alicia"
 date: "5/22/2021"
 image: "cover.jpg"
 categories:
-  - Science
-  - Technology
+  - Ranking
+  - Optimization
+  - Maximum Likelihood
 ---
 
-# TO DO
+# Motivation
 
-1. 2mal metric für vergleich meine lösung vs. package
-2. plots zum vergleich der beiden rankings (u.a. plot(log(bt_mle), r))
+Probably everyone is familiar with those tables in sports that rank teams, usually according to the number of games won. This seems to be a valide approach for tournaments where every team plays against every other team the same number of times. Such tournaments are called robin-round tournaments and examples include the Premier League as well as the Fußball and the Handball Bundesliga. Robin-round tournaments are a special type of complete comparisons.
+
+However, there are also tournaments in which not every team plays against every other team, i.e. incomplete comparisons. Examples include the NFL in American Football or knock-out tournaments such as playoffs or cups. In such tournaments, some teams might face on average stronger opponents than other teams. Therefore, the number of wins may not reflect the true strength of a team and should not be used to rank teams. Instead, it becomes important, how strong the opponents were, against which a team won or lost.
+
+So I was wondering, what approaches there are for learning a ranking from data on the outcome of incomplete pairwise comparisons. Note that this problem does not just arise in sports but in a variety of other domains. For instance, in preference modelling, multiple individuals must choose between different pairs of items. Based on the outcomes, one tries to rank all of the items. Nevertheless, I will stick to the application in sports.
+
+I found among others two interesting approaches: the PageRank algorithm and the Bradley-Terry model. I will implement both from scratch in R after having shortly described them. Furthermore, I will compare the results of my own implementation to the ones returned by dedicated libraries. For illustration, I will use data on the outcome of every NFL game played during the 2024-2025 regular season.
 
 
+# Data
 
-I am trying to implement various ranking approaches.
-
-# Get pairwise comparison data
-
-get American Football data from <https://www.pro-football-reference.com/years/2024/games.htm>; OLD NHL: <https://www.hockey-reference.com/leagues/NHL_2025_games.html#games>
+Before diving into the two approaches, I scrape and prepare the data on the outcome of every NFL game played during the 2024-2025 regular season. The data is available at: <https://www.pro-football-reference.com/years/2024/games.htm>.
 
 ```{r}
 #| warning: false
 
-library(rvest)        # for web page scraping
-library(dplyr)        # for data manipulations
-library(ggplot2)      # for visualization
+library(rvest)        # web page scraping
+library(dplyr)        # data manipulations
+
 
 url <- "https://www.pro-football-reference.com/years/2024/games.htm#games"
 page <- read_html(url)
@@ -37,6 +40,7 @@ games <- page %>%
   html_table(header=TRUE) %>%
   as.data.frame()
 
+# drop irrelevant cols
 games <- games[, c(1,5,7)]
 names(games) <- c("Week", "Winner", "Loser")
 
@@ -47,11 +51,13 @@ games <- games %>%
 
 teams <- sort(unique(c(games$Winner, games$Loser)))
 n_teams <- length(teams)
+
+head(games)
 ```
 
-# Construct Win Matrix from pairwise comparisons data
-
-adjacency matrix $W=[w_{ij}]_{i=1,\dots,n,\, j=1,\dots, n}$ i.e. i-th row says how often team i won against every other team
+For both approaches, it is more useful to aggregate the outcomes of the games in a win matrix. The win matrix is given by:
+$$W=[w_{ij}]_{i=1,\dots,\, n, j=1, \dots, n}$$
+where $w_{ij}$ is the number of times team $i$ has won against team $j$. In total there are $n=32$ teams in the NFL. The win matrix is computed as follows:
 
 ```{r}
 # initialize win matrix with zeros
@@ -70,8 +76,71 @@ for (g in 1:dim(games)[1]) {
   W[games[g, "Winner"], games[g, "Loser"]] <- 
     W[games[g, "Winner"], games[g, "Loser"]] + 1
 }
-
 ```
+
+# PageRank
+
+## Approach
+
+## Implementation
+
+
+# Bradley-Terry Model
+
+Under the Bradley-Terry model, the probability that in a direct comparison team $i$ would beat team $j$ is given by:
+$$ P(\text{"i beats j"}) = \frac{\theta_i}{\theta_i + \theta_j}$$
+for $i,j = 1, \dots, n, i \neq j$. $\theta_i$ can be thought of as measuring the strength of team $i$. Ceteris paribus, the greater $\theta_i$, the greater the probability that team $i$ wins against any other team.
+
+Given theta i for all teams, the teams can be ranked from strongest to weakest by sorting them according to theta in descending order.
+
+zuerst muss man jedoch basierend auf historical comparison data die thetas schätzen mittels maximum likelihood estimation
+
+die wahrscheinlichkeit dass
+
+Under independence the likelihood function (i.e. the probability of the observed data under theta or theta vector) is 
+$$ \prod_{i=1}^n \prod_{j=1,\\j \neq i}^n \left(\frac{\theta_i}{\theta_i + \theta_j}\right)^{w_{ij}} $$
+can equivalently be written as (alles ohne $j\neq i$) when setting $w_{ii}=0$
+
+AB HIER KÖNNTE ICH MIR DANN SPAREN DAS $j\neq i$ ANDAUERND RUMZUSCHLEIFEN
+
+mle estimate is then arg max likelihood
+
+taking the log: wieso zulässig soll ich das rein tun oder gefahr eigenplagiat?
+
+maximize log likelihood
+
+Log likelihood
+$$ \sum_{i=1}^n \sum_{j=1, \\ j \neq i}^n w_{ij} \left[\ln (\theta_i) - \ln (\theta_i + \theta_j)\right] = \sum_{i=1}^n \sum_{j=1, \\ j \neq i}^n w_{ij} \ln (\theta_i) - \sum_{i=1}^n \sum_{j=1, \\ j \neq i}^n w_{ij} \ln (\theta_i + \theta_j)$$
+Ableiten nach THETAi und null setzen liefert score equation
+$$ \frac{\partial }{\partial \, \theta_i} = \sum_{j=1, \\ j \neq i}^n w_{ij} \left[\frac{1}{\theta_i} - \frac{1}{\theta_i + \theta_j}\right] = \sum_{j=1, \\ j \neq i}^n w_{ij} \frac{1}{\theta_i} - \sum_{j=1, \\ j \neq i}^n w_{ij} \frac{1}{\theta_i + \theta_j} = 0 $$
+
+
+
+IMPORTANT: not necessary that they have played against each other in the past; I THINK THIS IS ALSO TRUE FOR PAGERANK
+
+## Approach
+
+## Implementation
+
+
+
+# Comparison
+
+# Conclusion
+
+
+
+
+# TO DO
+
+1. 2mal metric für vergleich meine lösung vs. package
+2. plots zum vergleich der beiden rankings (u.a. plot(log(bt_mle), r))
+
+
+
+I am trying to implement various ranking approaches.
+
+
 
 # Define function for mle estimation of Bradley Terry Model
 
@@ -111,6 +180,8 @@ bt_mle <- bradleyterry_mle(W)
 # Plot ranking results
 
 ```{r}
+library(ggplot2)      # for visualization
+
 df <- data.frame(
   team = names(bt_mle),
   score = as.numeric(bt_mle)

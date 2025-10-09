@@ -302,12 +302,12 @@ window.Quarto = {
 <p>Instead, the approach by <span class="citation" data-cites="magdon1998neural">Magdon-Ismail and Atiya (<a href="#ref-magdon1998neural" role="doc-biblioref">1998</a>)</span> relies on the following two useful properties of the <strong>CDF</strong>:</p>
 <ol type="1">
 <li>If the CDF is differentiable, the PDF is obtained as the derivative of the CDF, i.e., <span class="math inline">\(f_X(x)=\frac{d \, F_X}{d \, x}(x)\)</span>.</li>
-<li>Transforming a random variable by its own CDF yields a new random variable that is uniformly distributed on $(0,1)$, i.e., <span class="math inline">\(F_X(X) \sim \mathcal{U}(0,1)\)</span>.</li>
+<li>Transforming a random variable by its own CDF yields a new random variable that is uniformly distributed on <span class="math inline">\((0,1)\)</span>, i.e., <span class="math inline">\(F_X(X) \sim \mathcal{U}(0,1)\)</span>.</li>
 </ol>
 <p><span class="citation" data-cites="magdon1998neural">Magdon-Ismail and Atiya (<a href="#ref-magdon1998neural" role="doc-biblioref">1998</a>)</span> proposed to use a neural network, which needs to be differentiable, to approximate the <strong>CDF</strong> and take afterwards the first derivative w.r.t. <span class="math inline">\(x\)</span> to obtain an estimate of the <strong>PDF</strong>. Let <span class="math inline">\(N_{\theta}(x)\)</span> denote a feed forward multilayer perceptron parametrized by <span class="math inline">\(\theta\)</span> (i.e.&nbsp;a vector containing all weights and biases), <span class="math inline">\(N_{\theta}: \mathbb{R} \to \mathbb{R}\)</span>. <span class="math inline">\(N_{\theta}\)</span> is differentiable, if the activation functions employed by it are differentiable (since it is then a composition of differentiable functions). <span class="math inline">\(tanh\)</span> and <span class="math inline">\(sigmoid\)</span> are examples of differentiable activation functions.</p>
-<p>So the goal is to find the parameter vector <span class="math inline">\(\theta^\star\)</span> for which <span class="math inline">\(N_{\theta^\star}(x) = F_X(x)\)</span> for all <span class="math inline">\(x \in \mathbb{R}\)</span>. However, that is the same as finding the parameter vector <span class="math inline">\(\theta^\star\)</span> for which the transformed random variable <span class="math inline">\(N_{\theta^\star}(X)\)</span> is uniformly distributed on <span class="math inline">\((0,1)\)</span>, since <span class="math inline">\(F_X(X) \sim \mathcal{U}(0,1)\)</span>. This is achieved by the following procedure <span class="citation" data-cites="magdon1998neural">(<a href="#ref-magdon1998neural" role="doc-biblioref">Magdon-Ismail and Atiya 1998</a>)</span>: Beforehand, the realizations of the random variable <span class="math inline">\(X\)</span> are sorted in ascending order, i.e.&nbsp;<span class="math inline">\(x_{[1]} \leq \dots \leq x_{[n]}\)</span>. These <span class="math inline">\(x_{[i]}, i=1,\dots, n\)</span>, serve as inputs. During training, in each iteration step <!--$t \in \mathbb{N}$-->, first, a new set of <span class="math inline">\(n\)</span> samples are drawn i.i.d. from a uniform distribution on <span class="math inline">\((0,1)\)</span>, <span class="math inline">\(u_i \sim \mathcal{U}(0,1)\)</span>, and sorted in ascending order, i.e.&nbsp;<span class="math inline">\(u_{[1]} \leq \dots \leq u_{[n]}\)</span>. These <span class="math inline">\(u_{[i]}, i=1,\dots, n\)</span>, serve as targets only for that iteration step. Second, a gradient descent step is taken to adjust the parameter vector to better map the inputs onto the generated targets. For the purpose of mapping the data to a uniform distribution, the following loss function is a reasonable starting point: <span class="math display">\[ L_{Dist}(\theta) = \frac{1}{n} \sum_{i=1}^n \left[ N_{\theta}(x_{[i]}) -  u_{[i]}\right]^2 \]</span></p>
-<p>However, besides from mapping the data to a uniform distribution, there are two further properties, that CDFs exhibit and that the neural network approximation to the CDF must also have to be a legitimate estimate of a CDF. <!--Note that a CDF cannot be any arbitrary function. In fact, a CDF must have two further important properties that the neural network approximation to the CDF should also exhibit: --> First, the CDF maps <span class="math inline">\(\mathbb{R}\)</span> onto the interval <span class="math inline">\([0,1]\)</span>. Second, the CDF is monotonically increasing. By using an activation function in the output layer that maps <span class="math inline">\(\mathbb{R}\)</span> onto the interval <span class="math inline">\([0,1]\)</span>, it can be guaranteed that the neural network approximation to the CDF satisfies the first property. The second property can be enforced by modifying the loss function. The modified loss function <span class="math inline">\(L_{total}\)</span> also includes a term, <span class="math inline">\(L_{Mon}\)</span>, that applies a penalty if the neural network approximation to the CDF is not monotonically increasing in <span class="math inline">\(x\)</span>. More specifically, <span class="math inline">\(L_{Mon}\)</span> is written as: <span class="math display">\[ L_{Mon}(\theta) = \frac{1}{n_{Mon}} \sum_{k=1}^{n_{Mon}} \max \left( N_{\theta}(x_k^{Mon}) - N_{\theta}(x_k^{Mon} + \Delta), 0 \right)\]</span> for some small <span class="math inline">\(\Delta &gt; 0\)</span> with <span class="math inline">\(x_k^{Mon}, k=1,\dots, n_{Mon},\)</span> being a set of <span class="math inline">\(n_{Mon} \in \mathbb{N}\)</span> points at which monotonicity is to be enforced.</p>
-<p>The resulting modified loss function is: <span class="math display">\[ L_{total}(\theta) = L_{Dist}(\theta) + \lambda_{Mon} \, L_{Mon}(\theta) \]</span> where <span class="math inline">\(\lambda_{Mon} \in \mathbb{R}_{&gt;0}\)</span> is a large positive weighting factor for the monotonicity constraint. <span class="math inline">\(\theta^\star\)</span> is then given by: <span class="math display">\[\theta^\star = \underset{\theta}{\text{arg min}} \; L_{total}(\theta)\]</span> Once <span class="math inline">\(\theta^\star\)</span> is computed using standard gradient based methods, the estimated PDF <span class="math inline">\(\hat{f}_X\)</span> is obtained by <span class="math display">\[ \hat{f}_X(x) = \frac{\partial \, N_{\theta^\star}(x)}{\partial \, x}  \]</span></p>
+<p>So the goal is to find the parameter vector <span class="math inline">\(\theta^\star\)</span> for which <span class="math inline">\(N_{\theta^\star}(x) = F_X(x)\)</span> for all <span class="math inline">\(x \in \mathbb{R}\)</span>. However, that is the same as finding the parameter vector <span class="math inline">\(\theta^\star\)</span> for which the transformed random variable <span class="math inline">\(N_{\theta^\star}(X)\)</span> is uniformly distributed on <span class="math inline">\((0,1)\)</span>, since <span class="math inline">\(F_X(X) \sim \mathcal{U}(0,1)\)</span>. This is achieved by the following procedure <span class="citation" data-cites="magdon1998neural">(<a href="#ref-magdon1998neural" role="doc-biblioref">Magdon-Ismail and Atiya 1998</a>)</span>: Beforehand, the realizations of the random variable <span class="math inline">\(X\)</span> are sorted in ascending order, i.e.&nbsp;<span class="math inline">\(x_{[1]} \leq \dots \leq x_{[n]}\)</span>. These <span class="math inline">\(x_{[i]}, i=1,\dots, n\)</span>, serve as inputs. During training, in each iteration step <!--$t \in \mathbb{N}$-->, first, a new set of <span class="math inline">\(n\)</span> samples are drawn i.i.d. from a uniform distribution on <span class="math inline">\((0,1)\)</span>, <span class="math inline">\(u_i \sim \mathcal{U}(0,1)\)</span>, and sorted in ascending order, i.e.&nbsp;<span class="math inline">\(u_{[1]} \leq \dots \leq u_{[n]}\)</span>. These <span class="math inline">\(u_{[i]}, i=1,\dots, n\)</span>, serve as targets only for that iteration step. Second, a gradient descent step is taken to adjust the parameter vector to better map the inputs onto the generated targets. For the purpose of mapping the data to a uniform distribution, the following loss function is a reasonable starting point: <span class="math display">\[ L_{dist}(\theta) = \frac{1}{n} \sum_{i=1}^n \left[ N_{\theta}(x_{[i]}) -  u_{[i]}\right]^2 \]</span></p>
+<p>However, besides from mapping the data to a uniform distribution, there are two further properties, that CDFs exhibit and that the neural network approximation to the CDF must also have to be a legitimate estimate of a CDF. <!--Note that a CDF cannot be any arbitrary function. In fact, a CDF must have two further important properties that the neural network approximation to the CDF should also exhibit: --> First, the CDF maps <span class="math inline">\(\mathbb{R}\)</span> onto the interval <span class="math inline">\([0,1]\)</span>. Second, the CDF is monotonically increasing. By using an activation function in the output layer that maps <span class="math inline">\(\mathbb{R}\)</span> onto the interval <span class="math inline">\([0,1]\)</span>, it can be guaranteed that the neural network approximation to the CDF satisfies the first property. The second property can be enforced by modifying the loss function. The modified loss function <span class="math inline">\(L_{total}\)</span> also includes a term, <span class="math inline">\(L_{mon}\)</span>, that applies a penalty if the neural network approximation to the CDF is not monotonically increasing in <span class="math inline">\(x\)</span>. More specifically, <span class="math inline">\(L_{mon}\)</span> is written as: <span class="math display">\[ L_{mon}(\theta) = \frac{1}{n_{mon}} \sum_{k=1}^{n_{mon}} \max \left( N_{\theta}(x_k^{mon}) - N_{\theta}(x_k^{mon} + \Delta), 0 \right)\]</span> for some small <span class="math inline">\(\Delta &gt; 0\)</span> with <span class="math inline">\(x_k^{mon}, k=1,\dots, n_{mon},\)</span> being a set of <span class="math inline">\(n_{mon} \in \mathbb{N}\)</span> points at which monotonicity is to be enforced.</p>
+<p>The resulting modified loss function is: <span class="math display">\[ L_{total}(\theta) = L_{dist}(\theta) + \lambda_{mon} \, L_{mon}(\theta) \]</span> where <span class="math inline">\(\lambda_{mon} \in \mathbb{R}_{&gt;0}\)</span> is a large positive weighting factor for the monotonicity constraint. <span class="math inline">\(\theta^\star\)</span> is then given by: <span class="math display">\[\theta^\star = \underset{\theta}{\text{arg min}} \; L_{total}(\theta)\]</span> Once <span class="math inline">\(\theta^\star\)</span> is computed using standard gradient based methods, the estimated PDF <span class="math inline">\(\hat{f}_X\)</span> is obtained by <span class="math display">\[ \hat{f}_X(x) = \frac{\partial \, N_{\theta^\star}(x)}{\partial \, x}  \]</span></p>
 <p>exploiting the differentiability of <span class="math inline">\(N_{\theta}\)</span> using backpropagation.</p>
 <p>In summary, the procedure for estimating the <strong>PDF</strong> using neural network is given by:</p>
 <ol type="1">
@@ -324,7 +324,7 @@ window.Quarto = {
 <section id="implementation" class="level1">
 <h1>Implementation</h1>
 <p>After detailing the general approach for solving ODEs using neural networks, in this section, I will implement it from scratch in Python and apply it to two different examples.</p>
-<div id="e86260f9" class="cell" data-execution_count="1">
+<div id="f6c8658a" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for sampling</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -341,7 +341,7 @@ window.Quarto = {
 <section id="define-neural-network" class="level2">
 <h2 class="anchored" data-anchor-id="define-neural-network">Define Neural Network</h2>
 <p>At first, I define the neural network used for approximating the CDF. It is a fully connected feed forward neural network with one hidden layer using a <span class="math inline">\(tanh\)</span> activation function and an output layer using a <span class="math inline">\(sigmoid\)</span> activation function. Thereby, the neural network is differentiable and maps <span class="math inline">\(\mathbb{R}\)</span> onto the interval <span class="math inline">\((0,1)\)</span>.</p>
-<div id="19d4c6ad" class="cell" data-execution_count="2">
+<div id="b90e887a" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> N(nn.Module):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_size, hidden_size, output_size):</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(N, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -359,7 +359,7 @@ window.Quarto = {
 <section id="define-modified-loss-function" class="level2">
 <h2 class="anchored" data-anchor-id="define-modified-loss-function">Define Modified Loss Function</h2>
 <p>Next, I define the modified loss function as described above.</p>
-<div id="b3571561" class="cell" data-execution_count="3">
+<div id="8aa81831" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Loss(nn.Module):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(Loss, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -377,15 +377,15 @@ window.Quarto = {
 </section>
 <section id="gaussian-mixture" class="level2">
 <h2 class="anchored" data-anchor-id="gaussian-mixture">Gaussian Mixture</h2>
-<p>For the first example, realizations will be drawn from a 2-component Gaussian mixture distribution. So I construct one with mixture weights <span class="math inline">\(\phi_1=0.2\)</span> and <span class="math inline">\(\phi_2=0.8\)</span>, expectations <span class="math inline">\(\mu_1=2\)</span> and <span class="math inline">\(\mu_2=5\)</span> and standard deviations <span class="math inline">\(\sigma_1=0.25\)</span> and $ _2=0.5$.</p>
-<div id="e0604093" class="cell" data-execution_count="4">
+<p>For the first example, realizations will be drawn from a 2-component Gaussian mixture distribution. So I construct one with mixture weights <span class="math inline">\(\phi_1=0.2\)</span> and <span class="math inline">\(\phi_2=0.8\)</span>, expectations <span class="math inline">\(\mu_1=2\)</span> and <span class="math inline">\(\mu_2=5\)</span> and standard deviations <span class="math inline">\(\sigma_1=0.25\)</span> and <span class="math inline">\(\sigma_2=0.5\)</span>.</p>
+<div id="cc0e384a" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct 2-component Gaussian mixture distribution</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>comp1 <span class="op">=</span> stats.Normal(mu<span class="op">=</span><span class="dv">2</span>, sigma<span class="op">=</span><span class="fl">0.25</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>comp2 <span class="op">=</span> stats.Normal(mu<span class="op">=</span><span class="dv">5</span>, sigma<span class="op">=</span><span class="fl">0.5</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>mix <span class="op">=</span> stats.Mixture([comp1, comp2], weights<span class="op">=</span>[<span class="fl">0.2</span>, <span class="fl">0.8</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The corresponding PDF looks as follows:</p>
-<div id="e6169026" class="cell" data-execution_count="5">
+<div id="305412c3" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">1000</span>)</span>
@@ -408,20 +408,20 @@ window.Quarto = {
 <section id="set-seed" class="level3">
 <h3 class="anchored" data-anchor-id="set-seed">Set Seed</h3>
 <p>In the subsequent steps, the neural network will be initialized and realizations will be sampled from the PDF given above. Both involves randomness. Therefore, to ensure reproducibility of the subsequent steps, one must set a seed for the random number generators.</p>
-<div id="fd79f536" class="cell" data-execution_count="6">
+<div id="bbf434c4" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>random.seed(seed)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>np.random.seed(seed)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>&lt;torch._C.Generator at 0x25937c3e7b0&gt;</code></pre>
+<pre><code>&lt;torch._C.Generator at 0x1bfb47be7b0&gt;</code></pre>
 </div>
 </div>
 </section>
 <section id="construct-model-loss-and-optimizer" class="level3">
 <h3 class="anchored" data-anchor-id="construct-model-loss-and-optimizer">Construct Model, Loss and Optimizer</h3>
 <p>After that, I instantiate the neural network, the loss function to be minimized and the optimizer (here, I use Adam).</p>
-<div id="6e348c06" class="cell" data-execution_count="7">
+<div id="81abac89" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> N(input_size<span class="op">=</span><span class="dv">1</span>, hidden_size<span class="op">=</span><span class="dv">10</span>, output_size<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> Loss()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -430,7 +430,7 @@ window.Quarto = {
 <section id="sample-from-pdf" class="level3">
 <h3 class="anchored" data-anchor-id="sample-from-pdf">Sample from PDF</h3>
 <p>Next, I sample <span class="math inline">\(n=200\)</span> i.i.d. realizations from the 2-component Gaussian mixture distribution. Subsequently, I sort then in ascending order.</p>
-<div id="1d0882b7" class="cell" data-execution_count="8">
+<div id="bef8bfc4" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sample data, sort it and convert to torch tensor</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">200</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(seed)</span>
@@ -440,8 +440,8 @@ window.Quarto = {
 </section>
 <section id="set-monotonicity-points" class="level3">
 <h3 class="anchored" data-anchor-id="set-monotonicity-points">Set Monotonicity Points</h3>
-<p>Before training can start, I have to specify <span class="math inline">\(\lambda_{Mon}\)</span>, <span class="math inline">\(n_{Mon}\)</span>, the monotonicity points themselves as well as <span class="math inline">\(\Delta\)</span>. I choose to place <span class="math inline">\(n_{Mon}=1000\)</span> monotonicity points equally spaced between the smallest and the largest sampled <span class="math inline">\(X\)</span>-values.</p>
-<div id="d2ab9b1a" class="cell" data-execution_count="9">
+<p>Before training can start, I have to specify <span class="math inline">\(\lambda_{mon}\)</span>, <span class="math inline">\(n_{mon}\)</span>, the monotonicity points themselves as well as <span class="math inline">\(\Delta\)</span>. I choose to place <span class="math inline">\(n_{mon}=1000\)</span> monotonicity points equally spaced between the smallest and the largest sampled <span class="math inline">\(X\)</span>-values.</p>
+<div id="0aac86ed" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set monotonicity points</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>lambda_mon <span class="op">=</span> <span class="fl">1e6</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>n_mon <span class="op">=</span> <span class="dv">1000</span></span>
@@ -452,7 +452,7 @@ window.Quarto = {
 <section id="training" class="level3">
 <h3 class="anchored" data-anchor-id="training">Training</h3>
 <p>Now, everything is set up and training can start. Observe that, as described in the general approach, in each iteration, a new set of <span class="math inline">\(n\)</span> samples are drawn i.i.d. from <span class="math inline">\(\mathcal{U}(0,1)\)</span> and sorted in ascending order. These serve as targets only for that iteration.</p>
-<div id="258297e1" class="cell" data-execution_count="10">
+<div id="10c58e6f" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">100</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">2500</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -478,7 +478,7 @@ window.Quarto = {
 <section id="plot-cdf" class="level3">
 <h3 class="anchored" data-anchor-id="plot-cdf">Plot CDF</h3>
 <p>Once training has finished, I plot the learned neural network approximation of CDF against the actual CDF of the 2-component Gaussian mixture.</p>
-<div id="f5a11333" class="cell" data-execution_count="11">
+<div id="2ddef9b4" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">1000</span>).unsqueeze(<span class="dv">1</span>)</span>
@@ -507,7 +507,7 @@ window.Quarto = {
 <section id="compute-pdf" class="level3">
 <h3 class="anchored" data-anchor-id="compute-pdf">Compute PDF</h3>
 <p>Given the neural network approximation of the CDF, the following function computes an estimate of the PDF from it.</p>
-<div id="23e38441" class="cell" data-execution_count="12">
+<div id="1d7d9014" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ComputePDF(model, x):</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  x <span class="op">=</span> x.requires_grad_(<span class="va">True</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  cdf <span class="op">=</span> model(x)</span>
@@ -523,7 +523,7 @@ window.Quarto = {
 <section id="plot-pdf" class="level3">
 <h3 class="anchored" data-anchor-id="plot-pdf">Plot PDF</h3>
 <p>This plot confirms, that the estimate of the PDF obtained from the neural network approximation to the CDF is quite precise.</p>
-<div id="efb93808" class="cell" data-execution_count="13">
+<div id="be982abd" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pdf_est <span class="op">=</span> ComputePDF(model, xx).detach()</span>
@@ -552,12 +552,12 @@ window.Quarto = {
 <section id="weibull-distribution" class="level2">
 <h2 class="anchored" data-anchor-id="weibull-distribution">Weibull Distribution</h2>
 <p>As second example, I will use a Weibull distribution with <span class="math inline">\(shape=1.8\)</span> (and <span class="math inline">\(scale=1\)</span>).</p>
-<div id="b2a5f86c" class="cell" data-execution_count="14">
+<div id="b5249c54" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct Weibull distribution</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dist <span class="op">=</span> stats.weibull_min(c<span class="op">=</span><span class="fl">1.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>A plot of its PDF shows that it is clearly skewed.</p>
-<div id="8fbdb7fd" class="cell" data-execution_count="15">
+<div id="fde64f50" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">1000</span>)</span>
@@ -578,7 +578,7 @@ window.Quarto = {
 </div>
 </div>
 <p>The following steps (set seed; construct model, loss and optimizer; sample from PDF; set monontonicity points; training) are analogous to those in the first example. Therefore, I hide that part of the code. If you wish to have a look at it, click on the “Show code” button below.</p>
-<div id="aeada549" class="cell" data-execution_count="16">
+<div id="db364f2d" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed</span></span>
@@ -631,7 +631,7 @@ window.Quarto = {
 <section id="plot-cdf-1" class="level3">
 <h3 class="anchored" data-anchor-id="plot-cdf-1">Plot CDF</h3>
 <p>Inspecting the below plot of the learned neural network approximation of the CDF and the actual CDF shows again that the neural network was successful in recovering the actual CDF.</p>
-<div id="c8263c1b" class="cell" data-execution_count="17">
+<div id="1fcd2ab3" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">1000</span>).unsqueeze(<span class="dv">1</span>)</span>
@@ -659,7 +659,7 @@ window.Quarto = {
 <section id="plot-pdf-1" class="level3">
 <h3 class="anchored" data-anchor-id="plot-pdf-1">Plot PDF</h3>
 <p>Also when comparing the resulting estimated PDF to the actual one, it seems that neural network approach yields good results.</p>
-<div id="02a69656" class="cell" data-execution_count="18">
+<div id="2ab50554" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>pdf_est <span class="op">=</span> ComputePDF(model, xx).detach()</span>
