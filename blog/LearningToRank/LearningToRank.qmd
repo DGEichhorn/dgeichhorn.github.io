@@ -12,6 +12,10 @@ categories:
 #bibliography: references.bib
 ---
 
+
+# IMPORTANT: not necessary that they have played against each other in the past; I THINK THIS IS ALSO TRUE FOR PAGERANK
+
+
 # Motivation
 
 Probably everyone is familiar with those tables in sports that rank teams, usually according to the number of games won. This seems to be a valide approach for tournaments where every team plays against every other team the same number of times. Such tournaments are called robin-round tournaments and examples include the Premier League as well as the Fußball and the Handball Bundesliga. Robin-round tournaments are a special type of complete comparisons.
@@ -95,21 +99,131 @@ It is given by: $$ \begin{align} \frac{\partial l}{\partial \theta_k}(\theta_1, 
 &= \frac{1}{\theta_k} \sum_{j=1}^n w_{kj} - \sum_{j=1}^n \frac{w_{jk} +w_{kj}}{\theta_j + \theta_k} ,  &\forall k=1,\dots n \end{align}$$
 Note that I index the differentiation variable by $k$ in order to clearly separate it from the summation index $i$. Setting the gradient equal to 0 and rearranging yields: 
 $$ \theta_k = \frac{\sum_{j=1}^n w_{kj}}{\sum_{j=1}^n \frac{w_{kj} + w_{jk}}{\theta_k + \theta_j}}, \; \forall k=1,\dots,n $$
-Starting with some initial values $\theta_1^{(0)}, \dots, \theta_k^{(0)}$, the MLEs are iteratively obtained as follows:
+Starting with some initial values $\theta_1^{(0)}, \dots, \theta_k^{(0)}$,  and using the above equation, the MLEs are iteratively obtained as follows:
 $$\begin{align}
 \theta_k^{(t+1)} &\gets \frac{\sum_{j=1}^n w_{kj}}{\sum_{j=1}^n \frac{w_{kj} + w_{jk}}{\theta_k^{(t)} + \theta_j^{(t)}}}, &\; \forall k=1,\dots,n \\
 \theta_k^{(t+1)} &\gets \frac{1}{\left(\prod_{j=1}^n \theta_j^{(t+1)} \right)^{1/n}}, &\; \forall k=1,\dots,n
 \end{align}$$
-
-
-IMPORTANT: The second operation is a normalization ensuring that 
-
-
-IMPORTANT NO TIES
-
-IMPORTANT: not necessary that they have played against each other in the past; I THINK THIS IS ALSO TRUE FOR PAGERANK
+The second operation normalizes the MLEs such that their geometric mean is 1.
 
 ## Implementation
+
+Having outlined how the MLEs are obtained in the Bradley-Terry model, below, you find my from-scratch implementation of it.
+
+```{r}
+#| warning: false
+
+my_bradleyterry <- function(W, n_iter=1000){
+  n <- dim(W)[1]
+  
+  # initialize strength vector theta,
+  # before and after update,
+  # with all teams equally strong
+  theta.old <- rep(1, n)
+  names(theta.old) <- colnames(W)
+  theta.new <- rep(1,n)
+  names(theta.new) <- colnames(W)
+  
+  for (t in 1:n_iter) {
+    for (i in 1:n) {
+      theta.new[i]<-sum(W[i,])/(sum((W[i,]+W[,i])/(theta.old[i]+theta.old )))
+    }
+    
+    # normalize by geomtric mean
+    theta.new <- theta.new/prod(theta.new)^(1/n)
+    
+    # update
+    theta.old <- theta.new
+  }
+  
+  return(theta.new)
+}
+
+```
+
+I apply my function for computing the MLEs to the winning matrix of the 2024-2025 regular season retrieved above. 
+
+```{r}
+my_btm_mles <- my_bradleyterry(W)
+head(my_btm_mles)
+```
+
+Next, I sort the teams in descending order according to their estimated strengths and construct a horizontal bar char.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show code"
+#| warning: false
+
+library(ggplot2)      # for visualization
+
+df <- data.frame(
+  team = names(my_btm_mles),
+  score = as.numeric(my_btm_mles)
+)
+
+ggplot(df, aes(reorder(team, score), y=score)) +
+  geom_col(fill="#0b0b64") +
+  coord_flip() +
+  labs(title="Ranking and Strength based on Bradley-Terry",
+       y="Team",
+       x="Strength") +
+  theme_minimal()
+```
+
+Now, let's compare the results of my from-scratch implementation to those of the **BradleyTerry2** R package.
+
+```{r}
+# use built-in function to convert W in format required by BradleyTerry2
+dt <- BradleyTerry2::countsToBinomial(W)
+
+# fit Bradley-Terry model using BradleyTerry2
+package_btm <- BradleyTerry2::BTm(cbind(win1, win2), player1, player2, data=dt)
+
+# extract Bradley-Terry model MLEs
+package_btm_mles <- BradleyTerry2::BTabilities(package_btm)
+
+
+# compare results
+btm_compare <- cbind(my_btm_mles, "package_btm_mles"=package_btm_mles[,"ability"])
+head(btm_compare)
+```
+At first sight, it seems that the results returned by the **BradleyTerry2** package and my results differ quite alot. Therefore, I had a closer look at the documentation of the **BradleyTerry2** package. I found out that they utilize a slightly different specification of the Bradley-Terry model (let's call it the exponential specification). However, both specifications are equivalent in the sense that, first, both result in the same winning probabilities and, second, that there is an explicit formula for converting their parameters.
+
+The exponential specification is given by:
+$$P(\text{"i beats j"}) = \frac{e^{s_i}}{e^{s_i} + e^{s_j}}, \; \forall i,j=1,\dots, n$$
+and $s_0$ is set to be 0. The formulas for converting the parameters of the two specifications are:
+$$ \begin{align} s_i = \ln \left(\frac{\theta_i}{\theta_0}\right), \\
+\theta_i = \exp(s_i) \times \theta_0
+\end{align}$$
+So, let's now convert the parameters I estimated into the format of the exponential specification and then compare it to the output of the **BradleyTerry2** package.
+
+<!--
+```{r}
+# Converting my values into BTm ability values
+#log(bt_mle/bt_mle[1])
+
+# Converting BTm values to my values
+#BTabilities <- BTabilities(package_model)[,1]
+#exp(BTabilities)*bt_mle[1]
+```
+-->
+
+```{r}
+# compare results
+my_conv_btm_mles <- log(my_btm_mles/my_btm_mles[1])
+btm_compare <- cbind(my_btm_mles, my_conv_btm_mles, "package_btm_mles"=package_btm_mles[,"ability"])
+
+
+# compute Euclidean distance between my_conv_btm_mles and package_btm_mles
+dist <- sqrt(sum((btm_compare[,2]-btm_compare[,3])^2))
+print(paste("Euclidean distance between my_conv_btm_mles and package_btm_mles:", dist))
+
+head(btm_compare)
+```
+
+After converting my MLEs, they are exactly the same as the MLEs returned by the **BradleyTerry2** package.
+
 
 # PageRank
 
@@ -138,6 +252,8 @@ The second operation is a normalization ensuring that $\textbf{e}^T \, \textbf{p
 
 ## Implementation
 
+Below, you can see my implementation of the PageRank approach.
+
 ```{r}
 #| warning: false
 
@@ -151,7 +267,7 @@ my_pagerank <- function(W, d=0.85, n_iter=1000){
   p <- rep(1/n, n)
   
   # power iteration
-  for (k in 1:n_iter) {
+  for (t in 1:n_iter) {
     p <- A%*%p
     p <- (p/sum(p))*n
   }
@@ -227,6 +343,7 @@ apply mle estimation function to W matrix
 
 ```{r}
 bt_mle <- bradleyterry_mle(W)
+print(bt_mle)
 ```
 
 # Plot ranking results
