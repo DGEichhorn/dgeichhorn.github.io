@@ -12,9 +12,7 @@ categories:
 #bibliography: references.bib
 ---
 
-
 # IMPORTANT: not necessary that they have played against each other in the past; I THINK THIS IS ALSO TRUE FOR PAGERANK
-
 
 # Motivation
 
@@ -88,23 +86,13 @@ The Bradley-Terry model specifies the probability that a given team wins when pl
 
 Under the Bradley-Terry model, the probability that in a direct comparison team $i$ would beat team $j$ is given by: $$ P(\text{"i beats j"}) = \frac{\theta_i}{\theta_i + \theta_j}$$ for $i,j = 1, \dots, n, i \neq j$. $\theta_i$ can be thought of as measuring the strength of team $i$. Ceteris paribus, the greater $\theta_i$, the greater the probability that team $i$ wins against any other team.
 
-Under independence, the likelihood function (i.e. the probability of the observed data under $\theta_1, \dots, \theta_n$) is 
-$$L(\theta_1, \dots, \theta_n) =  \prod_{i=1}^n \prod_{j=1}^n \left(\frac{\theta_i}{\theta_i + \theta_j}\right)^{w_{ij}}.
-$$ 
-Note that $w_{ii}$ is set to 0 as mentioned above. The log-likelihood function is 
-$$ l(\theta_1, \dots, \theta_n) = \sum_{i=1}^n \sum_{j=1}^n w_{ij} \ln(\theta_i) - \sum_{i=1}^n \sum_{j=1}^n w_{ij} \ln(\theta_i + \theta_j)$$
-The maximum likelihood estimates (MLEs) are obtained by maximizing $l$ w.r.t. $\theta_1, \dots, \theta_n$. For this purpose the gradient of $l$ is required.
-It is given by: $$ \begin{align} \frac{\partial l}{\partial \theta_k}(\theta_1, \dots, \theta_n) &= \frac{1}{\theta_k} \sum_{j=1}^n w_{kj} - \left[ \overbrace{ \sum_{i=1}^n \frac{w_{ik}}{\theta_i + \theta_k}}^{\text{case: }j=k} + \overbrace{\sum_{j=1}^n \frac{w_{kj}}{\theta_k + \theta_j}}^{\text{case: }i=k} \right], \\
+Under independence, the likelihood function (i.e. the probability of the observed data under $\theta_1, \dots, \theta_n$) is $$L(\theta_1, \dots, \theta_n) =  \prod_{i=1}^n \prod_{j=1}^n \left(\frac{\theta_i}{\theta_i + \theta_j}\right)^{w_{ij}}.
+$$ Note that $w_{ii}$ is set to 0 as mentioned above. The log-likelihood function is $$ l(\theta_1, \dots, \theta_n) = \sum_{i=1}^n \sum_{j=1}^n w_{ij} \ln(\theta_i) - \sum_{i=1}^n \sum_{j=1}^n w_{ij} \ln(\theta_i + \theta_j)$$ The maximum likelihood estimates (MLEs) are obtained by maximizing $l$ w.r.t. $\theta_1, \dots, \theta_n$. For this purpose the gradient of $l$ is required. It is given by: $$ \begin{align} \frac{\partial l}{\partial \theta_k}(\theta_1, \dots, \theta_n) &= \frac{1}{\theta_k} \sum_{j=1}^n w_{kj} - \left[ \overbrace{ \sum_{i=1}^n \frac{w_{ik}}{\theta_i + \theta_k}}^{\text{case: }j=k} + \overbrace{\sum_{j=1}^n \frac{w_{kj}}{\theta_k + \theta_j}}^{\text{case: }i=k} \right], \\
 &= \frac{1}{\theta_k} \sum_{j=1}^n w_{kj} - \left[ \sum_{j=1}^n \frac{w_{jk}}{\theta_j + \theta_k} + \sum_{j=1}^n \frac{w_{kj}}{\theta_k + \theta_j} \right],\\
-&= \frac{1}{\theta_k} \sum_{j=1}^n w_{kj} - \sum_{j=1}^n \frac{w_{jk} +w_{kj}}{\theta_j + \theta_k} ,  &\forall k=1,\dots n \end{align}$$
-Note that I index the differentiation variable by $k$ in order to clearly separate it from the summation index $i$. Setting the gradient equal to 0 and rearranging yields: 
-$$ \theta_k = \frac{\sum_{j=1}^n w_{kj}}{\sum_{j=1}^n \frac{w_{kj} + w_{jk}}{\theta_k + \theta_j}}, \; \forall k=1,\dots,n $$
-Starting with some initial values $\theta_1^{(0)}, \dots, \theta_k^{(0)}$,  and using the above equation, the MLEs are iteratively obtained as follows:
-$$\begin{align}
+&= \frac{1}{\theta_k} \sum_{j=1}^n w_{kj} - \sum_{j=1}^n \frac{w_{jk} +w_{kj}}{\theta_j + \theta_k} ,  &\forall k=1,\dots n \end{align}$$ Note that I index the differentiation variable by $k$ in order to clearly separate it from the summation index $i$. Setting the gradient equal to 0 and rearranging yields: $$ \theta_k = \frac{\sum_{j=1}^n w_{kj}}{\sum_{j=1}^n \frac{w_{kj} + w_{jk}}{\theta_k + \theta_j}}, \; \forall k=1,\dots,n $$ Starting with some initial values $\theta_1^{(0)}, \dots, \theta_k^{(0)}$, and using the above equation, the MLEs are iteratively obtained as follows: $$\begin{align}
 \theta_k^{(t+1)} &\gets \frac{\sum_{j=1}^n w_{kj}}{\sum_{j=1}^n \frac{w_{kj} + w_{jk}}{\theta_k^{(t)} + \theta_j^{(t)}}}, &\; \forall k=1,\dots,n \\
 \theta_k^{(t+1)} &\gets \frac{1}{\left(\prod_{j=1}^n \theta_j^{(t+1)} \right)^{1/n}}, &\; \forall k=1,\dots,n
-\end{align}$$
-The second operation normalizes the MLEs such that their geometric mean is 1.
+\end{align}$$ The second operation normalizes the MLEs such that their geometric mean is 1.
 
 ## Implementation
 
@@ -141,7 +129,7 @@ my_bradleyterry <- function(W, n_iter=1000){
 
 ```
 
-I apply my function for computing the MLEs to the winning matrix of the 2024-2025 regular season retrieved above. 
+I apply my function for computing the MLEs to the winning matrix of the 2024-2025 regular season retrieved above.
 
 ```{r}
 my_btm_mles <- my_bradleyterry(W)
@@ -166,8 +154,8 @@ ggplot(df, aes(reorder(team, score), y=score)) +
   geom_col(fill="#0b0b64") +
   coord_flip() +
   labs(title="Ranking and Strength based on Bradley-Terry",
-       y="Team",
-       x="Strength") +
+       y="Strength",
+       x="Team") +
   theme_minimal()
 ```
 
@@ -188,16 +176,14 @@ package_btm_mles <- BradleyTerry2::BTabilities(package_btm)
 btm_compare <- cbind(my_btm_mles, "package_btm_mles"=package_btm_mles[,"ability"])
 head(btm_compare)
 ```
+
 At first sight, it seems that the results returned by the **BradleyTerry2** package and my results differ quite alot. Therefore, I had a closer look at the documentation of the **BradleyTerry2** package. I found out that they utilize a slightly different specification of the Bradley-Terry model (let's call it the exponential specification). However, both specifications are equivalent in the sense that, first, both result in the same winning probabilities and, second, that there is an explicit formula for converting their parameters.
 
-The exponential specification is given by:
-$$P(\text{"i beats j"}) = \frac{e^{s_i}}{e^{s_i} + e^{s_j}}, \; \forall i,j=1,\dots, n$$
-and $s_0$ is set to be 0. The formulas for converting the parameters of the two specifications are:
-$$ \begin{align} s_i = \ln \left(\frac{\theta_i}{\theta_0}\right), \\
+The exponential specification is given by: $$P(\text{"i beats j"}) = \frac{e^{s_i}}{e^{s_i} + e^{s_j}}, \; \forall i,j=1,\dots, n$$ and $s_0$ is set to be 0. The formulas for converting the parameters of the two specifications are: $$ \begin{align} s_i = \ln \left(\frac{\theta_i}{\theta_0}\right), \\
 \theta_i = \exp(s_i) \times \theta_0
-\end{align}$$
-So, let's now convert the parameters I estimated into the format of the exponential specification and then compare it to the output of the **BradleyTerry2** package.
+\end{align}$$ So, let's now convert the parameters I estimated into the format of the exponential specification and then compare it to the output of the **BradleyTerry2** package.
 
+````{=html}
 <!--
 ```{r}
 # Converting my values into BTm ability values
@@ -208,6 +194,7 @@ So, let's now convert the parameters I estimated into the format of the exponent
 #exp(BTabilities)*bt_mle[1]
 ```
 -->
+````
 
 ```{r}
 # compare results
@@ -223,7 +210,6 @@ head(btm_compare)
 ```
 
 After converting my MLEs, they are exactly the same as the MLEs returned by the **BradleyTerry2** package.
-
 
 # PageRank
 
@@ -247,8 +233,7 @@ So the PageRank strength vector is the eigenvector corresponding to an eigenvalu
 \textbf{p}^{(t+1)} &\gets \textbf{A} \, \textbf{p}^{(t)} \\
 \textbf{p}^{(t+1)} &\gets \frac{\textbf{p}^{(t+1)}}{\textbf{e}^T \, \textbf{p}^{(t+1)}} n
 \end{align}
-$$
-The second operation is a normalization ensuring that $\textbf{e}^T \, \textbf{p}^{(t+1)} = n$
+$$ The second operation is a normalization ensuring that $\textbf{e}^T \, \textbf{p}^{(t+1)} = n$
 
 ## Implementation
 
@@ -265,6 +250,7 @@ my_pagerank <- function(W, d=0.85, n_iter=1000){
   # initialize pagerank strength vector
   # with all teams equally strong
   p <- rep(1/n, n)
+  names(p) <- colnames(W)
   
   # power iteration
   for (t in 1:n_iter) {
@@ -275,151 +261,67 @@ my_pagerank <- function(W, d=0.85, n_iter=1000){
   return(p)
 }
 
-print(my_pagerank(W))
-
-# p <- n_teams
-# 
-# d <- 0.85
-# 
-# r <- rep(1/p, p)
-# 
-# # W_ij: number of times team j lost against team i
-# #W
-# 
-# # c_j: number of times team j lost (=colSums of W)
-# 
-# c <- colSums(W)
-# 
-# A <- (1-d)*rep(1,p) %*% t(rep(1,p))/p + d*W%*%diag(1/c) 
-# 
-# for (i in 1:100) {
-#   r <- A%*%r
-# }
-#
-# print(r)
 ```
+
+Let's apply my implementation of the PageRank to the win matrix.
+
+```{r}
+my_pagerank_est <- my_pagerank(W)
+head(my_pagerank_est)
+```
+
+And again I visualize the estimated strengths and the ranking using a horizontal bar char.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show code"
+#| warning: false
+
+df <- data.frame(
+  team = rownames(my_pagerank_est),
+  score = as.numeric(my_pagerank_est)
+)
+
+ggplot(df, aes(reorder(team, score), y=score)) +
+  geom_col(fill="#8b0000") +
+  coord_flip() +
+  labs(title="Ranking and Strength based on PageRank",
+       y="Strength",
+       x="Team") +
+  theme_minimal()
+```
+
+As for the Bradley-Terry model, I want to compare my from-scratch implementation of PageRank to the one provided by the **igraph** R package. Before actually compute the PageRank strength, the **igraph** package requires to construct a graph using the **transpose** of the win matrix as adjacency matrix.
+
+```{r}
+# construct graph from tranpose of win matrix
+graphObj <- igraph::graph_from_adjacency_matrix(t(W), weighted = TRUE, mode = "directed")
+
+# run pagerank
+package_pagerank_est <- igraph::page_rank(graphObj)$vector
+
+# compare results
+pagerank_compare <- cbind("my_pagerank_est"=my_pagerank_est, package_pagerank_est, "ratio"=my_pagerank_est/package_pagerank_est)
+head(pagerank_compare)
+```
+
+# WICHTIG: spaltennamen in dieser pagerank_compare tabelle fixen 
 
 WICHTIG: bei meiner Implementation wollen wir einen AVERAGE pagerank value of 1 also SUM UP to n; in PACKAGE WOLLEN SIE SUM UP to 1; also müssen wir meine werte mit 1/n multiplizieren oder die anderen mit n.
 
 # Comparison
 
-# Conclusion
+pagerank gleichmäßiger verteilt; BTM exponential dispersed
+beide in gleiche horizontal barplot
+
+evtl scatter plots beider ratings und rankings: plot(log(bt_mle), pagerank)
+
+2.  plots zum vergleich der beiden rankings (u.a. plot(log(bt_mle), r))
 
 # TO DO
 
 1.  2mal metric für vergleich meine lösung vs. package
-2.  plots zum vergleich der beiden rankings (u.a. plot(log(bt_mle), r))
-
-# Define function for mle estimation of Bradley Terry Model
-
-```{r}
-bradleyterry_mle <- function(W, n_iter=1000){
-  p <- dim(W)[1]
-  
-  theta.old <- rep(1, p)
-  names(theta.old) <- colnames(W)
-  
-  theta.new <- numeric(p)
-  names(theta.new) <- colnames(W)
-  
-  for (k in 1:n_iter) {
-    
-    for (i in 1:p) {
-      theta.new[i] <- 
-        sum(W[i,])/(sum((W[i,] + W[,i])/(theta.old[i]+theta.old)))
-    }
-    
-    # divide by geomtric mean
-    theta.new <- theta.new/prod(theta.new)^(1/p)
-    
-    theta.old <- theta.new
-  }
-  
-  return(theta.new)
-}
-```
-
-apply mle estimation function to W matrix
-
-```{r}
-bt_mle <- bradleyterry_mle(W)
-print(bt_mle)
-```
-
-# Plot ranking results
-
-```{r}
-library(ggplot2)      # for visualization
-
-df <- data.frame(
-  team = names(bt_mle),
-  score = as.numeric(bt_mle)
-)
-
-ggplot(df, aes(reorder(team, score), y=score)) +
-  geom_col(fill="steelblue") +
-  coord_flip() +
-  labs(title="TITEL",
-       y="y ACHSE",
-       x="x ACHSE") +
-  theme_minimal()
-```
-
-# compare my results to results of R Package Bradley Terry
-
-```{r}
-#| warning: false
-
-# evtl nicht die ganze library laden sondern nur BradleyTerry2:: an den notwendigen Stellen nutzen
-library(BradleyTerry2)
-
-b<-countsToBinomial(W)
-package_model <- BTm(cbind(win1, win2), player1, player2, data=b)
-BTabilities(package_model)
-
-# Converting my values into BTm ability values
-log(bt_mle/bt_mle[1])
 
 
-# Converting BTm values to my values
-BTabilities <- BTabilities(package_model)[,1]
-exp(BTabilities)*bt_mle[1]
-```
 
-# Google Page Rank from scratch
-
-```{r}
-#| warning: false
-
-p <- n_teams
-
-d <- 0.85
-
-r <- rep(1/p, p)
-
-# W_ij: number of times team j lost against team i
-#W
-
-# c_j: number of times team j lost (=colSums of W)
-
-c <- colSums(W)
-
-A <- (1-d)*rep(1,p) %*% t(rep(1,p))/p + d*W%*%diag(1/c) 
-
-for (i in 1:100) {
-  r <- A%*%r
-}
-
-print(r)
-```
-
-# compare my results to R Package results
-
-wichtig: evtl. igraph:: verwenden anstatt gesamte library zu laden um klarer zu machen wo genau wir eigentlich was aus dieser library verwende
-
-```{r}
-library(igraph)
-
-graphObj <- graph_from_adjacency_matrix(t(W), weighted = TRUE, mode = "directed")
-(prVec <- page_rank(graphObj)$vector)
-```
+# Conclusion
