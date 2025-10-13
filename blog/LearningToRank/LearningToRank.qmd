@@ -1,6 +1,7 @@
 ---
 title: "Learning to Rank"
-description: "In this post, I implement from scratch two different approaches for learning a ranking from data on the results of pairwise comparisons."
+description: "TO DO"
+# In this post, I implement from scratch two different approaches for learning a ranking from data on the results of pairwise comparisons.
 author: "Alicia"
 date: "5/22/2021"
 image: "cover.jpg"
@@ -8,22 +9,22 @@ categories:
   - Ranking
   - Optimization
   - Maximum Likelihood
+#bibliography: references.bib
 ---
 
 # Motivation
 
 Probably everyone is familiar with those tables in sports that rank teams, usually according to the number of games won. This seems to be a valide approach for tournaments where every team plays against every other team the same number of times. Such tournaments are called robin-round tournaments and examples include the Premier League as well as the Fußball and the Handball Bundesliga. Robin-round tournaments are a special type of complete comparisons.
 
-However, there are also tournaments in which not every team plays against every other team, i.e. incomplete comparisons. Examples include the NFL in American Football or knock-out tournaments such as playoffs or cups. In such tournaments, some teams might face on average stronger opponents than other teams. Therefore, the number of wins may not reflect the true strength of a team and should not be used to rank teams. Instead, it becomes important, how strong the opponents were, against which a team won or lost.
+However, there are also tournaments in which not every team plays against every other team, i.e. incomplete comparisons. Examples include the NFL in American Football or knock-out tournaments such as playoffs or cups. In such tournaments, some teams might face on average stronger opponents than other teams. Therefore, the number of wins may not reflect the true strength of a team and may not be used to rank teams. Instead, it becomes important, how strong the opponents were, against which a team won or lost.
 
 So I was wondering, what approaches there are for learning a ranking from data on the outcome of incomplete pairwise comparisons. Note that this problem does not just arise in sports but in a variety of other domains. For instance, in preference modelling, multiple individuals must choose between different pairs of items. Based on the outcomes, one tries to rank all of the items. Nevertheless, I will stick to the application in sports.
 
 I found among others two interesting approaches: the PageRank algorithm and the Bradley-Terry model. I will implement both from scratch in R after having shortly described them. Furthermore, I will compare the results of my own implementation to the ones returned by dedicated libraries. For illustration, I will use data on the outcome of every NFL game played during the 2024-2025 regular season.
 
-
 # Data
 
-Before diving into the two approaches, I scrape and prepare the data on the outcome of every NFL game played during the 2024-2025 regular season. The data is available at: <https://www.pro-football-reference.com/years/2024/games.htm>.
+Before diving into the two approaches, I scrape and prepare the data on the outcome of every NFL game played during the 2024-2025 regular season (of all $n=32$ NFL teams). The data is available at: <https://www.pro-football-reference.com/years/2024/games.htm>.
 
 ```{r}
 #| warning: false
@@ -55,9 +56,7 @@ n_teams <- length(teams)
 head(games)
 ```
 
-For both approaches, it is more useful to aggregate the outcomes of the games in a win matrix. The win matrix is given by:
-$$W=[w_{ij}]_{i=1,\dots,\, n, j=1, \dots, n}$$
-where $w_{ij}$ is the number of times team $i$ has won against team $j$. In total there are $n=32$ teams in the NFL. The win matrix is computed as follows:
+For both approaches, it is more useful to aggregate the outcomes of the games in a win matrix. The win matrix is given by: $$\textbf{W}=[w_{ij}]_{i=1,\dots,\, n, j=1, \dots, n}$$ where $w_{ij}$ is the number of times team $i$ has won against team $j$. The diagonal elements of $\textbf{W}$ are deliberately set to 0. The win matrix is computed as follows:
 
 ```{r}
 # initialize win matrix with zeros
@@ -70,77 +69,130 @@ W <- matrix(
   )
 )
 
-# fill win matrix
-# iterate over all games
+# to fill win matrix, iterate over all games
 for (g in 1:dim(games)[1]) {
   W[games[g, "Winner"], games[g, "Loser"]] <- 
     W[games[g, "Winner"], games[g, "Loser"]] + 1
 }
 ```
 
-# PageRank
+# Bradley-Terry Model
+
+The Bradley-Terry model specifies the probability that a given team wins when playing against a given opponent. This probability only depends on the strengths of both teams. Using maximum likelihood estimation, these strengths can be estimated for all teams given the results of games played in the past. Subsequently, the teams can be ranked by sorting them according to the estimated strengths in descending order.
 
 ## Approach
 
-## Implementation
+Under the Bradley-Terry model, the probability that in a direct comparison team $i$ would beat team $j$ is given by: $$ P(\text{"i beats j"}) = \frac{\theta_i}{\theta_i + \theta_j}$$ for $i,j = 1, \dots, n, i \neq j$. $\theta_i$ can be thought of as measuring the strength of team $i$. Ceteris paribus, the greater $\theta_i$, the greater the probability that team $i$ wins against any other team.
+
+Under independence, the likelihood function (i.e. the probability of the observed data under $\theta_1, \dots, \theta_n$) is 
+$$L(\theta_1, \dots, \theta_n) =  \prod_{i=1}^n \prod_{j=1}^n \left(\frac{\theta_i}{\theta_i + \theta_j}\right)^{w_{ij}}.
+$$ 
+Note that $w_{ii}$ is set to 0 as mentioned above. The log-likelihood function is 
+$$ l(\theta_1, \dots, \theta_n) = \sum_{i=1}^n \sum_{j=1}^n w_{ij} \ln(\theta_i) - \sum_{i=1}^n \sum_{j=1}^n w_{ij} \ln(\theta_i + \theta_j)$$
+The maximum likelihood estimates (MLEs) are obtained by maximizing $l$ w.r.t. $\theta_1, \dots, \theta_n$. For this purpose the gradient of $l$ is required.
+It is given by: $$ \begin{align} \frac{\partial l}{\partial \theta_k}(\theta_1, \dots, \theta_n) &= \frac{1}{\theta_k} \sum_{j=1}^n w_{kj} - \left[ \overbrace{ \sum_{i=1}^n \frac{w_{ik}}{\theta_i + \theta_k}}^{\text{case: }j=k} + \overbrace{\sum_{j=1}^n \frac{w_{kj}}{\theta_k + \theta_j}}^{\text{case: }i=k} \right], \\
+&= \frac{1}{\theta_k} \sum_{j=1}^n w_{kj} - \left[ \sum_{j=1}^n \frac{w_{jk}}{\theta_j + \theta_k} + \sum_{j=1}^n \frac{w_{kj}}{\theta_k + \theta_j} \right],\\
+&= \frac{1}{\theta_k} \sum_{j=1}^n w_{kj} - \sum_{j=1}^n \frac{w_{jk} +w_{kj}}{\theta_j + \theta_k} ,  &\forall k=1,\dots n \end{align}$$
+Note that I index the differentiation variable by $k$ in order to clearly separate it from the summation index $i$. Setting the gradient equal to 0 and rearranging yields: 
+$$ \theta_k = \frac{\sum_{j=1}^n w_{kj}}{\sum_{j=1}^n \frac{w_{kj} + w_{jk}}{\theta_k + \theta_j}}, \; \forall k=1,\dots,n $$
+Starting with some initial values $\theta_1^{(0)}, \dots, \theta_k^{(0)}$, the MLEs are iteratively obtained as follows:
+$$\begin{align}
+\theta_k^{(t+1)} &\gets \frac{\sum_{j=1}^n w_{kj}}{\sum_{j=1}^n \frac{w_{kj} + w_{jk}}{\theta_k^{(t)} + \theta_j^{(t)}}}, &\; \forall k=1,\dots,n \\
+\theta_k^{(t+1)} &\gets \frac{1}{\left(\prod_{j=1}^n \theta_j^{(t+1)} \right)^{1/n}}, &\; \forall k=1,\dots,n
+\end{align}$$
 
 
-# Bradley-Terry Model
-
-Under the Bradley-Terry model, the probability that in a direct comparison team $i$ would beat team $j$ is given by:
-$$ P(\text{"i beats j"}) = \frac{\theta_i}{\theta_i + \theta_j}$$
-for $i,j = 1, \dots, n, i \neq j$. $\theta_i$ can be thought of as measuring the strength of team $i$. Ceteris paribus, the greater $\theta_i$, the greater the probability that team $i$ wins against any other team.
-
-Given theta i for all teams, the teams can be ranked from strongest to weakest by sorting them according to theta in descending order.
-
-zuerst muss man jedoch basierend auf historical comparison data die thetas schätzen mittels maximum likelihood estimation
-
-die wahrscheinlichkeit dass
-
-Under independence the likelihood function (i.e. the probability of the observed data under theta or theta vector) is 
-$$ \prod_{i=1}^n \prod_{j=1,\\j \neq i}^n \left(\frac{\theta_i}{\theta_i + \theta_j}\right)^{w_{ij}} $$
-can equivalently be written as (alles ohne $j\neq i$) when setting $w_{ii}=0$
-
-AB HIER KÖNNTE ICH MIR DANN SPAREN DAS $j\neq i$ ANDAUERND RUMZUSCHLEIFEN
-
-mle estimate is then arg max likelihood
-
-taking the log: wieso zulässig soll ich das rein tun oder gefahr eigenplagiat?
-
-maximize log likelihood
-
-Log likelihood
-$$ \sum_{i=1}^n \sum_{j=1, \\ j \neq i}^n w_{ij} \left[\ln (\theta_i) - \ln (\theta_i + \theta_j)\right] = \sum_{i=1}^n \sum_{j=1, \\ j \neq i}^n w_{ij} \ln (\theta_i) - \sum_{i=1}^n \sum_{j=1, \\ j \neq i}^n w_{ij} \ln (\theta_i + \theta_j)$$
-Ableiten nach THETAi und null setzen liefert score equation
-$$ \frac{\partial }{\partial \, \theta_i} = \sum_{j=1, \\ j \neq i}^n w_{ij} \left[\frac{1}{\theta_i} - \frac{1}{\theta_i + \theta_j}\right] = \sum_{j=1, \\ j \neq i}^n w_{ij} \frac{1}{\theta_i} - \sum_{j=1, \\ j \neq i}^n w_{ij} \frac{1}{\theta_i + \theta_j} = 0 $$
+IMPORTANT: The second operation is a normalization ensuring that 
 
 
+IMPORTANT NO TIES
 
 IMPORTANT: not necessary that they have played against each other in the past; I THINK THIS IS ALSO TRUE FOR PAGERANK
 
+## Implementation
+
+# PageRank
+
+An alternative approach for ranking is the PageRank algorithm. Originally, it was developed by Google for ranking webpages based on their importance. A webpage is considered important if many other important webpages point to it via links. In sports, team strength plays the same role as website importance: a team is strong if many other strong opponent team lose against it. When team $i$ beats team $j$ it is as if website $j$ points to website $i$ (yes, it is that way around, think about it).
+
 ## Approach
+
+PageRank does not treat all of the opponents of a given team equally. In fact, it accounts for both, the strength of the opponents as well as their total number of games lost. Opponents with higher strength get more weight, while opponents with a higher total number of games lost get a less weight.
+
+Based on this mechanism, the strength of team $i$ according to PageRank, $p_i$, is recursively defined as: $$ p_i = (1-d) + d \sum_{j=1}^n \left( \frac{w_{ij}}{c_j} \right) p_j $$ As before, $w_{ij}$ is the number of times team $i$ won against team $j$. $c_j = \sum_{i=1}^n w_{ij}$ is the total numer of games lost by team $j$. The term inside the sum works according to the above described mechanism: Wins against an opponent $j$ with high strength (i.e. high $p_j$) get more weight, while wins against an opponent with a high number of total games lost (i.e. high $c_j$) get less weight. This is then summed up across all opponents and weighted by the damping factor $d \in [0,1)$ (usually, $d$ is set to 0.85). $d$ guarantees the existence of (finite) soultions even if there is a team that always won or always lost.
+
+The above can be written in matrix-vector notation as follows: $$ \textbf{p} = (1-d) \, \textbf{e} + d \, \textbf{W} \,\textbf{D}_c^{-1} \, \textbf{p} $$ where $\textbf{p}=[p_1, \dots, p_n]^T$ is the PageRank strength vector and $\textbf{e}$ is an $n$-dimensional vector of ones. $\textbf{D}=\text{diag}(c_1, \dots, c_n)$ is a diagonal matrix and $\textbf{W}$ is the win matrix introduced above.
+
+To get a unique solution, PageRank requires the strength vector $\textbf{p}$ to sum up to $n$, i.e. $\textbf{e}^T \, \textbf{p} = n$. Using this, the following holds: $$ \textbf{e} = \frac{\textbf{e} \, \textbf{e}^T \, \textbf{p}}{n}$$ Plugging this into the recursive formula for $\textbf{p}$ and factoring out $\textbf{p}$ on the right hand side yields: $$ \begin{align} 
+\textbf{p} &= \left[ (1-d) \, \textbf{e} \, \textbf{e}^T/n + d \, \textbf{W} \,\textbf{D}_c^{-1} \right] \textbf{p} \\
+&= \mathbf{A} \, \mathbf{p}
+\end{align}$$
+
+So the PageRank strength vector is the eigenvector corresponding to an eigenvalue of 1 of matrix $\textbf{A}$. In fact, it can be shown that 1 is the largest eigenvalue of $\textbf{A}$. It is known that the power iteration (or Von Mises iteration) method converges to the eigenvector corresponding to the largest eigenvalue, in this case the eigenvector corresponding to the eigenvalue 1. So given some initial vector$\textbf{p}_0$, the PageRank strength vector can be calculated iteratively as: $$
+\begin{align}
+\textbf{p}^{(t+1)} &\gets \textbf{A} \, \textbf{p}^{(t)} \\
+\textbf{p}^{(t+1)} &\gets \frac{\textbf{p}^{(t+1)}}{\textbf{e}^T \, \textbf{p}^{(t+1)}} n
+\end{align}
+$$
+The second operation is a normalization ensuring that $\textbf{e}^T \, \textbf{p}^{(t+1)} = n$
 
 ## Implementation
 
+```{r}
+#| warning: false
 
+my_pagerank <- function(W, d=0.85, n_iter=1000){
+  n <- dim(W)[1]
+  c <- colSums(W)
+  A <- (1-d)*rep(1,n) %*% t(rep(1,n))/n + d*W%*%diag(1/c)
+  
+  # initialize pagerank strength vector
+  # with all teams equally strong
+  p <- rep(1/n, n)
+  
+  # power iteration
+  for (k in 1:n_iter) {
+    p <- A%*%p
+    p <- (p/sum(p))*n
+  }
+  
+  return(p)
+}
+
+print(my_pagerank(W))
+
+# p <- n_teams
+# 
+# d <- 0.85
+# 
+# r <- rep(1/p, p)
+# 
+# # W_ij: number of times team j lost against team i
+# #W
+# 
+# # c_j: number of times team j lost (=colSums of W)
+# 
+# c <- colSums(W)
+# 
+# A <- (1-d)*rep(1,p) %*% t(rep(1,p))/p + d*W%*%diag(1/c) 
+# 
+# for (i in 1:100) {
+#   r <- A%*%r
+# }
+#
+# print(r)
+```
+
+WICHTIG: bei meiner Implementation wollen wir einen AVERAGE pagerank value of 1 also SUM UP to n; in PACKAGE WOLLEN SIE SUM UP to 1; also müssen wir meine werte mit 1/n multiplizieren oder die anderen mit n.
 
 # Comparison
 
 # Conclusion
 
-
-
-
 # TO DO
 
-1. 2mal metric für vergleich meine lösung vs. package
-2. plots zum vergleich der beiden rankings (u.a. plot(log(bt_mle), r))
-
-
-
-I am trying to implement various ranking approaches.
-
-
+1.  2mal metric für vergleich meine lösung vs. package
+2.  plots zum vergleich der beiden rankings (u.a. plot(log(bt_mle), r))
 
 # Define function for mle estimation of Bradley Terry Model
 
@@ -243,6 +295,7 @@ for (i in 1:100) {
 
 print(r)
 ```
+
 # compare my results to R Package results
 
 wichtig: evtl. igraph:: verwenden anstatt gesamte library zu laden um klarer zu machen wo genau wir eigentlich was aus dieser library verwende
@@ -253,5 +306,3 @@ library(igraph)
 graphObj <- graph_from_adjacency_matrix(t(W), weighted = TRUE, mode = "directed")
 (prVec <- page_rank(graphObj)$vector)
 ```
-
-
