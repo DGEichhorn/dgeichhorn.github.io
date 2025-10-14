@@ -156,7 +156,7 @@ ggplot(df, aes(reorder(team, score), y=score)) +
   labs(title="Ranking and Strength based on Bradley-Terry",
        y="Strength",
        x="Team") +
-  theme_minimal()
+  theme_light()
 ```
 
 Now, let's compare the results of my from-scratch implementation to those of the **BradleyTerry2** R package.
@@ -223,7 +223,7 @@ Based on this mechanism, the strength of team $i$ according to PageRank, $p_i$, 
 
 The above can be written in matrix-vector notation as follows: $$ \textbf{p} = (1-d) \, \textbf{e} + d \, \textbf{W} \,\textbf{D}_c^{-1} \, \textbf{p} $$ where $\textbf{p}=[p_1, \dots, p_n]^T$ is the PageRank strength vector and $\textbf{e}$ is an $n$-dimensional vector of ones. $\textbf{D}=\text{diag}(c_1, \dots, c_n)$ is a diagonal matrix and $\textbf{W}$ is the win matrix introduced above.
 
-To get a unique solution, PageRank requires the strength vector $\textbf{p}$ to sum up to $n$, i.e. $\textbf{e}^T \, \textbf{p} = n$. Using this, the following holds: $$ \textbf{e} = \frac{\textbf{e} \, \textbf{e}^T \, \textbf{p}}{n}$$ Plugging this into the recursive formula for $\textbf{p}$ and factoring out $\textbf{p}$ on the right hand side yields: $$ \begin{align} 
+To get a unique solution, PageRank requires a restriction on the scale of the strength vector. Therefore, the restriction that $\textbf{p}$ must to sum up to $n$, i.e. $\textbf{e}^T \, \textbf{p} = n$, is introduced. This is the same as saying that the average strength is 1. Using this, the following holds: $$ \textbf{e} = \frac{\textbf{e} \, \textbf{e}^T \, \textbf{p}}{n}$$ Plugging this into the recursive formula for $\textbf{p}$ and factoring out $\textbf{p}$ on the right hand side yields: $$ \begin{align} 
 \textbf{p} &= \left[ (1-d) \, \textbf{e} \, \textbf{e}^T/n + d \, \textbf{W} \,\textbf{D}_c^{-1} \right] \textbf{p} \\
 &= \mathbf{A} \, \mathbf{p}
 \end{align}$$
@@ -283,12 +283,12 @@ df <- data.frame(
 )
 
 ggplot(df, aes(reorder(team, score), y=score)) +
-  geom_col(fill="#8b0000") +
+  geom_col(fill="#d72638") +
   coord_flip() +
   labs(title="Ranking and Strength based on PageRank",
        y="Strength",
        x="Team") +
-  theme_minimal()
+  theme_light()
 ```
 
 As for the Bradley-Terry model, I want to compare my from-scratch implementation of PageRank to the one provided by the **igraph** R package. Before actually compute the PageRank strength, the **igraph** package requires to construct a graph using the **transpose** of the win matrix as adjacency matrix.
@@ -304,24 +304,97 @@ package_pagerank_est <- igraph::page_rank(graphObj)$vector
 pagerank_compare <- cbind("my_pagerank_est"=my_pagerank_est, package_pagerank_est, "ratio"=my_pagerank_est/package_pagerank_est)
 head(pagerank_compare)
 ```
+Obviously, my values and the values returned by the **igraph** package are not the same. However, when dividing them by each other it becomes apparent that my values are just 32 times the values returned by the package. The reason for the difference in scale is the following: The **igraph** package uses as restriction on the strength vector that it sums up to 1. However, I use as restriction that the strength vector sums up to $n=32$. Importantly, this difference in scaling has no influence on the rankings.
 
-# WICHTIG: spaltennamen in dieser pagerank_compare tabelle fixen 
-
-WICHTIG: bei meiner Implementation wollen wir einen AVERAGE pagerank value of 1 also SUM UP to n; in PACKAGE WOLLEN SIE SUM UP to 1; also müssen wir meine werte mit 1/n multiplizieren oder die anderen mit n.
 
 # Comparison
 
-pagerank gleichmäßiger verteilt; BTM exponential dispersed
-beide in gleiche horizontal barplot
+Having in detail covered  each of the two approaches separately, let's now compare their results. 
 
-evtl scatter plots beider ratings und rankings: plot(log(bt_mle), pagerank)
+```{r}
+#| code-fold: true
+#| code-summary: "Show code"
+#| warning: false
 
-2.  plots zum vergleich der beiden rankings (u.a. plot(log(bt_mle), r))
+df <- data.frame(
+  team = names(my_btm_mles),
+  btm = as.numeric(my_btm_mles),
+  pagerank = as.numeric(my_pagerank_est)
+)
 
-# TO DO
-
-1.  2mal metric für vergleich meine lösung vs. package
+df$team <- factor(df$team, levels=df$team[order(df$btm, decreasing=FALSE)])
 
 
+df_long <- reshape(df,
+                   varying = list(c("btm", "pagerank")),
+                   v.names = "score",
+                   timevar = "scoretype",
+                   times = c("btm", "pagerank"),
+                   direction = "long")
+
+df_long$team <- factor(df_long$team, levels=levels(df$team))
+
+ggplot(df_long, aes(x=team, y=score, fill=scoretype)) +
+  geom_bar(stat="identity", position=position_dodge(width = 0.7)) +
+  scale_fill_manual(values=c("btm"="#0b0b64", "pagerank"="#d72638"),
+                    labels=c("btm"="Bradley-Terry", "pagerank"="PageRank"),
+                    name="Approach") +
+  coord_flip() +
+  labs(title="Strengths based on Bradley-Terry and PageRank",
+       y="Strength",
+       x="Team") +
+  theme_light()
+```
+
+When looking at the above plot, two aspects are particularly striking. First, there is alot more dispersion among the Bradley-Terry strengths than among the PageRank strengths. Second, it seems that the ranking obtained from PageRank is not identical to the one returned by the Bradley-Terry model (Obviously, when the teams are sorted in descending order based on their Bradley-Terry strengths (as in the above plot) they are not at the same time also sorted in descending order based on the PageRank strengths).
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show code"
+#| warning: false
+
+p1 <- ggplot(df, aes(x=my_btm_mles, y=my_pagerank_est)) +
+  geom_point() +
+  coord_equal() +
+  labs(y="PageRank Strength",
+       x="Bradley-Terry Strength") +
+  theme_light() +
+  theme(aspect.ratio = 1)
+
+p2 <- ggplot(df, aes(x=log(my_btm_mles), y=my_pagerank_est)) +
+  geom_point() +
+  coord_equal() +
+  labs(y="PageRank Strength",
+       x="log(Bradley-Terry Strength)") +
+  theme_light() +
+  theme(aspect.ratio = 1)
+
+gridExtra::grid.arrange(p1, p2, ncol=2,
+                        top="Strengths based on Bradley-Terry and PageRank")
+```
+
+Above, on the left, you can see a scatterplot of the PageRank strengths against the Bradley-Terry strengths. From that plot, it seems that there is rather a logarithmic relationship between the two. Therefore, on the right, I also show a plot of the PageRank strengths against **log** of the Bradley-Terry strengths. It seems that both approaches assign high strengths (and low strengths, respectively) to similar teams. However, there seems to be less agreement of both approaches on strong teams than on weak teams. This becomes also apparent form the following plot.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show code"
+#| warning: false
+
+ggplot(df, aes(x=rank(-my_btm_mles), y=rank(-my_pagerank_est))) +
+  geom_point() +
+  geom_line() +
+  geom_abline(linetype="dashed") +
+  scale_x_reverse(breaks=c(1,4*(1:8)), minor_breaks=1:32) +
+  scale_y_reverse(breaks=c(1,4*(1:8)), minor_breaks=1:32) +
+  coord_equal() +
+  labs(title="Ranks based on Bradley-Terry and PageRank",
+       x="Bradley-Terry Ranks",
+       y="PageRank Ranks") +
+  theme_light()
+```
+
+The above plot compares the **rankings** derived from the strength estimates of PageRank and the Bradley-Terry model. If both approaches would result in identical rankings, then the solid line would perfectly lie on the dashed line. The further the solid line is away from the dashed line, the greater the difference between the two rankings. This plot supports the observations stated above.
 
 # Conclusion
+
+Overall, PageRank and the Bradle-Terry model yield quite similar rankings of the 32 NFL teams. However, if I had to choose one of them I would pick the Bradley-Terry model. This is because, unlike PageRank, the Bradley-Terry model not only returns a ranking, but it also allows to make predictions on the probability that a certain team would win against a given opponent.

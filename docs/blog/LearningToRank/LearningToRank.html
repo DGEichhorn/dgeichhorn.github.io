@@ -215,9 +215,7 @@ window.Quarto = {
   <li><a href="#approach-1" id="toc-approach-1" class="nav-link" data-scroll-target="#approach-1">Approach</a></li>
   <li><a href="#implementation-1" id="toc-implementation-1" class="nav-link" data-scroll-target="#implementation-1">Implementation</a></li>
   </ul></li>
-  <li><a href="#wichtig-spaltennamen-in-dieser-pagerank_compare-tabelle-fixen" id="toc-wichtig-spaltennamen-in-dieser-pagerank_compare-tabelle-fixen" class="nav-link" data-scroll-target="#wichtig-spaltennamen-in-dieser-pagerank_compare-tabelle-fixen">WICHTIG: spaltennamen in dieser pagerank_compare tabelle fixen</a></li>
   <li><a href="#comparison" id="toc-comparison" class="nav-link" data-scroll-target="#comparison">Comparison</a></li>
-  <li><a href="#to-do" id="toc-to-do" class="nav-link" data-scroll-target="#to-do">TO DO</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
@@ -406,7 +404,7 @@ Carolina Panthers     Chicago Bears
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Ranking and Strength based on Bradley-Terry"</span>,</span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Strength"</span>,</span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Team"</span>) <span class="sc">+</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -494,7 +492,7 @@ Chicago Bears       0.4153262       -0.9715400       -0.9715400</code></pre>
 <p>PageRank does not treat all of the opponents of a given team equally. In fact, it accounts for both, the strength of the opponents as well as their total number of games lost. Opponents with higher strength get more weight, while opponents with a higher total number of games lost get a less weight.</p>
 <p>Based on this mechanism, the strength of team <span class="math inline">\(i\)</span> according to PageRank, <span class="math inline">\(p_i\)</span>, is recursively defined as: <span class="math display">\[ p_i = (1-d) + d \sum_{j=1}^n \left( \frac{w_{ij}}{c_j} \right) p_j \]</span> As before, <span class="math inline">\(w_{ij}\)</span> is the number of times team <span class="math inline">\(i\)</span> won against team <span class="math inline">\(j\)</span>. <span class="math inline">\(c_j = \sum_{i=1}^n w_{ij}\)</span> is the total numer of games lost by team <span class="math inline">\(j\)</span>. The term inside the sum works according to the above described mechanism: Wins against an opponent <span class="math inline">\(j\)</span> with high strength (i.e.&nbsp;high <span class="math inline">\(p_j\)</span>) get more weight, while wins against an opponent with a high number of total games lost (i.e.&nbsp;high <span class="math inline">\(c_j\)</span>) get less weight. This is then summed up across all opponents and weighted by the damping factor <span class="math inline">\(d \in [0,1)\)</span> (usually, <span class="math inline">\(d\)</span> is set to 0.85). <span class="math inline">\(d\)</span> guarantees the existence of (finite) soultions even if there is a team that always won or always lost.</p>
 <p>The above can be written in matrix-vector notation as follows: <span class="math display">\[ \textbf{p} = (1-d) \, \textbf{e} + d \, \textbf{W} \,\textbf{D}_c^{-1} \, \textbf{p} \]</span> where <span class="math inline">\(\textbf{p}=[p_1, \dots, p_n]^T\)</span> is the PageRank strength vector and <span class="math inline">\(\textbf{e}\)</span> is an <span class="math inline">\(n\)</span>-dimensional vector of ones. <span class="math inline">\(\textbf{D}=\text{diag}(c_1, \dots, c_n)\)</span> is a diagonal matrix and <span class="math inline">\(\textbf{W}\)</span> is the win matrix introduced above.</p>
-<p>To get a unique solution, PageRank requires the strength vector <span class="math inline">\(\textbf{p}\)</span> to sum up to <span class="math inline">\(n\)</span>, i.e.&nbsp;<span class="math inline">\(\textbf{e}^T \, \textbf{p} = n\)</span>. Using this, the following holds: <span class="math display">\[ \textbf{e} = \frac{\textbf{e} \, \textbf{e}^T \, \textbf{p}}{n}\]</span> Plugging this into the recursive formula for <span class="math inline">\(\textbf{p}\)</span> and factoring out <span class="math inline">\(\textbf{p}\)</span> on the right hand side yields: <span class="math display">\[ \begin{align}
+<p>To get a unique solution, PageRank requires a restriction on the scale of the strength vector. Therefore, the restriction that <span class="math inline">\(\textbf{p}\)</span> must to sum up to <span class="math inline">\(n\)</span>, i.e.&nbsp;<span class="math inline">\(\textbf{e}^T \, \textbf{p} = n\)</span>, is introduced. This is the same as saying that the average strength is 1. Using this, the following holds: <span class="math display">\[ \textbf{e} = \frac{\textbf{e} \, \textbf{e}^T \, \textbf{p}}{n}\]</span> Plugging this into the recursive formula for <span class="math inline">\(\textbf{p}\)</span> and factoring out <span class="math inline">\(\textbf{p}\)</span> on the right hand side yields: <span class="math display">\[ \begin{align}
 \textbf{p} &amp;= \left[ (1-d) \, \textbf{e} \, \textbf{e}^T/n + d \, \textbf{W} \,\textbf{D}_c^{-1} \right] \textbf{p} \\
 &amp;= \mathbf{A} \, \mathbf{p}
 \end{align}\]</span></p>
@@ -552,12 +550,12 @@ Chicago Bears     0.5206048</code></pre>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="fu">reorder</span>(team, score), <span class="at">y=</span>score)) <span class="sc">+</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill=</span><span class="st">"#8b0000"</span>) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill=</span><span class="st">"#d72638"</span>) <span class="sc">+</span></span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Ranking and Strength based on PageRank"</span>,</span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Strength"</span>,</span>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Team"</span>) <span class="sc">+</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -588,28 +586,112 @@ Carolina Panthers 0.4254393           0.01329498 32
 Chicago Bears     0.5206048           0.01626890 32</code></pre>
 </div>
 </div>
+<p>Obviously, my values and the values returned by the <strong>igraph</strong> package are not the same. However, when dividing them by each other it becomes apparent that my values are just 32 times the values returned by the package. The reason for the difference in scale is the following: The <strong>igraph</strong> package uses as restriction on the strength vector that it sums up to 1. However, I use as restriction that the strength vector sums up to <span class="math inline">\(n=32\)</span>. Importantly, this difference in scaling has no influence on the rankings.</p>
 </section>
-</section>
-<section id="wichtig-spaltennamen-in-dieser-pagerank_compare-tabelle-fixen" class="level1">
-<h1>WICHTIG: spaltennamen in dieser pagerank_compare tabelle fixen</h1>
-<p>WICHTIG: bei meiner Implementation wollen wir einen AVERAGE pagerank value of 1 also SUM UP to n; in PACKAGE WOLLEN SIE SUM UP to 1; also müssen wir meine werte mit 1/n multiplizieren oder die anderen mit n.</p>
 </section>
 <section id="comparison" class="level1">
 <h1>Comparison</h1>
-<p>pagerank gleichmäßiger verteilt; BTM exponential dispersed beide in gleiche horizontal barplot</p>
-<p>evtl scatter plots beider ratings und rankings: plot(log(bt_mle), pagerank)</p>
-<ol start="2" type="1">
-<li>plots zum vergleich der beiden rankings (u.a. plot(log(bt_mle), r))</li>
-</ol>
-</section>
-<section id="to-do" class="level1">
-<h1>TO DO</h1>
-<ol type="1">
-<li>2mal metric für vergleich meine lösung vs.&nbsp;package</li>
-</ol>
+<p>Having in detail covered each of the two approaches separately, let’s now compare their results.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">team =</span> <span class="fu">names</span>(my_btm_mles),</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">btm =</span> <span class="fu">as.numeric</span>(my_btm_mles),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pagerank =</span> <span class="fu">as.numeric</span>(my_pagerank_est)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>team <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>team, <span class="at">levels=</span>df<span class="sc">$</span>team[<span class="fu">order</span>(df<span class="sc">$</span>btm, <span class="at">decreasing=</span><span class="cn">FALSE</span>)])</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>df_long <span class="ot">&lt;-</span> <span class="fu">reshape</span>(df,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">varying =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"btm"</span>, <span class="st">"pagerank"</span>)),</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>                   <span class="at">v.names =</span> <span class="st">"score"</span>,</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>                   <span class="at">timevar =</span> <span class="st">"scoretype"</span>,</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">times =</span> <span class="fu">c</span>(<span class="st">"btm"</span>, <span class="st">"pagerank"</span>),</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>                   <span class="at">direction =</span> <span class="st">"long"</span>)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>df_long<span class="sc">$</span>team <span class="ot">&lt;-</span> <span class="fu">factor</span>(df_long<span class="sc">$</span>team, <span class="at">levels=</span><span class="fu">levels</span>(df<span class="sc">$</span>team))</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_long, <span class="fu">aes</span>(<span class="at">x=</span>team, <span class="at">y=</span>score, <span class="at">fill=</span>scoretype)) <span class="sc">+</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">"identity"</span>, <span class="at">position=</span><span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.7</span>)) <span class="sc">+</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"btm"</span><span class="ot">=</span><span class="st">"#0b0b64"</span>, <span class="st">"pagerank"</span><span class="ot">=</span><span class="st">"#d72638"</span>),</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"btm"</span><span class="ot">=</span><span class="st">"Bradley-Terry"</span>, <span class="st">"pagerank"</span><span class="ot">=</span><span class="st">"PageRank"</span>),</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name=</span><span class="st">"Approach"</span>) <span class="sc">+</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Strengths based on Bradley-Terry and PageRank"</span>,</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Strength"</span>,</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Team"</span>) <span class="sc">+</span></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="LearningToRank_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>When looking at the above plot, two aspects are particularly striking. First, there is alot more dispersion among the Bradley-Terry strengths than among the PageRank strengths. Second, it seems that the ranking obtained from PageRank is not identical to the one returned by the Bradley-Terry model (Obviously, when the teams are sorted in descending order based on their Bradley-Terry strengths (as in the above plot) they are not at the same time also sorted in descending order based on the PageRank strengths).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span>my_btm_mles, <span class="at">y=</span>my_pagerank_est)) <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"PageRank Strength"</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Bradley-Terry Strength"</span>) <span class="sc">+</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span><span class="fu">log</span>(my_btm_mles), <span class="at">y=</span>my_pagerank_est)) <span class="sc">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"PageRank Strength"</span>,</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"log(Bradley-Terry Strength)"</span>) <span class="sc">+</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>gridExtra<span class="sc">::</span><span class="fu">grid.arrange</span>(p1, p2, <span class="at">ncol=</span><span class="dv">2</span>,</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>                        <span class="at">top=</span><span class="st">"Strengths based on Bradley-Terry and PageRank"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="LearningToRank_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Above, on the left, you can see a scatterplot of the PageRank strengths against the Bradley-Terry strengths. From that plot, it seems that there is rather a logarithmic relationship between the two. Therefore, on the right, I also show a plot of the PageRank strengths against <strong>log</strong> of the Bradley-Terry strengths. It seems that both approaches assign high strengths (and low strengths, respectively) to similar teams. However, there seems to be less agreement of both approaches on strong teams than on weak teams. This becomes also apparent form the following plot.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x=</span><span class="fu">rank</span>(<span class="sc">-</span>my_btm_mles), <span class="at">y=</span><span class="fu">rank</span>(<span class="sc">-</span>my_pagerank_est))) <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_reverse</span>(<span class="at">breaks=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>)), <span class="at">minor_breaks=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">32</span>) <span class="sc">+</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_reverse</span>(<span class="at">breaks=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>)), <span class="at">minor_breaks=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">32</span>) <span class="sc">+</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Ranks based on Bradley-Terry and PageRank"</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Bradley-Terry Ranks"</span>,</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"PageRank Ranks"</span>) <span class="sc">+</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="LearningToRank_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The above plot compares the <strong>rankings</strong> derived from the strength estimates of PageRank and the Bradley-Terry model. If both approaches would result in identical rankings, then the solid line would perfectly lie on the dashed line. The further the solid line is away from the dashed line, the greater the difference between the two rankings. This plot supports the observations stated above.</p>
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
+<p>Overall, PageRank and the Bradle-Terry model yield quite similar rankings of the 32 NFL teams. However, if I had to choose one of them I would pick the Bradley-Terry model. This is because, unlike PageRank, the Bradley-Terry model not only returns a ranking, but it also allows to make predictions on the probability that a certain team would win against a given opponent.</p>
 
 
 </section>
