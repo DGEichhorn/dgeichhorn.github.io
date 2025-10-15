@@ -1,9 +1,9 @@
 ---
 title: "Neural Networks for Probability Density Estimation"
-description: "Post description"
-author: "Author"
-date: "5/22/2021"
-#image: "cover.jpg"
+description: "I implement from scratch an approach for estimating an unknown probability density function of a sample using neural networks. To demonstrate that this method works, I apply it to two examples."
+author: "Dominik G. Eichhorn"
+date: "10/25/2025"
+image: "cover.jpg"
 categories:
   - Deep Learning
   - Python
