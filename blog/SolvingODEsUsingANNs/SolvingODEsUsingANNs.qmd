@@ -1,7 +1,7 @@
 ---
-title: "Using Neural Networks to Solve Ordinary Differential Equations"
-description: "Implementing from scratch a neural network based approach for approximating numerically the solutions of ordinary differential equations."
-date: "5/22/2021"
+title: "Neural Networks for Solving Ordinary Differential Equations"
+description: "I code from scratch a neural network based approach for numerically solving ordinary differential equations (ODE). To demonstrate that this method works, I apply it to two exemplary ODEs."
+date: "9/10/2025"
 #image: "cover.jpg"
 categories:
   - Deep Learning

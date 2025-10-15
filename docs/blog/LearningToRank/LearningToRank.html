@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Alicia">
-<meta name="dcterms.date" content="2021-05-22">
-<meta name="description" content="TO DO">
+<meta name="author" content="Dominik G. Eichhorn">
+<meta name="dcterms.date" content="2025-08-21">
+<meta name="description" content="I implement from scratch two approaches for learning a ranking from imcomplete pairwise comparison data (Bradley-Terry model and PageRank). Then, I apply them to NFL data and compare the results.">
 
 <title>Learning to Rank – Dominik G. Eichhorn</title>
 <style>
@@ -58,7 +58,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -202,8 +222,7 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#important-not-necessary-that-they-have-played-against-each-other-in-the-past-i-think-this-is-also-true-for-pagerank" id="toc-important-not-necessary-that-they-have-played-against-each-other-in-the-past-i-think-this-is-also-true-for-pagerank" class="nav-link active" data-scroll-target="#important-not-necessary-that-they-have-played-against-each-other-in-the-past-i-think-this-is-also-true-for-pagerank">IMPORTANT: not necessary that they have played against each other in the past; I THINK THIS IS ALSO TRUE FOR PAGERANK</a></li>
-  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation">Motivation</a></li>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation">Motivation</a></li>
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
   <li><a href="#bradley-terry-model" id="toc-bradley-terry-model" class="nav-link" data-scroll-target="#bradley-terry-model">Bradley-Terry Model</a>
   <ul class="collapse">
@@ -230,12 +249,13 @@ window.Quarto = {
     <div class="quarto-category">Ranking</div>
     <div class="quarto-category">Optimization</div>
     <div class="quarto-category">Maximum Likelihood</div>
+    <div class="quarto-category">R</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    TO DO
+    I implement from scratch two approaches for learning a ranking from imcomplete pairwise comparison data (Bradley-Terry model and PageRank). Then, I apply them to NFL data and compare the results.
   </div>
 </div>
 
@@ -245,14 +265,14 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Alicia </p>
+             <p>Dominik G. Eichhorn </p>
           </div>
   </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 22, 2021</p>
+      <p class="date">August 21, 2025</p>
     </div>
   </div>
   
@@ -264,9 +284,6 @@ window.Quarto = {
 </header>
 
 
-<section id="important-not-necessary-that-they-have-played-against-each-other-in-the-past-i-think-this-is-also-true-for-pagerank" class="level1">
-<h1>IMPORTANT: not necessary that they have played against each other in the past; I THINK THIS IS ALSO TRUE FOR PAGERANK</h1>
-</section>
 <section id="motivation" class="level1">
 <h1>Motivation</h1>
 <p>Probably everyone is familiar with those tables in sports that rank teams, usually according to the number of games won. This seems to be a valide approach for tournaments where every team plays against every other team the same number of times. Such tournaments are called robin-round tournaments and examples include the Premier League as well as the Fußball and the Handball Bundesliga. Robin-round tournaments are a special type of complete comparisons.</p>
@@ -344,7 +361,7 @@ window.Quarto = {
 &amp;= \frac{1}{\theta_k} \sum_{j=1}^n w_{kj} - \sum_{j=1}^n \frac{w_{jk} +w_{kj}}{\theta_j + \theta_k} ,  &amp;\forall k=1,\dots n \end{align}\]</span> Note that I index the differentiation variable by <span class="math inline">\(k\)</span> in order to clearly separate it from the summation index <span class="math inline">\(i\)</span>. Setting the gradient equal to 0 and rearranging yields: <span class="math display">\[ \theta_k = \frac{\sum_{j=1}^n w_{kj}}{\sum_{j=1}^n \frac{w_{kj} + w_{jk}}{\theta_k + \theta_j}}, \; \forall k=1,\dots,n \]</span> Starting with some initial values <span class="math inline">\(\theta_1^{(0)}, \dots, \theta_k^{(0)}\)</span>, and using the above equation, the MLEs are iteratively obtained as follows: <span class="math display">\[\begin{align}
 \theta_k^{(t+1)} &amp;\gets \frac{\sum_{j=1}^n w_{kj}}{\sum_{j=1}^n \frac{w_{kj} + w_{jk}}{\theta_k^{(t)} + \theta_j^{(t)}}}, &amp;\; \forall k=1,\dots,n \\
 \theta_k^{(t+1)} &amp;\gets \frac{1}{\left(\prod_{j=1}^n \theta_j^{(t+1)} \right)^{1/n}}, &amp;\; \forall k=1,\dots,n
-\end{align}\]</span> The second operation normalizes the MLEs such that their geometric mean is 1.</p>
+\end{align}\]</span> The second operation normalizes the MLEs such that their geometric mean is 1 <span class="citation" data-cites="newman2023efficient">(<a href="#ref-newman2023efficient" role="doc-biblioref">Newman 2023</a>)</span>.</p>
 </section>
 <section id="implementation" class="level2">
 <h2 class="anchored" data-anchor-id="implementation">Implementation</h2>
@@ -398,13 +415,17 @@ Carolina Panthers     Chicago Bears
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">score =</span> <span class="fu">as.numeric</span>(my_btm_mles)</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="fu">reorder</span>(team, score), <span class="at">y=</span>score)) <span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="fu">reorder</span>(team, score), <span class="at">y=</span>score)) <span class="sc">+</span></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill=</span><span class="st">"#0b0b64"</span>) <span class="sc">+</span></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Ranking and Strength based on Bradley-Terry"</span>,</span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Strength"</span>,</span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Team"</span>) <span class="sc">+</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"cover.jpg"</span>, <span class="at">plot =</span> p, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">dpi =</span> <span class="dv">300</span>, <span class="at">bg =</span> <span class="st">"white"</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -501,7 +522,7 @@ Chicago Bears       0.4153262       -0.9715400       -0.9715400</code></pre>
 \textbf{p}^{(t+1)} &amp;\gets \textbf{A} \, \textbf{p}^{(t)} \\
 \textbf{p}^{(t+1)} &amp;\gets \frac{\textbf{p}^{(t+1)}}{\textbf{e}^T \, \textbf{p}^{(t+1)}} n
 \end{align}
-\]</span> The second operation is a normalization ensuring that <span class="math inline">\(\textbf{e}^T \, \textbf{p}^{(t+1)} = n\)</span></p>
+\]</span> The second operation is a normalization ensuring that <span class="math inline">\(\textbf{e}^T \, \textbf{p}^{(t+1)} = n\)</span> <span class="citation" data-cites="page1999pagerank">Hastie et al. (<a href="#ref-hastie2009elements" role="doc-biblioref">2009</a>)</span>.</p>
 </section>
 <section id="implementation-1" class="level2">
 <h2 class="anchored" data-anchor-id="implementation-1">Implementation</h2>
@@ -694,9 +715,20 @@ Chicago Bears     0.5206048           0.01626890 32</code></pre>
 <p>Overall, PageRank and the Bradle-Terry model yield quite similar rankings of the 32 NFL teams. However, if I had to choose one of them I would pick the Bradley-Terry model. This is because, unlike PageRank, the Bradley-Terry model not only returns a ranking, but it also allows to make predictions on the probability that a certain team would win against a given opponent.</p>
 
 
+
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-hastie2009elements" class="csl-entry" role="listitem">
+Hastie, Trevor, Robert Tibshirani, Jerome Friedman, et al. 2009. <span>“The Elements of Statistical Learning.”</span> Springer series in statistics New-York.
+</div>
+<div id="ref-newman2023efficient" class="csl-entry" role="listitem">
+Newman, Mark EJ. 2023. <span>“Efficient Computation of Rankings from Pairwise Comparisons.”</span> <em>Journal of Machine Learning Research</em> 24 (238): 1–25.
+</div>
+<div id="ref-page1999pagerank" class="csl-entry" role="listitem">
+Page, Lawrence, Sergey Brin, Rajeev Motwani, and Terry Winograd. 1999. <span>“The PageRank Citation Ranking: Bringing Order to the Web.”</span> Stanford infolab.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

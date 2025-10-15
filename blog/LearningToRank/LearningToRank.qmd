@@ -1,18 +1,16 @@
 ---
 title: "Learning to Rank"
-description: "TO DO"
-# In this post, I implement from scratch two different approaches for learning a ranking from data on the results of pairwise comparisons.
-author: "Alicia"
-date: "5/22/2021"
+description: "I implement from scratch two approaches for learning a ranking from imcomplete pairwise comparison data (Bradley-Terry model and PageRank). Then, I apply them to NFL data and compare the results."
+author: "Dominik G. Eichhorn"
+date: "8/21/2025"
 image: "cover.jpg"
 categories:
   - Ranking
   - Optimization
   - Maximum Likelihood
-#bibliography: references.bib
+  - R
+bibliography: references.bib
 ---
-
-# IMPORTANT: not necessary that they have played against each other in the past; I THINK THIS IS ALSO TRUE FOR PAGERANK
 
 # Motivation
 
@@ -92,7 +90,7 @@ $$ Note that $w_{ii}$ is set to 0 as mentioned above. The log-likelihood functio
 &= \frac{1}{\theta_k} \sum_{j=1}^n w_{kj} - \sum_{j=1}^n \frac{w_{jk} +w_{kj}}{\theta_j + \theta_k} ,  &\forall k=1,\dots n \end{align}$$ Note that I index the differentiation variable by $k$ in order to clearly separate it from the summation index $i$. Setting the gradient equal to 0 and rearranging yields: $$ \theta_k = \frac{\sum_{j=1}^n w_{kj}}{\sum_{j=1}^n \frac{w_{kj} + w_{jk}}{\theta_k + \theta_j}}, \; \forall k=1,\dots,n $$ Starting with some initial values $\theta_1^{(0)}, \dots, \theta_k^{(0)}$, and using the above equation, the MLEs are iteratively obtained as follows: $$\begin{align}
 \theta_k^{(t+1)} &\gets \frac{\sum_{j=1}^n w_{kj}}{\sum_{j=1}^n \frac{w_{kj} + w_{jk}}{\theta_k^{(t)} + \theta_j^{(t)}}}, &\; \forall k=1,\dots,n \\
 \theta_k^{(t+1)} &\gets \frac{1}{\left(\prod_{j=1}^n \theta_j^{(t+1)} \right)^{1/n}}, &\; \forall k=1,\dots,n
-\end{align}$$ The second operation normalizes the MLEs such that their geometric mean is 1.
+\end{align}$$ The second operation normalizes the MLEs such that their geometric mean is 1 [@newman2023efficient].
 
 ## Implementation
 
@@ -150,13 +148,17 @@ df <- data.frame(
   score = as.numeric(my_btm_mles)
 )
 
-ggplot(df, aes(reorder(team, score), y=score)) +
+p <- ggplot(df, aes(reorder(team, score), y=score)) +
   geom_col(fill="#0b0b64") +
   coord_flip() +
   labs(title="Ranking and Strength based on Bradley-Terry",
        y="Strength",
        x="Team") +
   theme_light()
+
+ggsave("cover.jpg", plot = p, width = 8, height = 6, dpi = 300, bg = "white")
+
+p
 ```
 
 Now, let's compare the results of my from-scratch implementation to those of the **BradleyTerry2** R package.
@@ -233,7 +235,7 @@ So the PageRank strength vector is the eigenvector corresponding to an eigenvalu
 \textbf{p}^{(t+1)} &\gets \textbf{A} \, \textbf{p}^{(t)} \\
 \textbf{p}^{(t+1)} &\gets \frac{\textbf{p}^{(t+1)}}{\textbf{e}^T \, \textbf{p}^{(t+1)}} n
 \end{align}
-$$ The second operation is a normalization ensuring that $\textbf{e}^T \, \textbf{p}^{(t+1)} = n$
+$$ The second operation is a normalization ensuring that $\textbf{e}^T \, \textbf{p}^{(t+1)} = n$ [@page1999pagerank,@hastie2009elements].
 
 ## Implementation
 
