@@ -1,0 +1,14 @@
+---
+title: "Offline Reinforcement Learning for Dynamic Pricing"
+description: "TO DO"
+author: "Dominik G. Eichhorn"
+date: "7/17/2025"
+image: "cover.jpg"
+categories:
+  - Machine Learning
+  - Portfolio Management
+  - Python
+bibliography: references.bib
+---
+
+here goes the text
