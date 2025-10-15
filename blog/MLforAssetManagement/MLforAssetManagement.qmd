@@ -2,7 +2,7 @@
 title: "Machine Learning for Managing Stock Portfolios"
 description: "TO DO"
 author: "Dominik G. Eichhorn"
-date: "4/27/2022"
+date: "5/1/2022"
 image: "cover.jpg"
 categories:
   - Machine Learning
@@ -11,9 +11,20 @@ categories:
 bibliography: references.bib
 ---
 
-high-level overview; if you want to learn about it in detail feel free to read my full thesis
 
-replicating from scratch gu kelly xu since they dont provide any code; and extend der analyses;
+Those interested in the technical details may scroll down to the bottom (section Appendix), where the pdf-file of my master's thesis is displayed. Unlike the other posts, in the remainder of this post, I will not go into the technical details or show any code. I will rather give an high-level overview of what I did as part of my master's thesis.
+
+# Introduction
+
+In their seminal paper, @gu2020empirical describe how supervised machine learning models can be utilized to manage stock portfolios. They report that empirically these so-called machine learning portfolios deliver substantial risk-adjusted outperformance. However, their analyses only consider gross returns, i.e., before transaction costs. This is a problem insofar as these machine learning portfolios very frequently buy stocks and sell them shortly afterwards (or the other way around). Each of these stock-level transactions leads to costs which reduce the net returns of the portfolio. It is therefore a fair question what the net return of these machine learning portfolios is.
+
+In trying to answer this question, I encountered two major challenges. First, @gu2020empirical do not provide any code for the construction of the machine learning portfolios. Hence, I had to replicate their approach from scratch in Python based on the descriptions in their paper. Second, in order to calculate the net returns I need at every point in time the stock-level transaction costs for all stocks considered (or at least an estimate of them). My supervisor pointed out to me that such a data set had recently been made publicly available by @chen2021open, which I then used for my analyses.
+
+# HIER WEITERES VORGEHEN
+
+# Implementation
+
+# Results
 
 dataset of stocks with characteristics and returns for each month; rolling window approach to predict returns based on historical information; use different machine learning models
 
@@ -22,6 +33,8 @@ at the end of each month we can for each stock predicht the return for the upcom
 so this is what gu kelly xu did
 
 i extend it: because i look also at after cost performance; crucial because very high turnover leading to high transaction costs
+
+# Appendix
 
 ```{=html}
 <embed src="Thesis.pdf" width="800px" height="2100px" />
