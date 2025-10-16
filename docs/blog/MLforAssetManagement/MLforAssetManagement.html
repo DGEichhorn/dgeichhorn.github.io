@@ -159,10 +159,10 @@ div.csl-indent {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#hier-weiteres-vorgehen" id="toc-hier-weiteres-vorgehen" class="nav-link" data-scroll-target="#hier-weiteres-vorgehen">HIER WEITERES VORGEHEN</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
   <li><a href="#implementation" id="toc-implementation" class="nav-link" data-scroll-target="#implementation">Implementation</a></li>
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
-  <li><a href="#sec-appendix" id="toc-sec-appendix" class="nav-link" data-scroll-target="#sec-appendix">Appendix</a></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix">Appendix</a></li>
   </ul>
 </nav>
     </div>
@@ -210,26 +210,32 @@ div.csl-indent {
 </header>
 
 
-<p>Those interested in the technical details may scroll down to the bottom (section Appendix <a href="#sec-appendix" class="quarto-xref">Section&nbsp;5</a>), where the pdf-file of my master’s thesis is displayed. Unlike the other posts, in the remainder of this post, I will not go into the technical details or show any code. I will rather give an high-level overview of what I did as part of my master’s thesis.</p>
+<p>Those interested in the technical details may scroll down to the bottom (section Appendix), where the pdf-file of my master’s thesis is displayed. Unlike the other posts, in the remainder of this post, I will not go into the technical details or show any code. I will rather give an high-level overview of what I did as part of my master’s thesis.</p>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>In their seminal paper, <span class="citation" data-cites="gu2020empirical">Gu, Kelly, and Xiu (<a href="#ref-gu2020empirical" role="doc-biblioref">2020</a>)</span> describe how supervised machine learning models can be utilized to manage stock portfolios. They report that empirically these so-called machine learning portfolios deliver substantial risk-adjusted outperformance. However, their analyses only consider gross returns, i.e., before transaction costs. This is a problem insofar as these machine learning portfolios very frequently buy stocks and sell them shortly afterwards (or the other way around). Each of these stock-level transactions leads to costs which reduce the net returns of the portfolio. It is therefore a fair question what the net return of these machine learning portfolios is.</p>
 <p>In trying to answer this question, I encountered two major challenges. First, <span class="citation" data-cites="gu2020empirical">Gu, Kelly, and Xiu (<a href="#ref-gu2020empirical" role="doc-biblioref">2020</a>)</span> do not provide any code for the construction of the machine learning portfolios. Hence, I had to replicate their approach from scratch in Python based on the descriptions in their paper. Second, in order to calculate the net returns I need at every point in time the stock-level transaction costs for all stocks considered (or at least an estimate of them). My supervisor pointed out to me that such a data set had recently been made publicly available by <span class="citation" data-cites="chen2021open">Chen and Zimmermann (<a href="#ref-chen2021open" role="doc-biblioref">2021</a>)</span>, which I then used for my analyses.</p>
+<p>In the following, I will first briefly say something about the data set I used. Then, I will give a high-level description of how I constructed the machine learning portfolios. Subsequently, I will present my results on their after-transaction-cost performance.</p>
 </section>
-<section id="hier-weiteres-vorgehen" class="level1">
-<h1>HIER WEITERES VORGEHEN</h1>
+<section id="data" class="level1">
+<h1>Data</h1>
+<p>The data, upon which my analyses were based, covered monthly information on approx. 8.000 major US exchanged-listed stocks between 1970 and 2017. For every stock, I have for each month a set of 202 stock/firm specific characteristics, its gross return as well as its transaction/trading cost (i.e.&nbsp;half the spread).</p>
 </section>
 <section id="implementation" class="level1">
 <h1>Implementation</h1>
+<p>the basis of machine learning portfolios is a prediction model; takes the firm/stock characteristics at end of month t as input and predicts the return of that stock for month t+1</p>
+<p>train and tune multiple prediction models welche</p>
+<p>models are updated using a rolling window approach</p>
+<p>I used this data to train and tune multiple prediction models using a rolling-window approach. More specifically, at the end of each month, the prediction models</p>
 </section>
 <section id="results" class="level1">
 <h1>Results</h1>
-<p>dataset of stocks with characteristics and returns for each month; rolling window approach to predict returns based on historical information; use different machine learning models</p>
+<p>rolling window approach to predict returns based on historical information; use different machine learning models</p>
 <p>at the end of each month we can for each stock predicht the return for the upcomming month; sort stocks according to their predicted return; go long in upper 10 percent; go short in lower 10 percent; this is called decile spread portfolio</p>
 <p>so this is what gu kelly xu did</p>
 <p>i extend it: because i look also at after cost performance; crucial because very high turnover leading to high transaction costs</p>
 </section>
-<section id="sec-appendix" class="level1">
+<section id="appendix" class="level1">
 <h1>Appendix</h1>
 <embed src="Thesis.pdf" width="800px" height="2100px">
 
