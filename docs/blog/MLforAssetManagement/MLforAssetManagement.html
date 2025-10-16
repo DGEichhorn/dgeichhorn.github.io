@@ -203,8 +203,9 @@ window.Quarto = {
 <div class="quarto-title">
 <h1 class="title">Machine Learning for Managing Stock Portfolios</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Machine Learning</div>
     <div class="quarto-category">Portfolio Management</div>
+    <div class="quarto-category">Machine Learning</div>
+    <div class="quarto-category">Deep Learning</div>
     <div class="quarto-category">Python</div>
   </div>
   </div>
@@ -258,10 +259,9 @@ window.Quarto = {
 <h1>Approach</h1>
 <p>The foundation upon which machine learning portfolios are based is a prediction model. The prediction model takes the characteristics of each stock in month <span class="math inline">\(t\)</span> as input and outputs for each stock a prediction of the gross return realized in month <span class="math inline">\(t+1\)</span>. The prediction model is gradually updated overtime using an expanding window approach.</p>
 <p>I trained and tuned a broad variety of prediction models. These include several baseline unpenalized and penalized linear models, tree based models such as random forests and gradient boosted trees, and multiple deep learning models. Note that each prediction model is the foundation for a different machine learning portfolio.</p>
-<p>Given a prediction model, at the end of month <span class="math inline">\(t\)</span>, the machine learning portfolio is constructed as follows: The prediction model is used to predict the gross return of each stock in month <span class="math inline">\(t+1\)</span>. Next, all stocks are sorted according to their predicted gross return for month <span class="math inline">\(t+1\)</span>. Subsequently, the portfolio is formed by going long in the top decile and going short the bottom decile of stocks sorted by predicted return.</p>
-<p>Note that at any point in time, 80% of the stocks are kept neutral (zero position).</p>
-<p>führt zu großen turnovers weil selten ein stock 2 monate hintereinander in top10 or bottom10 bleibt</p>
-<p>stattdessen of so dass von long oder short in neutral position oder sogar in opposite position; das alles fürhrt zu transaction costs welche</p>
+<p>Given a prediction model, at the end of month <span class="math inline">\(t\)</span>, the machine learning portfolio is constructed as follows: The prediction model is used to predict the gross return of each stock in month <span class="math inline">\(t+1\)</span>. Next, all stocks are sorted according to their predicted gross return for month <span class="math inline">\(t+1\)</span>. Subsequently, the portfolio is formed by going long in the top 10% and going short the bottom 10% of stocks sorted by predicted return. The remaining 80% of the stocks are kept neutral (zero position).</p>
+<p>Over time, the predicted returns for a given stock tend to fluctuate a lot. Hence, a stock that ranks in the top 10% by predicted return in one month seldom remains there in the subsequent month (same holds for bottom 10%). As a consequence, at the end of each month many transactions need to be executed in order to close existing long and short positions and open new ones. Each of these transactions causes costs which in turn shrink net returns.</p>
+<p>haben wir stock-level transaction cost dataset von bla. Somit können wir exact die net returns der machine learning portfolios berechnen</p>
 <p>da wir datensatz mit stock specific transaction costs haben können wir jetzt schauen was die net returns sind</p>
 </section>
 <section id="results" class="level1">
