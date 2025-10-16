@@ -11,6 +11,7 @@ categories:
 bibliography: references.bib
 ---
 
+# Before Diving In
 
 Those interested in the technical details may scroll down to the bottom (section Appendix), where the pdf-file of my master's thesis is displayed. Unlike the other posts, in the remainder of this post, I will not go into the technical details or show any code. I will rather give an high-level overview of what I did as part of my master's thesis.
 
@@ -24,25 +25,25 @@ In the following, I will first briefly say something about the data set I used. 
 
 # Data
 
-The data, upon which my analyses were based, covered monthly information on approx. 8.000 major US exchanged-listed stocks between 1970 and 2017. For every stock, I have for each month a set of 202 stock/firm specific characteristics, its gross return as well as its transaction/trading cost (i.e. half the spread).
+The data, upon which my analyses were based, covered monthly information on approx. 8,000 major US exchanged-listed stocks between 1970 and 2017. For every stock, I have for each month a set of 202 stock/firm specific characteristics, its gross return as well as its transaction/trading cost (i.e. half the spread).
 
 # Approach
 
 The foundation upon which machine learning portfolios are based is a prediction model. The prediction model takes the characteristics of each stock in month $t$ as input and outputs for each stock a prediction of the gross return realized in month $t+1$. The prediction model is gradually updated overtime using an expanding window approach. 
 
-I trained and tuned a broad variety of prediction models. These include several baseline unpenalized and penalized linear models, tree based models such as random forests and gradient boosted trees, and multiple deep learning models. 
+I trained and tuned a broad variety of prediction models. These include several baseline unpenalized and penalized linear models, tree based models such as random forests and gradient boosted trees, and multiple deep learning models. Note that each prediction model is the foundation for a different machine learning portfolio.
 
+Given a prediction model, at the end of month $t$, the machine learning portfolio is constructed as follows: The prediction model is used to predict the gross return of each stock in month $t+1$. Next, all stocks are sorted according to their predicted gross return for month $t+1$. Subsequently, the portfolio is formed by going long in the top decile and going short the bottom decile of stocks sorted by predicted return. 
 
+Note that at any point in time, 80\% of the stocks are kept neutral (zero position).
+
+führt zu großen turnovers weil selten ein stock 2 monate hintereinander in top10 or bottom10 bleibt
+
+stattdessen of so dass von long oder short in neutral position oder sogar in opposite position; das alles fürhrt zu transaction costs welche
+
+da wir datensatz mit stock specific transaction costs haben können wir jetzt schauen was die net returns sind
 
 # Results
-
-rolling window approach to predict returns based on historical information; use different machine learning models
-
-at the end of each month we can for each stock predicht the return for the upcomming month; sort stocks according to their predicted return; go long in upper 10 percent; go short in lower 10 percent; this is called decile spread portfolio
-
-so this is what gu kelly xu did
-
-i extend it: because i look also at after cost performance; crucial because very high turnover leading to high transaction costs
 
 # Appendix
 
