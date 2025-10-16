@@ -26,7 +26,7 @@ In the following, I will first briefly say something about the data set I used. 
 
 # Data
 
-The data, upon which my analyses were based, covered monthly information on approx. 8,000 major US exchanged-listed stocks between 1970 and 2017. For every stock, I have for each month a set of 202 stock/firm specific characteristics, its gross return as well as its transaction/trading cost (i.e. half the spread).
+The data, upon which my analyses were based, covered monthly information on approx. 8,000 major US exchanged-listed stocks between 1970 and 2017. For every stock, I have for each month a set of 202 stock specific characteristics, its gross return as well as its transaction/trading cost (i.e. half the spread).
 
 # Approach
 
@@ -36,16 +36,28 @@ I trained and tuned a broad variety of prediction models. These include several 
 
 Given a prediction model, at the end of month $t$, the machine learning portfolio is constructed as follows: The prediction model is used to predict the gross return of each stock in month $t+1$. Next, all stocks are sorted according to their predicted gross return for month $t+1$. Subsequently, the portfolio is formed by going long in the top 10\% and going short the bottom 10\% of stocks sorted by predicted return. The remaining 80\% of the stocks are kept neutral (zero position).
 
-Over time, the predicted returns for a given stock tend to fluctuate a lot. Hence, a stock that ranks in the top 10\% by predicted return in one month seldom remains there in the subsequent month (same holds for bottom 10\%). As a consequence, at the end of each month many transactions need to be executed in order to close existing long and short positions and open new ones. Each of these transactions causes costs which in turn shrink net returns.
-
-haben wir stock-level transaction cost dataset von bla. Somit können wir exact die net returns der machine learning portfolios berechnen
-
-da wir datensatz mit stock specific transaction costs haben können wir jetzt schauen was die net returns sind
+Over time, the predicted returns for a given stock tend to fluctuate a lot. Hence, a stock that ranks in the top 10\% by predicted return in one month seldom remains there in the subsequent month (same holds for bottom 10\%). As a consequence, at the end of each month many transactions need to be executed in order to close existing long and short positions and open new ones. Each of these transactions causes costs which in turn shrink net returns. The data set by provided by @chen2021open containing monthly stock-level information on the transaction costs allows me to exactly compute those net returns of the machine learning portfolios I constructed.
 
 # Results
+
+The tables and plots shown below are all taken from my master's thesis (provided in the Appendix at the bottom of this page). 
+
+As mentioned above, each prediction model is the foundation for a different machine learning portfolio. The different machine learning portfolios are respectively based on: unpenalized linear models ($OLS-3$, $OLS-all$), penalized linear models ($Ridge$, $LASSO$, $E-Net$, i.e., elastic net), tree-based models ($RF$, i.e. random forest, $XGBoost$, i.e. boosted trees), and deep neural networks with 1 to 5 hidden layers ($NN1$, $NN2$, $NN3$, $NN4$, $NN5$) and an ensemble of them ($NN\text{1-5}$).
+
+![](plotcumnetperformance.jpg)
+
+
+The above plot, depicts the cumulative **out-of sample net** performance of all the machine learning portfolios I constructed. The below table reports among others the average **out-of sample monthly net** returns ($Avg(n)$ column) and the corresponding values of the t-statistic ($t(n)$ column). Taken together, two insights can be drawn: Firstly, all considered machine learning portfolios earn statistically significant positive average monthly net returns. Secondly, the machine learning portfolios that are based on deep neural networks yield net returns that are substantially larger than those based on the other models.
+
+![](tabavgreturns.jpg)
+
+However, it might by that all the considered machine learning portfolios earn rather high net returns just because they excessively take risks and are therefore rewarded with higher returns. Thus, I had a look at a risk adjusted measure of (out-) performance, namely the alpha against the Fama-French 5 Factor Model plus Momentum (FF5M+Mom). The below table reports among others for all machine learning portfolios the alphas after transaction costs (i.e. net alphas in $\alpha(n)$ column) and the corresponding values of the t-statistic (in parentheses below). From this it can be seen that **only the machine learning portfolios based on random forests and on deep neural networks yield statistically significant risk-adjusted outperformance** (against the FF5M+Mom) **after transaction costs**.
+
+![](tabriskadjperformance.jpg)
+
 
 # Appendix
 
 ```{=html}
-<embed src="Thesis.pdf" width="800px" height="2100px" />
+<embed src="Thesis.pdf" width="800px" height="1200px" />
 ```
