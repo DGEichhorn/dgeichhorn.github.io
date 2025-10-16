@@ -26,15 +26,13 @@ In the following, I will first briefly say something about the data set I used. 
 
 The data, upon which my analyses were based, covered monthly information on approx. 8.000 major US exchanged-listed stocks between 1970 and 2017. For every stock, I have for each month a set of 202 stock/firm specific characteristics, its gross return as well as its transaction/trading cost (i.e. half the spread).
 
-# Implementation
+# Approach
 
-the basis of machine learning portfolios is a prediction model; takes the firm/stock characteristics at end of month t as input and predicts the return of that stock for month t+1
+The foundation upon which machine learning portfolios are based is a prediction model. The prediction model takes the characteristics of each stock in month $t$ as input and outputs for each stock a prediction of the gross return realized in month $t+1$. The prediction model is gradually updated overtime using an expanding window approach. 
 
-train and tune multiple prediction models welche
+I trained and tuned a broad variety of prediction models. These include several baseline unpenalized and penalized linear models, tree based models such as random forests and gradient boosted trees, and multiple deep learning models. 
 
-models are updated using a rolling window approach
 
-I used this data to train and tune multiple prediction models using a rolling-window approach. More specifically, at the end of each month, the prediction models 
 
 # Results
 

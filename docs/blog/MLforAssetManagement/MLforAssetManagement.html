@@ -92,6 +92,35 @@ div.csl-indent {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -160,7 +189,7 @@ div.csl-indent {
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
-  <li><a href="#implementation" id="toc-implementation" class="nav-link" data-scroll-target="#implementation">Implementation</a></li>
+  <li><a href="#approach" id="toc-approach" class="nav-link" data-scroll-target="#approach">Approach</a></li>
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
   <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix">Appendix</a></li>
   </ul>
@@ -221,12 +250,10 @@ div.csl-indent {
 <h1>Data</h1>
 <p>The data, upon which my analyses were based, covered monthly information on approx. 8.000 major US exchanged-listed stocks between 1970 and 2017. For every stock, I have for each month a set of 202 stock/firm specific characteristics, its gross return as well as its transaction/trading cost (i.e.&nbsp;half the spread).</p>
 </section>
-<section id="implementation" class="level1">
-<h1>Implementation</h1>
-<p>the basis of machine learning portfolios is a prediction model; takes the firm/stock characteristics at end of month t as input and predicts the return of that stock for month t+1</p>
-<p>train and tune multiple prediction models welche</p>
-<p>models are updated using a rolling window approach</p>
-<p>I used this data to train and tune multiple prediction models using a rolling-window approach. More specifically, at the end of each month, the prediction models</p>
+<section id="approach" class="level1">
+<h1>Approach</h1>
+<p>The foundation upon which machine learning portfolios are based is a prediction model. The prediction model takes the characteristics of each stock in month <span class="math inline">\(t\)</span> as input and outputs for each stock a prediction of the gross return realized in month <span class="math inline">\(t+1\)</span>. The prediction model is gradually updated overtime using an expanding window approach.</p>
+<p>I trained and tuned a broad variety of prediction models. These include several baseline unpenalized and penalized linear models, tree based models such as random forests and gradient boosted trees, and multiple deep learning models.</p>
 </section>
 <section id="results" class="level1">
 <h1>Results</h1>
