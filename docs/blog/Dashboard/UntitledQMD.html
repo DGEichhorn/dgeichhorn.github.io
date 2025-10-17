@@ -6,11 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Dominik G. Eichhorn">
-<meta name="dcterms.date" content="2025-08-17">
-<meta name="description" content="TO DO">
 
-<title>Offline Reinforcement Learning for Dynamic Pricing – Dominik G. Eichhorn</title>
+<title>Dashboards – Dominik G. Eichhorn</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -72,35 +69,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -162,53 +130,22 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#before-diving-in" id="toc-before-diving-in" class="nav-link active" data-scroll-target="#before-diving-in">Before Diving In</a></li>
-  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation">Motivation</a></li>
-  <li><a href="#reinforcement-learning-online-vs.-offline" id="toc-reinforcement-learning-online-vs.-offline" class="nav-link" data-scroll-target="#reinforcement-learning-online-vs.-offline">Reinforcement Learning: Online vs.&nbsp;Offline</a></li>
-  <li><a href="#what-we-did-in-the-paper" id="toc-what-we-did-in-the-paper" class="nav-link" data-scroll-target="#what-we-did-in-the-paper">WHAT WE DID IN THE PAPER</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Offline Reinforcement Learning for Dynamic Pricing</h1>
-  <div class="quarto-categories">
-    <div class="quarto-category">Machine Learning</div>
-    <div class="quarto-category">Portfolio Management</div>
-    <div class="quarto-category">Python</div>
-  </div>
-  </div>
-
-<div>
-  <div class="description">
-    TO DO
-  </div>
+<h1 class="title">Dashboards</h1>
 </div>
+
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Dominik G. Eichhorn </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">August 17, 2025</p>
-    </div>
-  </div>
   
     
   </div>
@@ -218,34 +155,11 @@ window.Quarto = {
 </header>
 
 
-<section id="before-diving-in" class="level1">
-<h1>Before Diving In</h1>
-<p>ANPASSEN: Those interested in the technical details may scroll down to the bottom (section Appendix), where the pdf-file of my master’s thesis is displayed. Unlike most of the other posts, in the remainder of this post, I will not go into the technical details or show any code. I will rather give an high-level overview of what I did as part of my master’s thesis.</p>
-<p>LINK ZU SPRINGER LINK PAPER UND SAGEN, DASS OPEN ACCESS</p>
-</section>
-<section id="motivation" class="level1">
-<h1>Motivation</h1>
-<p>Probably everyone has experienced a similar situation at some point: You want to fly from A to B. You found a specific flight offered on the website of an airline. Over the next few days, before you finally decide whether to book that specific flight, you check several times the price offered on the airline’s website. You will notice that the price offered by the airline for that specific flight changes over time. Sometimes these price changes are relatively large and occur at rather short intervals. This is an example of a dynamic pricing.</p>
-<p>A typical setting studied in dynamic pricing:</p>
-<p>A provider sells a product over a fixed selling horizon of <span class="math inline">\(T \in \mathbb{N}\)</span> periods. In period <span class="math inline">\(t=0\)</span>, i.e., at the beginning of the selling horizon, the provider starts with an initial capacity of <span class="math inline">\(c_0 \in \mathbb{N}\)</span> units of that product. If the provider sells <span class="math inline">\(c_0 \in \mathbb{N}\)</span> units before the end of the selling horizon, he <strong>cannot</strong> replenish capacities. Conversely, if the provider does not sell all <span class="math inline">\(c_0 \in \mathbb{N}\)</span> units during the selling horizon, the remaining <span class="math inline">\(c_T\)</span> units expire without generating any revenue.</p>
-<p>The goal in dynamic pricing is to find the pricing policy which maximizes the expected total revenue.</p>
-<p>eine pricing policy besagt gegeben zustand (=remaining capacity and remaining time) which price the provider should charge</p>
-<p>MARKOV DECISION PROCESS</p>
-<p>typical scenario in dynamic pricing is where fixed selling horizon and fixed capacity</p>
-<p>jedem ist schonmal dynamic pricing begegnet; typisches Beispiel Flugzeug</p>
-<p>airline passt preis über die zeit an mit dem ziel overall profit/revenues zu maximieren</p>
-<p>things get even more complicated when you look at a network of flights; cannot treat them independently</p>
-</section>
-<section id="reinforcement-learning-online-vs.-offline" class="level1">
-<h1>Reinforcement Learning: Online vs.&nbsp;Offline</h1>
-<p>Eher intuitiv gehalten, für more rigorous treatment see paper</p>
-</section>
-<section id="what-we-did-in-the-paper" class="level1">
-<h1>WHAT WE DID IN THE PAPER</h1>
-<p>above describe with just one product is network with single leg; we did with for a network</p>
+<p>Here is an example of a dashboard:</p>
+<iframe width="1200" height="700" src="Dashboard.html">
+</iframe>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
