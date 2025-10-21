@@ -14,7 +14,7 @@ bibliography: references.bib
 
 # Before Diving In
 
-Those interested in the technical details may scroll down to the bottom (section Appendix), where the pdf-file of my master's thesis is displayed. Unlike most of the other posts, in the remainder of this post, I will not go into the technical details or show any code. I will rather give an high-level overview of what I did as part of my master's thesis.
+Those interested in the technical details may scroll down to the bottom (section Appendix), where the pdf-file of my master's thesis is displayed. Unlike the other posts, in the remainder of this post, I will not go into the technical details or show any code. I will rather give an high-level overview of what I did as part of my master's thesis.
 
 # Introduction
 
