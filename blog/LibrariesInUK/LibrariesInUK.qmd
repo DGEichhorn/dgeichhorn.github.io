@@ -1,6 +1,6 @@
 ---
 title: "Analyzing Library Usage in England"
-description: "I do a short analysis (incl. plots) of library usage across districts in England. More specifically, I look at differences accross district types and at spatial dependencies."
+description: "I do a short analysis (incl. visualizations) of library usage across districts in England. More specifically, I look at differences accross district types and at spatial dependencies."
 author: "Dominik G. Eichhorn"
 date: "7/29/2025"
 image: "cover.jpg"
