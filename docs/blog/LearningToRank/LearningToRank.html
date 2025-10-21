@@ -595,16 +595,19 @@ Chicago Bears     0.5206048</code></pre>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>package_pagerank_est <span class="ot">&lt;-</span> igraph<span class="sc">::</span><span class="fu">page_rank</span>(graphObj)<span class="sc">$</span>vector</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># compare results</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>pagerank_compare <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="st">"my_pagerank_est"</span><span class="ot">=</span>my_pagerank_est, package_pagerank_est, <span class="st">"ratio"</span><span class="ot">=</span>my_pagerank_est<span class="sc">/</span>package_pagerank_est)</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pagerank_compare)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>pagerank_compare <span class="ot">&lt;-</span> <span class="fu">cbind</span>(my_pagerank_est,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>                          package_pagerank_est,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>                          my_pagerank_est<span class="sc">/</span>package_pagerank_est)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(pagerank_compare) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"my_pagerank_est"</span>,<span class="st">"package_pagerank_est"</span>,<span class="st">"ratio"</span>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pagerank_compare)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                            package_pagerank_est   
-Arizona Cardinals 0.7385196           0.02307874 32
-Atlanta Falcons   1.2251638           0.03828637 32
-Baltimore Ravens  1.9602687           0.06125840 32
-Buffalo Bills     2.2841688           0.07138027 32
-Carolina Panthers 0.4254393           0.01329498 32
-Chicago Bears     0.5206048           0.01626890 32</code></pre>
+<pre><code>                  my_pagerank_est package_pagerank_est ratio
+Arizona Cardinals       0.7385196           0.02307874    32
+Atlanta Falcons         1.2251638           0.03828637    32
+Baltimore Ravens        1.9602687           0.06125840    32
+Buffalo Bills           2.2841688           0.07138027    32
+Carolina Panthers       0.4254393           0.01329498    32
+Chicago Bears           0.5206048           0.01626890    32</code></pre>
 </div>
 </div>
 <p>Obviously, my values and the values returned by the <strong>igraph</strong> package are not the same. However, when dividing them by each other it becomes apparent that my values are just 32 times the values returned by the package. The reason for the difference in scale is the following: The <strong>igraph</strong> package uses as restriction on the strength vector that it sums up to 1. However, I use as restriction that the strength vector sums up to <span class="math inline">\(n=32\)</span>. Importantly, this difference in scaling has no influence on the rankings.</p>

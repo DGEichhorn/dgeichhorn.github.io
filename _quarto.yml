@@ -20,7 +20,7 @@ website:
             href: inputs/CV_DominikEichhorn.pdf
           - text: DE
             href: inputs/Lebenslauf_DominikEichhorn.pdf
-      - text: Coding/Projects
+      - text: Coding
         href: blog/index.qmd
 
 format:

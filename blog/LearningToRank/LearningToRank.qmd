@@ -303,7 +303,10 @@ graphObj <- igraph::graph_from_adjacency_matrix(t(W), weighted = TRUE, mode = "d
 package_pagerank_est <- igraph::page_rank(graphObj)$vector
 
 # compare results
-pagerank_compare <- cbind("my_pagerank_est"=my_pagerank_est, package_pagerank_est, "ratio"=my_pagerank_est/package_pagerank_est)
+pagerank_compare <- cbind(my_pagerank_est,
+                          package_pagerank_est,
+                          my_pagerank_est/package_pagerank_est)
+colnames(pagerank_compare) <- c("my_pagerank_est","package_pagerank_est","ratio")
 head(pagerank_compare)
 ```
 Obviously, my values and the values returned by the **igraph** package are not the same. However, when dividing them by each other it becomes apparent that my values are just 32 times the values returned by the package. The reason for the difference in scale is the following: The **igraph** package uses as restriction on the strength vector that it sums up to 1. However, I use as restriction that the strength vector sums up to $n=32$. Importantly, this difference in scaling has no influence on the rankings.

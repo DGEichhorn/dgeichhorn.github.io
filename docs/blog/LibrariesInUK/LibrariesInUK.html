@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Dominik G. Eichhorn">
-<meta name="dcterms.date" content="2025-08-21">
-<meta name="description" content="TO DO">
+<meta name="dcterms.date" content="2025-07-29">
+<meta name="description" content="I do a short analysis (incl.&nbsp;plots) of library usage across districts in England. More specifically, I look at differences accross district types and at spatial dependencies.">
 
-<title>TO DO – Dominik G. Eichhorn</title>
+<title>Analyzing Library Usage in England – Dominik G. Eichhorn</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -222,8 +222,7 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#do-to-references.bib-includieren" id="toc-do-to-references.bib-includieren" class="nav-link active" data-scroll-target="#do-to-references.bib-includieren">DO TO: references.bib includieren</a></li>
-  <li><a href="#before-diving-in" id="toc-before-diving-in" class="nav-link" data-scroll-target="#before-diving-in">Before Diving In</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
   <li><a href="#library-usage-by-district-type" id="toc-library-usage-by-district-type" class="nav-link" data-scroll-target="#library-usage-by-district-type">Library Usage by District Type</a></li>
   <li><a href="#spatial-analysis-of-library-usage" id="toc-spatial-analysis-of-library-usage" class="nav-link" data-scroll-target="#spatial-analysis-of-library-usage">Spatial Analysis of Library Usage</a></li>
@@ -236,7 +235,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">TO DO</h1>
+<h1 class="title">Analyzing Library Usage in England</h1>
   <div class="quarto-categories">
     <div class="quarto-category">Spatial Data</div>
     <div class="quarto-category">Data Analysis</div>
@@ -247,7 +246,7 @@ window.Quarto = {
 
 <div>
   <div class="description">
-    TO DO
+    I do a short analysis (incl.&nbsp;plots) of library usage across districts in England. More specifically, I look at differences accross district types and at spatial dependencies.
   </div>
 </div>
 
@@ -264,7 +263,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 21, 2025</p>
+      <p class="date">July 29, 2025</p>
     </div>
   </div>
   
@@ -276,13 +275,16 @@ window.Quarto = {
 </header>
 
 
-<section id="do-to-references.bib-includieren" class="level1">
-<h1>DO TO: references.bib includieren</h1>
-<p>Idea für eine Data Viz Post: - map plot: nutzung von libraries; vermeintliche einfach erklärung: in manchen districts sind mehr doofis die weniger in bibs gehen ABER: Nutzung hängt auch von Erreichbarkeit ab - map plot: erreichbarkeit von libraries - scatterplot: zusammenhang nutzung vs.&nbsp;erreichbarkeit - korrektur: (perc usage)/(perc 30 min walk erreichbar)</p>
-</section>
-<section id="before-diving-in" class="level1">
-<h1>Before Diving In</h1>
-<p>In the following, I will provide a short an analysis (incl.&nbsp;visualizations) of an interesting data set I recently came accross.</p>
+<!--
+Idea für eine Data Viz Post:
+- map plot: nutzung von libraries; vermeintliche einfach erklärung: in manchen districts sind mehr doofis die weniger in bibs gehen ABER: Nutzung hängt auch von Erreichbarkeit ab
+- map plot: erreichbarkeit von libraries
+- scatterplot: zusammenhang nutzung vs. erreichbarkeit
+- korrektur: (perc usage)/(perc 30 min walk erreichbar)
+-->
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>I really enjoy going to libraries, be it to research something academic or to read for pleasur. My passion for visiting libraries prompted me to check whether there are any data sets on library usage. Unfortunately, I couldn’t find such a data set for Germany. However, I came accross some data on the usage and access to libraries in England. In the following, I will provide a short analysis (incl.&nbsp;visualizations) of that data.</p>
 </section>
 <section id="data" class="level1">
 <h1>Data</h1>
@@ -429,7 +431,7 @@ window.Quarto = {
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>usage_df <span class="ot">&lt;-</span> <span class="fu">left_join</span>(boundaries, usage_df, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"LAD25CD"</span><span class="ot">=</span><span class="st">"LAD_code"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The <strong>boundaries</strong> dataframe contains for each district a description of its territory as polygon. Next, I join the <strong>boundaries</strong> data and the <strong>usage</strong> data using a left join. The resulting data set is the basis for plotting a map of England with each district coloured according to the percentag of residents that visited a library.</p>
+<p>The <strong>boundaries</strong> dataframe contains for each district a description of its territory as a polygon. Next, I join the <strong>boundaries</strong> data and the <strong>usage</strong> data using a left join. The resulting data set is the basis for plotting a map of England with each district coloured according to the percentag of residents that visited a library.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p3_df <span class="ot">&lt;-</span> usage_df <span class="sc">%&gt;%</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -454,11 +456,11 @@ window.Quarto = {
 <span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
 <span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"%-age of Residents</span><span class="sc">\n</span><span class="st">Visiting a Library"</span>,</span>
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>      <span class="st">"12–19%"</span> <span class="ot">=</span> <span class="st">"#8B0000"</span>,  <span class="co"># dark red</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>      <span class="st">"19–23%"</span> <span class="ot">=</span> <span class="st">"#E74C3C"</span>,  <span class="co"># red</span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>      <span class="st">"23–27%"</span> <span class="ot">=</span> <span class="st">"#A8E6A3"</span>,  <span class="co"># light green</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>      <span class="st">"27–31%"</span> <span class="ot">=</span> <span class="st">"#34A853"</span>,  <span class="co"># green</span></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>      <span class="st">"31–38%"</span> <span class="ot">=</span> <span class="st">"#006400"</span>   <span class="co"># dark green</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>      <span class="st">"12–19%"</span> <span class="ot">=</span> <span class="st">"#8B0000"</span>,</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>      <span class="st">"19–23%"</span> <span class="ot">=</span> <span class="st">"#E74C3C"</span>,</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>      <span class="st">"23–27%"</span> <span class="ot">=</span> <span class="st">"#A8E6A3"</span>,</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>      <span class="st">"27–31%"</span> <span class="ot">=</span> <span class="st">"#34A853"</span>,</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>      <span class="st">"31–38%"</span> <span class="ot">=</span> <span class="st">"#006400"</span></span>
 <span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    ),</span>
 <span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.value=</span><span class="st">"lightgrey"</span>,</span>
 <span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">drop =</span> <span class="cn">FALSE</span></span>
