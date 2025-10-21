@@ -8,5 +8,15 @@
       "/blog/LibrariesInUK/LibrariesInUK.html",
       "/blog/MLforAssetManagement/MLforAssetManagement.html"
     ]
+  },
+  {
+    "listing": "/coding/index.html",
+    "items": [
+      "/coding/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html",
+      "/coding/ANNsForProbabilityDensityEstimation/ANNsForProbabilityDensityEstimation.html",
+      "/coding/LearningToRank/LearningToRank.html",
+      "/coding/LibrariesInUK/LibrariesInUK.html",
+      "/coding/MLforAssetManagement/MLforAssetManagement.html"
+    ]
   }
 ]

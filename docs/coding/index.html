@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Hi, I’m Dominik. – Dominik G. Eichhorn</title>
+<title>Projects – Dominik G. Eichhorn</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,23 +23,26 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./inputs/logo.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-858d365d9a055f8b8ee912346b04f130.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../inputs/logo.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-listing/list.min.js"></script>
+<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-858d365d9a055f8b8ee912346b04f130.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -67,21 +70,79 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
 
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
 
-<link rel="stylesheet" href="styles.css">
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Dominik G. Eichhorn</span>
     </a>
   </div>
@@ -92,11 +153,11 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../about.html"> 
 <span class="menu-text">About me</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -105,17 +166,17 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-cv">    
         <li>
-    <a class="dropdown-item" href="./inputs/CV_DominikEichhorn.pdf">
+    <a class="dropdown-item" href="../inputs/CV_DominikEichhorn.pdf">
  <span class="dropdown-text">EN</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./inputs/Lebenslauf_DominikEichhorn.pdf">
+    <a class="dropdown-item" href="../inputs/Lebenslauf_DominikEichhorn.pdf">
  <span class="dropdown-text">DE</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="./coding/index.html"> 
+    <a class="nav-link active" href="../coding/index.html" aria-current="page"> 
 <span class="menu-text">Coding</span></a>
   </li>  
 </ul>
@@ -129,56 +190,174 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
 <!-- main -->
-<div class="quarto-about-jolla">
-  <img src="inputs/Bewerbungsfoto_rounded.png" class="about-image
-  round " style="height: 15em; width: 15em;">
- <header id="title-block-header" class="quarto-title-block default">
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Hi, I’m Dominik.</h1>
+<h1 class="title">Projects</h1>
 </div>
+
+
+
 <div class="quarto-title-meta">
+
+    
+  
+    
   </div>
-</header><main class="content" id="quarto-document-content">
-<!--This is a Quarto website.
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-::: {.cell}
-```{.r .cell-code}
-1 + 1
-```
-::: {.cell-output .cell-output-stdout}
-```
-[1] 2
-```
-:::
-:::
--->
+  
 
 
-</main> 
-  <hr class="about-sep">
-   <div class="about-links">
-  <a href="mailto:dominik.g.eichhorn@gmail.com" class="about-link" rel="" target="">
-    <i class="bi bi-envelope"></i>
-     <span class="about-link-text">Email</span>
-  </a>
-  <a href="https://github.com/DGEichhorn" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">GitHub</span>
-  </a>
-  <a href="https://www.linkedin.com/in/dgeichhorn" class="about-link" rel="" target="">
-    <i class="bi bi-linkedin"></i>
-     <span class="about-link-text">LinkedIn</span>
-  </a>
-  <a href="/inputs/CV_DominikEichhorn.pdf" class="about-link" rel="" target="">
-     <span class="about-link-text">CV</span>
-  </a>
+</header>
+
+
+
+
+
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-categories="RGVlcCUyMExlYXJuaW5nJTJDUHl0aG9uJTJDRGlmZmVyZW50aWFsJTIwRXF1YXRpb25z" data-listing-date-sort="1759788000000" data-listing-file-modified-sort="1761054587134" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1654">
+<div class="thumbnail"><a href="../coding/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html" class="no-external">
+
+<img loading="lazy" src="../coding/SolvingODEsUsingANNs/cover.jpg" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../coding/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html" class="no-external">Neural Networks for Solving Ordinary Differential Equations</a>
+</h3>
+<div class="delink listing-description"><a href="../coding/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html" class="no-external">
+<p>I code from scratch a neural network based approach for numerically solving ordinary differential equations (ODE). I illustrate how this method functions by applying it to two examplary ODEs.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="../coding/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html" class="no-external">
+<div class="listing-date">
+Oct 7, 2025
+</div>
+<div class="listing-author">
+Dominik G. Eichhorn
+</div>
+</a>
 </div>
 </div>
- <!-- /main -->
+<div class="quarto-post image-right" data-index="1" data-categories="RGVlcCUyMExlYXJuaW5nJTJDUHl0aG9uJTJDUHJvYmFiaWxpdHklMjBEZW5zaXR5JTIwRXN0aW1hdGlvbg==" data-listing-date-sort="1757455200000" data-listing-file-modified-sort="1761059003609" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2003">
+<div class="thumbnail"><a href="../coding/ANNsForProbabilityDensityEstimation/ANNsForProbabilityDensityEstimation.html" class="no-external">
+
+<img loading="lazy" src="../coding/ANNsForProbabilityDensityEstimation/cover.jpg" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../coding/ANNsForProbabilityDensityEstimation/ANNsForProbabilityDensityEstimation.html" class="no-external">Neural Networks for Probability Density Estimation</a>
+</h3>
+<div class="delink listing-description"><a href="../coding/ANNsForProbabilityDensityEstimation/ANNsForProbabilityDensityEstimation.html" class="no-external">
+<p>I implement from scratch an approach for estimating an unknown probability density function of a sample using neural networks. To demonstrate that this method works, I apply it to two examples.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="../coding/ANNsForProbabilityDensityEstimation/ANNsForProbabilityDensityEstimation.html" class="no-external">
+<div class="listing-date">
+Sep 10, 2025
+</div>
+<div class="listing-author">
+Dominik G. Eichhorn
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="2" data-categories="UmFua2luZyUyQ09wdGltaXphdGlvbiUyQ01heGltdW0lMjBMaWtlbGlob29kJTJDUg==" data-listing-date-sort="1755727200000" data-listing-file-modified-sort="1761046091674" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2984">
+<div class="thumbnail"><a href="../coding/LearningToRank/LearningToRank.html" class="no-external">
+
+<img loading="lazy" src="../coding/LearningToRank/cover.jpg" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../coding/LearningToRank/LearningToRank.html" class="no-external">Learning to Rank</a>
+</h3>
+<div class="delink listing-description"><a href="../coding/LearningToRank/LearningToRank.html" class="no-external">
+<p>I implement from scratch two approaches for learning a ranking from imcomplete pairwise comparison data (Bradley-Terry model and PageRank). Then, I apply them to NFL data and compare the results.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="../coding/LearningToRank/LearningToRank.html" class="no-external">
+<div class="listing-date">
+Aug 21, 2025
+</div>
+<div class="listing-author">
+Dominik G. Eichhorn
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="3" data-categories="U3BhdGlhbCUyMERhdGElMkNEYXRhJTIwQW5hbHlzaXMlMkNWaXN1YWxpemF0aW9uJTJDUg==" data-listing-date-sort="1753740000000" data-listing-file-modified-sort="1761049472247" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1924">
+<div class="thumbnail"><a href="../coding/LibrariesInUK/LibrariesInUK.html" class="no-external">
+
+<img loading="lazy" src="../coding/LibrariesInUK/cover.jpg" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../coding/LibrariesInUK/LibrariesInUK.html" class="no-external">Analyzing Library Usage in England</a>
+</h3>
+<div class="delink listing-description"><a href="../coding/LibrariesInUK/LibrariesInUK.html" class="no-external">
+<p>I do a short analysis (incl.&nbsp;visualizations) of library usage across districts in England. More specifically, I look at differences accross district types and at spatial dependencies.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="../coding/LibrariesInUK/LibrariesInUK.html" class="no-external">
+<div class="listing-date">
+Jul 29, 2025
+</div>
+<div class="listing-author">
+Dominik G. Eichhorn
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="4" data-categories="UG9ydGZvbGlvJTIwTWFuYWdlbWVudCUyQ01hY2hpbmUlMjBMZWFybmluZyUyQ0RlZXAlMjBMZWFybmluZyUyQ1B5dGhvbg==" data-listing-date-sort="1651356000000" data-listing-file-modified-sort="1760967073162" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="945">
+<div class="thumbnail"><a href="../coding/MLforAssetManagement/MLforAssetManagement.html" class="no-external">
+
+<img loading="lazy" src="../coding/MLforAssetManagement/cover.jpg" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../coding/MLforAssetManagement/MLforAssetManagement.html" class="no-external">Machine Learning for Managing Stock Portfolios</a>
+</h3>
+<div class="delink listing-description"><a href="../coding/MLforAssetManagement/MLforAssetManagement.html" class="no-external">
+<p>As part of my master’s thesis I implemented a machine learning based approach for managing stock portfolios. I describe how this approach works and assess the performance of these portfolios.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="../coding/MLforAssetManagement/MLforAssetManagement.html" class="no-external">
+<div class="listing-date">
+May 1, 2022
+</div>
+<div class="listing-author">
+Dominik G. Eichhorn
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     

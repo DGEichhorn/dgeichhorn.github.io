@@ -21,7 +21,7 @@ website:
           - text: DE
             href: inputs/Lebenslauf_DominikEichhorn.pdf
       - text: Coding
-        href: blog/index.qmd
+        href: coding/index.qmd
 
 format:
   html:
