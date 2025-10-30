@@ -1,15 +1,5 @@
 [
   {
-    "listing": "/blog/index.html",
-    "items": [
-      "/blog/ANNsForProbabilityDensityEstimation/ANNsForProbabilityDensityEstimation.html",
-      "/blog/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html",
-      "/blog/LearningToRank/LearningToRank.html",
-      "/blog/LibrariesInUK/LibrariesInUK.html",
-      "/blog/MLforAssetManagement/MLforAssetManagement.html"
-    ]
-  },
-  {
     "listing": "/coding/index.html",
     "items": [
       "/coding/SolvingODEsUsingANNs/SolvingODEsUsingANNs.html",

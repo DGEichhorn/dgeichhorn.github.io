@@ -325,7 +325,7 @@ window.Quarto = {
 <section id="implementation" class="level1">
 <h1>Implementation</h1>
 <p>After detailing the general approach for solving ODEs using neural networks, in this section, I will implement it from scratch in Python and apply it to two different examples.</p>
-<div id="afe60456" class="cell" data-execution_count="1">
+<div id="8907052c" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for sampling</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -342,7 +342,7 @@ window.Quarto = {
 <section id="define-neural-network" class="level2">
 <h2 class="anchored" data-anchor-id="define-neural-network">Define Neural Network</h2>
 <p>At first, I define the neural network used for approximating the CDF. It is a fully connected feed forward neural network with one hidden layer using a <span class="math inline">\(tanh\)</span> activation function and an output layer using a <span class="math inline">\(sigmoid\)</span> activation function. Thereby, the neural network is differentiable and maps <span class="math inline">\(\mathbb{R}\)</span> onto the interval <span class="math inline">\((0,1)\)</span>.</p>
-<div id="0f120aee" class="cell" data-execution_count="2">
+<div id="0657fcb9" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> N(nn.Module):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_size, hidden_size, output_size):</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(N, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -360,7 +360,7 @@ window.Quarto = {
 <section id="define-modified-loss-function" class="level2">
 <h2 class="anchored" data-anchor-id="define-modified-loss-function">Define Modified Loss Function</h2>
 <p>Next, I define the modified loss function as described above.</p>
-<div id="58918902" class="cell" data-execution_count="3">
+<div id="f53c435b" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Loss(nn.Module):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">super</span>(Loss, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -379,14 +379,14 @@ window.Quarto = {
 <section id="gaussian-mixture" class="level2">
 <h2 class="anchored" data-anchor-id="gaussian-mixture">Gaussian Mixture</h2>
 <p>For the first example, realizations will be drawn from a 2-component Gaussian mixture distribution. So I construct one with mixture weights <span class="math inline">\(\phi_1=0.2\)</span> and <span class="math inline">\(\phi_2=0.8\)</span>, expectations <span class="math inline">\(\mu_1=2\)</span> and <span class="math inline">\(\mu_2=5\)</span> and standard deviations <span class="math inline">\(\sigma_1=0.25\)</span> and <span class="math inline">\(\sigma_2=0.5\)</span>.</p>
-<div id="4a89787c" class="cell" data-execution_count="4">
+<div id="8766b812" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct 2-component Gaussian mixture distribution</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>comp1 <span class="op">=</span> stats.Normal(mu<span class="op">=</span><span class="dv">2</span>, sigma<span class="op">=</span><span class="fl">0.25</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>comp2 <span class="op">=</span> stats.Normal(mu<span class="op">=</span><span class="dv">5</span>, sigma<span class="op">=</span><span class="fl">0.5</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>mix <span class="op">=</span> stats.Mixture([comp1, comp2], weights<span class="op">=</span>[<span class="fl">0.2</span>, <span class="fl">0.8</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The corresponding PDF looks as follows:</p>
-<div id="7c875cc3" class="cell" data-execution_count="5">
+<div id="ea13e8df" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">1000</span>)</span>
@@ -409,20 +409,20 @@ window.Quarto = {
 <section id="set-seed" class="level3">
 <h3 class="anchored" data-anchor-id="set-seed">Set Seed</h3>
 <p>In the subsequent steps, the neural network will be initialized and realizations will be sampled from the PDF given above. Both involves randomness. Therefore, to ensure reproducibility of the subsequent steps, one must set a seed for the random number generators.</p>
-<div id="3aaabe31" class="cell" data-execution_count="6">
+<div id="f4b92738" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>seed <span class="op">=</span> <span class="dv">42</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>random.seed(seed)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>np.random.seed(seed)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(seed)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="24">
-<pre><code>&lt;torch._C.Generator at 0x22b8117e7b0&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>&lt;torch._C.Generator at 0x1cfb761ead0&gt;</code></pre>
 </div>
 </div>
 </section>
 <section id="construct-model-loss-and-optimizer" class="level3">
 <h3 class="anchored" data-anchor-id="construct-model-loss-and-optimizer">Construct Model, Loss and Optimizer</h3>
 <p>After that, I instantiate the neural network, the loss function to be minimized and the optimizer (here, I use Adam).</p>
-<div id="5ad764f7" class="cell" data-execution_count="7">
+<div id="f305d5dc" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> N(input_size<span class="op">=</span><span class="dv">1</span>, hidden_size<span class="op">=</span><span class="dv">10</span>, output_size<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> Loss()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -431,7 +431,7 @@ window.Quarto = {
 <section id="sample-from-pdf" class="level3">
 <h3 class="anchored" data-anchor-id="sample-from-pdf">Sample from PDF</h3>
 <p>Next, I sample <span class="math inline">\(n=200\)</span> i.i.d. realizations from the 2-component Gaussian mixture distribution. Subsequently, I sort then in ascending order.</p>
-<div id="2347fe92" class="cell" data-execution_count="8">
+<div id="8ed001e0" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sample data, sort it and convert to torch tensor</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">200</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(seed)</span>
@@ -442,7 +442,7 @@ window.Quarto = {
 <section id="set-monotonicity-points" class="level3">
 <h3 class="anchored" data-anchor-id="set-monotonicity-points">Set Monotonicity Points</h3>
 <p>Before training can start, I have to specify <span class="math inline">\(\lambda_{mon}\)</span>, <span class="math inline">\(n_{mon}\)</span>, the monotonicity points themselves as well as <span class="math inline">\(\Delta\)</span>. I choose to place <span class="math inline">\(n_{mon}=1000\)</span> monotonicity points equally spaced between the smallest and the largest sampled <span class="math inline">\(X\)</span>-values.</p>
-<div id="e4cccce6" class="cell" data-execution_count="9">
+<div id="dea4cea2" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set monotonicity points</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>lambda_mon <span class="op">=</span> <span class="fl">1e6</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>n_mon <span class="op">=</span> <span class="dv">1000</span></span>
@@ -453,7 +453,7 @@ window.Quarto = {
 <section id="training" class="level3">
 <h3 class="anchored" data-anchor-id="training">Training</h3>
 <p>Now, everything is set up and training can start. Observe that, as described in the general approach, in each iteration, a new set of <span class="math inline">\(n\)</span> samples are drawn i.i.d. from <span class="math inline">\(\mathcal{U}(0,1)\)</span> and sorted in ascending order. These serve as targets only for that iteration.</p>
-<div id="0284d1d7" class="cell" data-execution_count="10">
+<div id="1762976d" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">100</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>steps_per_epoch <span class="op">=</span> <span class="dv">2500</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -479,7 +479,7 @@ window.Quarto = {
 <section id="plot-cdf" class="level3">
 <h3 class="anchored" data-anchor-id="plot-cdf">Plot CDF</h3>
 <p>Once training has finished, I plot the learned neural network approximation of CDF against the actual CDF of the 2-component Gaussian mixture.</p>
-<div id="4ac15ad5" class="cell" data-execution_count="11">
+<div id="e05f586d" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">1000</span>).unsqueeze(<span class="dv">1</span>)</span>
@@ -508,7 +508,7 @@ window.Quarto = {
 <section id="compute-pdf" class="level3">
 <h3 class="anchored" data-anchor-id="compute-pdf">Compute PDF</h3>
 <p>Given the neural network approximation of the CDF, the following function computes an estimate of the PDF from it.</p>
-<div id="aaed6036" class="cell" data-execution_count="12">
+<div id="294e19fd" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ComputePDF(model, x):</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  x <span class="op">=</span> x.requires_grad_(<span class="va">True</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  cdf <span class="op">=</span> model(x)</span>
@@ -524,7 +524,7 @@ window.Quarto = {
 <section id="plot-pdf" class="level3">
 <h3 class="anchored" data-anchor-id="plot-pdf">Plot PDF</h3>
 <p>This plot confirms, that the estimate of the PDF obtained from the neural network approximation to the CDF is quite precise.</p>
-<div id="a3638cd9" class="cell" data-execution_count="13">
+<div id="02bb43c8" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pdf_est <span class="op">=</span> ComputePDF(model, xx).detach()</span>
@@ -553,12 +553,12 @@ window.Quarto = {
 <section id="weibull-distribution" class="level2">
 <h2 class="anchored" data-anchor-id="weibull-distribution">Weibull Distribution</h2>
 <p>As second example, I will use a Weibull distribution with <span class="math inline">\(shape=1.8\)</span> (and <span class="math inline">\(scale=1\)</span>).</p>
-<div id="4114793a" class="cell" data-execution_count="14">
+<div id="d6ae2878" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct Weibull distribution</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dist <span class="op">=</span> stats.weibull_min(c<span class="op">=</span><span class="fl">1.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>A plot of its PDF shows that it is clearly skewed.</p>
-<div id="ff530949" class="cell" data-execution_count="15">
+<div id="47b96c82" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">1000</span>)</span>
@@ -579,7 +579,7 @@ window.Quarto = {
 </div>
 </div>
 <p>The following steps (set seed; construct model, loss and optimizer; sample from PDF; set monontonicity points; training) are analogous to those in the first example. Therefore, I hide that part of the code. If you wish to have a look at it, click on the “Show code” button below.</p>
-<div id="ffce4198" class="cell" data-execution_count="16">
+<div id="a2cf73e9" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed</span></span>
@@ -632,7 +632,7 @@ window.Quarto = {
 <section id="plot-cdf-1" class="level3">
 <h3 class="anchored" data-anchor-id="plot-cdf-1">Plot CDF</h3>
 <p>Inspecting the below plot of the learned neural network approximation of the CDF and the actual CDF shows again that the neural network was successful in recovering the actual CDF.</p>
-<div id="4a4c0d68" class="cell" data-execution_count="17">
+<div id="cb78b1e7" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>xx <span class="op">=</span> torch.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">1000</span>).unsqueeze(<span class="dv">1</span>)</span>
@@ -660,7 +660,7 @@ window.Quarto = {
 <section id="plot-pdf-1" class="level3">
 <h3 class="anchored" data-anchor-id="plot-pdf-1">Plot PDF</h3>
 <p>Also when comparing the resulting estimated PDF to the actual one, it seems that neural network approach yields good results.</p>
-<div id="b146b6b0" class="cell" data-execution_count="18">
+<div id="22294eaa" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Show code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>pdf_est <span class="op">=</span> ComputePDF(model, xx).detach()</span>
